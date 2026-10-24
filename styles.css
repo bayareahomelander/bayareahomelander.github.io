@@ -279,7 +279,9 @@ figcaption { font-size: 0.8125rem; color: var(--muted); line-height: 1.55; margi
   content: counter(art, decimal-leading-zero); position: absolute; left: 0; top: 18px;
   font-family: var(--mono); font-size: 0.8125rem; color: var(--accent);
 }
-.articles .t { font-weight: 500; line-height: 1.4; }
+.articles .t { font-weight: 500; line-height: 1.4; text-decoration: none; }
+.articles a.t:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.articles a.t::after { content: "\00a0↗"; color: var(--muted); font-weight: 400; }
 .articles .d { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
 q { quotes: "\201C" "\201D"; font-style: italic; }
 
