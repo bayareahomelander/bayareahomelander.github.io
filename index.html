@@ -42,6 +42,7 @@
         Previously at Z.AI, where I fine-tuned GLM models and cut serving latency by 28%.
         Since then I've built <a href="#onyx">Onyx</a>, an open-source inference engine,
         and written a <a href="#writing">from-first-principles series</a> on how transformers work.
+        Now I'm building <a href="#flint">Flint</a>, GPT-2 from scratch on hand-written CUDA kernels.
         Based in Vancouver.
       </p>
       <ul class="links">
@@ -169,14 +170,69 @@
       </div>
     </section>
 
-    <!-- In progress -->
-    <section class="section tight" aria-labelledby="flint-title">
+    <!-- In progress. Always pair the name with its subtitle; no repo link before v0.1. -->
+    <section class="section" id="flint" aria-labelledby="flint-title">
       <div class="wrap">
         <div class="next">
-          <p class="eyebrow">In progress</p>
-          <h2 id="flint-title">Flint</h2>
-          <!-- TODO: one-line description of Flint, once it's ready to share -->
-          <p>A new project, private for now. It goes public at v0.1.</p>
+          <p class="eyebrow">In progress · v0.1 in December 2026</p>
+          <h2 id="flint-title">Flint <span class="project-tag">GPT-2 from scratch on hand-written CUDA kernels</span></h2>
+          <p class="body-lg">
+            A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
+            Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
+          </p>
+          <p class="next-why">
+            Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
+            kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
+            PyTorch, but still hand matrix multiplies and attention to NVIDIA's libraries and target
+            newer GPUs with BF16. The question here is how close hand-written kernels can get to
+            cuBLAS when nothing is borrowed, on a Turing GPU that FlashAttention-2 doesn't support,
+            with the same kernels carried through to inference.
+          </p>
+          <p class="early">
+            <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
+            every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
+          </p>
+
+          <div class="flint-grid">
+            <div class="how">
+              <h3>What makes it hard</h3>
+              <ul>
+                <li>
+                  <strong>A tensor-core matrix multiply in inline PTX.</strong>
+                  All three layouts training needs, deterministic split-K, and bias, GELU and
+                  residual-add fused into the output stage. Turing lacks the async copies newer GEMMs
+                  rely on, and the main loop sits at the 128-register limit.
+                </li>
+                <li>
+                  <strong>Flash attention, forward and backward.</strong>
+                  Deterministic with no atomics, inside Turing's 64 KB of shared memory.
+                </li>
+                <li>
+                  <strong>FP16 training, since Turing has no BF16.</strong>
+                  Loss scaling throughout; every kernel's error must stay within <span class="nw">2–3&times;</span> of
+                  PyTorch's own FP16 error against an FP32 reference, and runs are bit-identical.
+                </li>
+                <li>
+                  <strong>Honest measurement.</strong>
+                  Each kernel is reported as a share of cuBLAS from interleaved runs, and as a share
+                  of hardware peak at the clock the GPU actually ran at.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3>Roadmap</h3>
+              <ol class="roadmap">
+                <li><span class="when">Dec 2026</span><span><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</span></li>
+                <li><span class="when">2027</span><span><b>Training:</b> GPT-2 124M end to end on these kernels.</span></li>
+                <li><span class="when">2027</span><span><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</span></li>
+              </ol>
+            </div>
+          </div>
+
+          <p class="stack" aria-label="Built with">
+            <span>C++17</span><span>CUDA</span><span>Inline PTX</span><span>CMake</span><span>pytest</span><span>Nsight Compute</span><span>compute-sanitizer</span>
+          </p>
+          <p class="note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
         </div>
       </div>
     </section>
@@ -192,8 +248,8 @@
             <div class="when">2025 – now</div>
             <div class="what">
               <h3>Independent <span class="at">Vancouver</span></h3>
-              <p>Building open-source inference tooling (Onyx, and Flint in progress) and writing a
-                 step-by-step series on how LLMs work.</p>
+              <p>Built Onyx, an open-source inference engine. Now building Flint, GPT-2 from scratch
+                 on hand-written CUDA kernels. Writing a step-by-step series on how LLMs work.</p>
             </div>
           </li>
 
@@ -239,7 +295,7 @@
             <div><dt>Inference</dt><dd>TensorRT-LLM, MLX, PyTorch/CUDA, Flash Attention, continuous batching, speculative decoding, KV-cache optimization, quantization</dd></div>
             <div><dt>Machine learning</dt><dd>PyTorch, Transformers, TensorFlow, scikit-learn, LoRA/QLoRA, RAG, vector search, reranking</dd></div>
             <div><dt>MLOps</dt><dd>FastAPI, Docker, Kubernetes, MLflow, TensorBoard</dd></div>
-            <div><dt>Languages</dt><dd>Python, Rust</dd></div>
+            <div><dt>Languages</dt><dd>Python, Rust, C++, CUDA</dd></div>
             <div><dt>Education</dt><dd>Bachelor's degree, University of British Columbia, 2016 – 2021</dd></div>
           </dl>
         </div>

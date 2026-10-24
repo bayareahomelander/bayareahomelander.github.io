@@ -36,5 +36,4 @@ A custom domain can be added later under **Settings → Pages → Custom domain*
 
 ## Open TODOs
 
-- One-line description of Flint, once it's ready to share
 - Add new Medium articles to the Writing list as they're published
