@@ -13,6 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/writing/writing.css">
+  <script src="/writing/writing.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -40,7 +42,72 @@
           follow, with a runnable NumPy snippet at each step.
         </p>
 
-        <!-- MAP: transformer map goes here -->
+        <div class="tmap" id="tmap">
+          <p class="eyebrow tmap-eyebrow">The path of one prompt</p>
+          <div class="tmap-grid">
+            <ol class="tmap-list" aria-label="Stages of the transformer, in order">
+            <li class="is-overview" data-i="0">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">01</span><span class="nm">The whole path</span></button>
+                <a class="go" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7" aria-label="Read article: The whole path">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="1">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">02</span><span class="nm">Text → tokens</span></button>
+                <a class="go" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10" aria-label="Read article: Text → tokens">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="2">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">03</span><span class="nm">Token IDs → embeddings</span></button>
+                <a class="go" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e" aria-label="Read article: Token IDs → embeddings">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="3">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">04</span><span class="nm">Adding position</span></button>
+                <a class="go" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c" aria-label="Read article: Adding position">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="4">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">05</span><span class="nm">Attention scores and causal mask</span></button>
+                <a class="go" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a" aria-label="Read article: Attention scores and causal mask">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="5">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">06</span><span class="nm">Queries, keys, values</span></button>
+                <a class="go" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5" aria-label="Read article: Queries, keys, values">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="6">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">07</span><span class="nm">Multiple heads</span></button>
+                <a class="go" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0" aria-label="Read article: Multiple heads">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="7">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">08</span><span class="nm">Residual, layer norm, feed-forward</span></button>
+                <a class="go" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468" aria-label="Read article: Residual, layer norm, feed-forward">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li data-i="8">
+              <div class="row">
+                <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">09</span><span class="nm">Final state → logits → softmax</span></button>
+                <a class="go" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417" aria-label="Read article: Final state → logits → softmax">Read<span aria-hidden="true"> ↗</span></a>
+              </div>
+            </li>
+            <li class="is-coming"><div class="row"><span class="node"><span class="num">&middot;&middot;&middot;</span><span class="nm">More stages coming</span></span></div></li>
+            </ol>
+            <div class="tmap-side">
+              <div class="panel tmap-panel" id="tmap-panel" role="region" aria-label="Stage detail"></div>
+            </div>
+          </div>
+          <p class="tmap-hint">Select a stage to preview it; each links to its article. The full list follows below.</p>
+        </div>
 
         <ol class="articles">
           <li><a class="t" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7">What Actually Happens When You Send a Prompt to an LLM?</a><span class="d">The whole path from a typed prompt to the first generated token.</span></li>

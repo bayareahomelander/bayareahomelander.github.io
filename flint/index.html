@@ -13,6 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/flint/flint.css">
+  <script src="/flint/flint.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -54,7 +56,127 @@
             every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
           </p>
 
-          <!-- VISUALIZERS: technique visualizers go here -->
+          <!-- VISUALIZERS: generic technique explainers; no performance numbers, no hardware details. -->
+          <div class="viz-block" aria-labelledby="viz-title">
+            <h2 class="viz-title" id="viz-title">Two techniques, step by step</h2>
+            <p class="viz-lead">
+              The two kernels at the heart of the project, drawn generically. Press play, or step
+              through one stage at a time.
+            </p>
+
+            <figure class="panel viz" data-viz="gemm" aria-labelledby="gemm-t">
+              <div class="panel-top">
+                <span class="panel-title" id="gemm-t">Tensor-core matrix multiply: one thread block's tile of C = A &times; B</span>
+              </div>
+              <div class="viz-phase" data-phase aria-hidden="true">&nbsp;</div>
+              <div class="viz-body">
+                <div class="viz-main">
+                  <svg class="viz-svg" data-svg viewBox="0 0 240 246" role="img"
+                       aria-label="A matrix on the left, B matrix on top, and the C output tile, split into four warp tiles of tensor-core fragments. The K dimension is walked in four steps."></svg>
+                  <p class="viz-now" data-now aria-live="polite"></p>
+                  <div class="viz-controls">
+                    <button type="button" class="btn vbtn" data-act="play">Play</button>
+                    <button type="button" class="btn ghost vbtn" data-act="step">Step</button>
+                    <button type="button" class="btn ghost vbtn" data-act="restart">Restart</button>
+                    <span class="viz-count" data-count>Step 0 / 20</span>
+                  </div>
+                </div>
+                <div class="viz-side">
+                  <ol class="stages" aria-label="Where the tile is during a K-step" data-stages>
+                    <li><b>Global memory</b><span>A and B tiles for this K-step</span></li>
+                    <li><b>Registers</b><span>staging buffer, since Turing has no async copy</span></li>
+                    <li><b>Shared memory</b><span>the tile every warp reads from</span></li>
+                    <li><b>Fragments</b><span>operands for the tensor-core instructions</span></li>
+                    <li><b>Accumulators</b><span>the C tile, kept in registers across all of K</span></li>
+                  </ol>
+                  <ul class="epi" aria-label="Output stage, fused" data-epi>
+                    <li class="lbl">Output stage</li>
+                    <li>Bias</li><li>GELU</li><li>Residual add</li><li>Store C</li>
+                  </ul>
+                  <div class="meter" role="img" aria-label="Register budget: the main loop uses 128 of the 128 registers available per thread. Illustrative split between accumulators, fragments, staging and loop state.">
+                    <div class="meter-top">
+                      <span class="panel-title">Registers per thread, main loop</span>
+                      <span class="meter-val">128 / 128</span>
+                    </div>
+                    <div class="meter-bar" aria-hidden="true">
+                      <span class="seg" data-seg="acc" style="flex:56">accumulators</span>
+                      <span class="seg" data-seg="frag" style="flex:28">frags</span>
+                      <span class="seg" data-seg="stg" style="flex:24">staging</span>
+                      <span class="seg" data-seg="loop" style="flex:20">loop</span>
+                    </div>
+                    <p class="meter-note">The loop sits at the 128-register limit, so small changes cost real speed. The split shown is made up.</p>
+                  </div>
+                </div>
+              </div>
+              <ul class="legend" aria-hidden="true">
+                <li><span class="sw fetch"></span>tile in flight</li>
+                <li><span class="sw stage"></span>staged</li>
+                <li><span class="sw acc"></span>in use by tensor cores</li>
+                <li><span class="sw done"></span>consumed</li>
+                <li><span class="sw warp"></span>warp tile (4&times;4 fragments)</li>
+              </ul>
+              <figcaption>
+                Illustration; not the project’s exact configuration. Tile counts and sizes are chosen for legibility.
+              </figcaption>
+              <noscript><p>This step-through needs JavaScript.</p></noscript>
+            </figure>
+
+            <figure class="panel viz wide" data-viz="attn" aria-labelledby="attn-t">
+              <div class="panel-top">
+                <span class="panel-title" id="attn-t">Flash attention, forward pass: online softmax over streamed K/V blocks</span>
+              </div>
+              <div class="viz-phase" data-phase aria-hidden="true">&nbsp;</div>
+              <div class="viz-body">
+                <div class="viz-main">
+                  <svg class="viz-svg" data-svg viewBox="0 0 348 214" role="img"
+                       aria-label="Four query rows held on chip. Three blocks of keys and values stream through. For each block the score tile, the running row max m, the rescale factor alpha, the running sum l and the output accumulator O are updated."></svg>
+                  <p class="viz-now" data-now aria-live="polite"></p>
+                  <div class="viz-controls">
+                    <button type="button" class="btn vbtn" data-act="play">Play</button>
+                    <button type="button" class="btn ghost vbtn" data-act="step">Step</button>
+                    <button type="button" class="btn ghost vbtn" data-act="restart">Restart</button>
+                    <span class="viz-count" data-count>Step 0 / 19</span>
+                  </div>
+                </div>
+                <div class="viz-side">
+                  <ol class="stages" aria-label="Stages of one K/V block" data-stages>
+                    <li><b>Stream in</b><span>a K and V block, Q stays put</span></li>
+                    <li><b>Score tile</b><span>S = Q &middot; K&#7488;</span></li>
+                    <li><b>Running max</b><span>m = max(m, row max of S)</span></li>
+                    <li><b>Exponentiate</b><span>P = exp(S &minus; m); update the running sum l</span></li>
+                    <li><b>Rescale</b><span>O &times; &alpha;, where &alpha; = exp(m<sub>old</sub> &minus; m<sub>new</sub>)</span></li>
+                    <li><b>Accumulate</b><span>O += P &middot; V</span></li>
+                    <li><b>Normalize</b><span>after the last block, O &divide; l</span></li>
+                  </ol>
+                  <div class="meter" role="img" aria-label="Shared-memory budget: Q, K and V tiles use 48 KB of the 64 KB available. Illustrative sizes.">
+                    <div class="meter-top">
+                      <span class="panel-title">Shared memory</span>
+                      <span class="meter-val">48 / 64 KB</span>
+                    </div>
+                    <div class="meter-bar" aria-hidden="true">
+                      <span class="seg" data-seg="q" style="flex:16">Q 16</span>
+                      <span class="seg" data-seg="k" style="flex:16">K 16</span>
+                      <span class="seg" data-seg="v" style="flex:16">V 16</span>
+                      <span class="seg free" style="flex:16">free</span>
+                    </div>
+                    <p class="meter-note">Q, K and V tiles fit within Turing's 64 KB of shared memory. Sizes are illustrative.</p>
+                  </div>
+                  <p class="viz-fact">Forward and backward passes are both deterministic, with no atomics.</p>
+                </div>
+              </div>
+              <ul class="legend" aria-hidden="true">
+                <li><span class="sw acc"></span>scores S (stronger = larger)</li>
+                <li><span class="sw pbar"></span>probabilities P, and O</li>
+                <li><span class="sw stage"></span>block in use</li>
+                <li><span class="sw done"></span>block finished</li>
+              </ul>
+              <figcaption>
+                Illustration; not the project’s exact configuration. Four query rows, three blocks of four keys and a head size of four keep
+                the arithmetic readable; the numbers shown are computed from made-up scores.
+              </figcaption>
+              <noscript><p>This step-through needs JavaScript.</p></noscript>
+            </figure>
+          </div>
 
           <div class="flint-grid">
             <div class="how">

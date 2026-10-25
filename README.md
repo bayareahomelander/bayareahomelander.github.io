@@ -2,11 +2,17 @@
 
 Personal site for Paco Sun. Plain HTML, CSS, and a little JavaScript, with no build step.
 
-| File | What it holds |
+| Path | What it holds |
 | --- | --- |
-| `index.html` | All page content |
-| `styles.css` | Layout, colors (light and dark), and responsive rules |
-| `script.js` | The speculative-decoding demo in the Onyx section |
+| `index.html` | Home: intro, project cards, latest writing, experience summary, contact |
+| `onyx/` | Onyx project page and its interactive demos |
+| `flint/` | Flint project page, its technique visualizers, and the home-card preview |
+| `writing/` | The article series and its transformer map |
+| `resume/` | Full resume, styled to print cleanly to PDF |
+| `styles.css` | Shared layout, colors (light and dark), and components |
+| `script.js` | The scripted speculative-decoding preview on the home page |
+
+Each page folder keeps its own CSS and JS; only `styles.css` and `script.js` are shared.
 
 ## Preview locally
 
