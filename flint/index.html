@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flint · GPT-2 from scratch on hand-written CUDA kernels · Paco Sun</title>
+  <meta name="description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime.">
+  <meta property="og:title" content="Flint · GPT-2 from scratch on hand-written CUDA kernels · Paco Sun">
+  <meta property="og:description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/">Paco Sun</a>
+      <nav aria-label="Site">
+        <a href="/#work" aria-current="true">Work</a>
+        <a href="/writing/">Writing</a>
+        <a href="/resume/">Resume</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Always pair the name with its subtitle; no repo link before v0.1. -->
+    <section class="page-head" id="flint" aria-labelledby="flint-title">
+      <div class="wrap">
+        <div class="next is-page">
+          <a class="crumb" href="/#work">All work</a>
+          <p class="eyebrow">In progress · v0.1 in December 2026</p>
+          <h1 id="flint-title">Flint <span class="project-tag">GPT-2 from scratch on hand-written CUDA kernels</span></h1>
+          <p class="body-lg">
+            A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
+            Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
+          </p>
+          <p class="next-why">
+            Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
+            kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
+            PyTorch, but still hand matrix multiplies and attention to NVIDIA's libraries and target
+            newer GPUs with BF16. The question here is how close hand-written kernels can get to
+            cuBLAS when nothing is borrowed, on a Turing GPU that FlashAttention-2 doesn't support,
+            with the same kernels carried through to inference.
+          </p>
+          <p class="early">
+            <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
+            every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
+          </p>
+
+          <!-- VISUALIZERS: technique visualizers go here -->
+
+          <div class="flint-grid">
+            <div class="how">
+              <h3>What makes it hard</h3>
+              <ul>
+                <li>
+                  <strong>A tensor-core matrix multiply in inline PTX.</strong>
+                  All three layouts training needs, deterministic split-K, and bias, GELU and
+                  residual-add fused into the output stage. Turing lacks the async copies newer GEMMs
+                  rely on, and the main loop sits at the 128-register limit.
+                </li>
+                <li>
+                  <strong>Flash attention, forward and backward.</strong>
+                  Deterministic with no atomics, inside Turing's 64 KB of shared memory.
+                </li>
+                <li>
+                  <strong>FP16 training, since Turing has no BF16.</strong>
+                  Loss scaling throughout; every kernel's error must stay within <span class="nw">2–3&times;</span> of
+                  PyTorch's own FP16 error against an FP32 reference, and runs are bit-identical.
+                </li>
+                <li>
+                  <strong>Honest measurement.</strong>
+                  Each kernel is reported as a share of cuBLAS from interleaved runs, and as a share
+                  of hardware peak at the clock the GPU actually ran at.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3>Roadmap</h3>
+              <ol class="roadmap">
+                <li><span class="when">Dec 2026</span><span><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</span></li>
+                <li><span class="when">2027</span><span><b>Training:</b> GPT-2 124M end to end on these kernels.</span></li>
+                <li><span class="when">2027</span><span><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</span></li>
+              </ol>
+            </div>
+          </div>
+
+          <p class="stack" aria-label="Built with">
+            <span>C++17</span><span>CUDA</span><span>Inline PTX</span><span>CMake</span><span>pytest</span><span>Nsight Compute</span><span>compute-sanitizer</span>
+          </p>
+          <p class="note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>&copy; 2026 Paco Sun</span>
+      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+    </div>
+  </footer>
+</body>
+</html>

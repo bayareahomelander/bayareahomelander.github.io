@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Text to Next Token · Writing · Paco Sun</title>
+  <meta name="description" content="A series that follows one prompt through every stage of a transformer, with the arithmetic worked by hand and runnable NumPy at each step.">
+  <meta property="og:title" content="From Text to Next Token · Writing · Paco Sun">
+  <meta property="og:description" content="A series that follows one prompt through every stage of a transformer, with the arithmetic worked by hand and runnable NumPy at each step.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/">Paco Sun</a>
+      <nav aria-label="Site">
+        <a href="/#work">Work</a>
+        <a href="/writing/" aria-current="page">Writing</a>
+        <a href="/resume/">Resume</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head" id="writing" aria-labelledby="writing-title">
+      <div class="wrap">
+        <p class="eyebrow">Writing</p>
+        <h1 id="writing-title" class="section-title">From Text to Next Token</h1>
+        <p class="body-lg">
+          A series that follows one prompt, <q>The cat sat on the</q>, through every stage of a
+          transformer. No metaphors: the arithmetic is worked by hand on a model small enough to
+          follow, with a runnable NumPy snippet at each step.
+        </p>
+
+        <!-- MAP: transformer map goes here -->
+
+        <ol class="articles">
+          <li><a class="t" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7">What Actually Happens When You Send a Prompt to an LLM?</a><span class="d">The whole path from a typed prompt to the first generated token.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10">Your LLM Doesn’t Read Words</a><span class="d">Why tokenization trips models up on counting the r’s in “strawberry.”</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e">How an LLM Knows “King” Is Closer to “Queen” Than to “Fridge”</a><span class="d">How an embedding lookup turns token IDs into vectors.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c">How a Transformer Tells “Dog Chased Cat” From “Cat Chased Dog”</a><span class="d">Giving each token its position in the sequence.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a">What Is Attention Actually Calculating?</a><span class="d">Five tokens through dot products and causal masking, by hand.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5">Where Do Queries, Keys, and Values Come From?</a><span class="d">The learned projections that feed attention.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0">Why One Attention Head Isn’t Enough</a><span class="d">Two heads on the same tokens, then concatenation and projection.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468">Attention Is Only Half of a Transformer Block</a><span class="d">Residuals, layer normalization, and the feed-forward network.</span></li>
+          <li><a class="t" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417">How an LLM Scores Every Token It Could Say Next</a><span class="d">From the final state to logits and softmax probabilities.</span></li>
+        </ol>
+        <p class="cta-row">
+          <a class="btn ghost" href="https://medium.com/@pacosun">Read the series on Medium</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>&copy; 2026 Paco Sun</span>
+      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+    </div>
+  </footer>
+</body>
+</html>

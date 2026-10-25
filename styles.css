@@ -43,6 +43,11 @@
   }
 }
 
+/* Cross-page transitions: a quick crossfade with the header held in place. */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -90,6 +95,7 @@ b, strong { font-weight: 600; }
 .site-header nav { display: flex; gap: 22px; flex-wrap: wrap; }
 .site-header nav a { color: var(--muted); text-decoration: none; font-size: 0.9375rem; }
 .site-header nav a:hover { color: var(--ink); }
+.site-header nav a[aria-current] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 6px; }
 
 /* ---------- Shared bits ---------- */
 .eyebrow {
@@ -147,7 +153,48 @@ b, strong { font-weight: 600; }
 .links a { font-family: var(--mono); font-size: 0.875rem; text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
 .links a:hover { border-color: var(--ink); }
 .links a::after { content: " ↗"; color: var(--muted); }
-.links a[href^="mailto"]::after { content: ""; }
+.links a[href^="mailto"]::after, .links a[href^="/"]::after { content: ""; }
+
+/* ---------- Subpages ---------- */
+.page-head { padding: 56px 0 88px; }
+.crumb { display: inline-block; font-family: var(--mono); font-size: 0.8125rem; color: var(--muted); text-decoration: none; margin-bottom: 28px; }
+.crumb::before { content: "\2190\00a0"; }
+.crumb:hover { color: var(--ink); }
+.project-head h1, h1.section-title, .next h1 {
+  font-family: var(--serif); font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1; letter-spacing: -0.01em;
+}
+
+/* ---------- Home: project cards ---------- */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+.card {
+  display: flex; flex-direction: column; color: inherit; text-decoration: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card:hover { border-color: var(--ink); transform: translateY(-2px); }
+.card.in-progress { border-style: dashed; }
+.card-preview {
+  height: 150px; display: flex; align-items: center; padding: 0 22px; overflow: hidden;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.card.in-progress .card-preview { border-bottom-style: dashed; }
+.demo-line.mini { min-height: 0; width: 100%; padding: 0; border: 0; background: none; font-size: 0.9375rem; }
+.flint-preview {
+  width: calc(100% + 44px); height: 100%; margin: 0 -22px;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.card-body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 22px; }
+.card-kicker { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+.card h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-family: var(--serif); font-size: 2.25rem; line-height: 1; }
+.card h3 .project-tag { font-size: 0.8125rem; }
+.card-body > p:not(.card-kicker):not(.card-note) { color: var(--ink-2); }
+.card-stats { list-style: none; padding: 0; margin: 2px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.875rem; color: var(--muted); }
+.card-stats b { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+.card-note { font-size: 0.875rem; color: var(--ink-2); border-left: 2px solid var(--accent); padding-left: 10px; }
+.card-more { margin-top: auto; padding-top: 6px; font-size: 0.9375rem; font-weight: 500; }
+.card-more::after { content: "\00a0\2192"; display: inline-block; transition: transform 0.2s ease; }
+.card:hover .card-more::after { transform: translateX(4px); }
 
 /* ---------- Onyx ---------- */
 .project-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 20px; }
@@ -247,7 +294,9 @@ figcaption { font-size: 0.8125rem; color: var(--muted); line-height: 1.55; margi
 
 /* ---------- Flint ---------- */
 .next { border: 1px dashed var(--line); border-radius: var(--radius); padding: 36px; }
-.next h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; font-size: clamp(2.25rem, 5vw, 3rem); }
+.next.is-page { border: 0; border-radius: 0; padding: 0; }
+.next.is-page h1 { font-size: clamp(3rem, 8vw, 4.5rem); }
+.next h1, .next h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; font-size: clamp(2.25rem, 5vw, 3rem); }
 .next .body-lg { margin-top: 16px; }
 .next-why { margin-top: 14px; color: var(--ink-2); max-width: 70ch; }
 .early {
@@ -274,6 +323,8 @@ figcaption { font-size: 0.8125rem; color: var(--muted); line-height: 1.55; margi
 .what ul { margin: 10px 0 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; max-width: 70ch; }
 .what li::marker { color: var(--muted); }
 .what b { color: var(--ink); }
+.roles.compact .role { padding: 18px 0; }
+.roles.compact .what p { margin-top: 4px; }
 
 .background { margin-top: 40px; }
 .skills { margin: 0; display: grid; }
@@ -304,6 +355,9 @@ q { quotes: "\201C" "\201D"; font-style: italic; }
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 0.8125rem; color: var(--muted); }
 .site-footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; }
+.foot-links { display: flex; gap: 18px; }
+.foot-links a { text-decoration: none; }
+.foot-links a:hover { color: var(--ink); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
@@ -313,12 +367,17 @@ q { quotes: "\201C" "\201D"; font-style: italic; }
   .stats li:nth-child(n+3) { border-top: 1px solid var(--line); }
   .articles { grid-template-columns: 1fr; }
   .flint-grid { grid-template-columns: 1fr; gap: 32px; }
+  .cards { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
   :root { --gutter: 16px; }
   body { font-size: 16px; }
   .hero { padding-top: 56px; padding-bottom: 64px; }
+  .page-head { padding: 36px 0 60px; }
+  .card-preview { height: 120px; padding: 0 16px; }
+  .flint-preview { width: calc(100% + 32px); margin: 0 -16px; }
+  .card-body { padding: 18px 16px; }
   .section { padding: 60px 0; }
   .section.tight { padding: 40px 0; }
   .stats strong { font-size: 2.25rem; }

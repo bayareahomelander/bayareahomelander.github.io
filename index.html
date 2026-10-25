@@ -6,25 +6,25 @@
   <title>Paco Sun · ML Engineer, LLM Inference</title>
   <meta name="description" content="Paco Sun is a machine learning engineer in Vancouver working on LLM inference: fine-tuning, serving, and speculative decoding. Creator of Onyx.">
   <meta property="og:title" content="Paco Sun · ML Engineer, LLM Inference">
-  <meta property="og:description" content="Making large language models faster to run, without changing what they say.">
+  <meta property="og:description" content="Paco Sun is a machine learning engineer in Vancouver working on LLM inference: fine-tuning, serving, and speculative decoding. Creator of Onyx.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="#top">Paco Sun</a>
-      <nav aria-label="Sections">
-        <a href="#onyx">Onyx</a>
-        <a href="#experience">Experience</a>
-        <a href="#writing">Writing</a>
-        <a href="#contact">Contact</a>
+      <a class="brand" href="/">Paco Sun</a>
+      <nav aria-label="Site">
+        <a href="/#work">Work</a>
+        <a href="/writing/">Writing</a>
+        <a href="/resume/">Resume</a>
+        <a href="/#contact">Contact</a>
       </nav>
     </div>
   </header>
@@ -40,292 +40,114 @@
       </p>
       <p class="sub">
         Previously at Z.AI, where I fine-tuned GLM models and cut serving latency by 28%.
-        Since then I've built <a href="#onyx">Onyx</a>, an open-source inference engine,
-        and written a <a href="#writing">from-first-principles series</a> on how transformers work.
-        Now I'm building <a href="#flint">Flint</a>, GPT-2 from scratch on hand-written CUDA kernels.
+        Since then I've built <a href="/onyx/">Onyx</a>, an open-source inference engine,
+        and written a <a href="/writing/">from-first-principles series</a> on how transformers work.
+        Now I'm building <a href="/flint/">Flint</a>, GPT-2 from scratch on hand-written CUDA kernels.
         Based in Vancouver.
       </p>
       <ul class="links">
         <li><a href="https://github.com/bayareahomelander">GitHub</a></li>
         <li><a href="https://medium.com/@pacosun">Medium</a></li>
         <li><a href="mailto:SunweichenP@Gmail.com">Email</a></li>
+        <li><a href="/resume/">Resume</a></li>
       </ul>
     </section>
 
-    <!-- Featured project -->
-    <section class="section" id="onyx" aria-labelledby="onyx-title">
+    <!-- Work. Always pair Flint with its subtitle; no repo link before v0.1. -->
+    <section class="section" id="work" aria-labelledby="work-title">
       <div class="wrap">
-        <p class="eyebrow">Featured project</p>
-        <div class="project-head">
-          <h2 id="onyx-title">Onyx</h2>
-          <p class="project-tag">Grammar-constrained LLM inference engine</p>
-        </div>
-        <p class="body-lg">
-          Onyx makes an 8B model generate up to 2.4&times; faster while producing exactly the
-          same output, token for token. A small draft model guesses ahead; the large target
-          model checks every guess in one pass and keeps only what it agrees with. A Rust grammar
-          engine forces every token to fit a regex or JSON Schema, so structured output is valid
-          by construction.
-        </p>
-
-        <ul class="stats" aria-label="Onyx results">
-          <li><strong>1.49&times;</strong><span>faster overall across a 48-request benchmark, output identical</span></li>
-          <li><strong>2.44&times;</strong><span>faster on code; 2.1&times; on JSON Schema and regex output</span></li>
-          <li><strong>0.3 ms</strong><span>added time to first token, down from 637 ms</span></li>
-          <li><strong>1.45&times;</strong><span>on Apple Silicon (MLX, 4-bit), in a separate implementation</span></li>
-        </ul>
-
-        <div class="onyx-grid">
-          <figure class="panel demo" aria-labelledby="demo-cap">
-            <div class="panel-top">
-              <span class="panel-title">Speculative decoding, one round at a time</span>
-              <span class="phase" aria-live="off" data-phase>&nbsp;</span>
+        <p class="eyebrow">Selected work</p>
+        <h2 id="work-title" class="section-title">Projects</h2>
+        <div class="cards">
+          <a class="card" href="/onyx/">
+            <div class="card-preview" aria-hidden="true">
+              <div class="demo-line mini" data-demo></div>
             </div>
-            <div class="demo-line" data-demo aria-hidden="true"></div>
-            <dl class="demo-count">
-              <div><dt>Tokens</dt><dd data-tokens>0</dd></div>
-              <div><dt>Target passes</dt><dd data-passes>0</dd></div>
-              <div><dt>Target alone</dt><dd data-alone>0 passes</dd></div>
-            </dl>
-            <ul class="legend" aria-hidden="true">
-              <li><span class="tok draft">draft</span> proposed by the 0.5B draft</li>
-              <li><span class="tok rejected">bad</span> rejected by the target</li>
-              <li><span class="tok target">own</span> the target's own token</li>
-            </ul>
-            <figcaption id="demo-cap">
-              Illustration. Each round the draft proposes up to three tokens; the 8B target scores
-              them all in one forward pass, keeps the longest prefix it agrees with, then adds its
-              own next token. The draft has its own cost, so the real benchmark speedup is
-              1.49&times;, not the ratio of passes shown here.
-            </figcaption>
-          </figure>
-
-          <figure class="panel chart" aria-labelledby="chart-cap">
-            <div class="panel-top">
-              <span class="panel-title" id="chart-cap">Speedup over the target model alone, by workload</span>
-            </div>
-            <table class="bars">
-              <caption class="sr-only">Onyx speedup over Qwen3-8B alone on an RTX 2080 Ti, by workload</caption>
-              <thead>
-                <tr><th scope="col">Workload</th><th scope="col" class="n">Cases</th><th scope="col">Speedup</th></tr>
-              </thead>
-              <tbody>
-                <tr style="--v:2.44"><th scope="row">Code</th><td class="n">6</td><td><div class="cell"><span class="bar"></span><span class="val">2.44&times;</span></div></td></tr>
-                <tr style="--v:2.11"><th scope="row">JSON Schema output</th><td class="n">4</td><td><div class="cell"><span class="bar"></span><span class="val">2.11&times;</span></div></td></tr>
-                <tr style="--v:2.07"><th scope="row">Regex-constrained output</th><td class="n">4</td><td><div class="cell"><span class="bar"></span><span class="val">2.07&times;</span></div></td></tr>
-                <tr style="--v:1.85"><th scope="row">Information extraction</th><td class="n">6</td><td><div class="cell"><span class="bar"></span><span class="val">1.85&times;</span></div></td></tr>
-                <tr style="--v:1.62"><th scope="row">Mixed prompts</th><td class="n">9</td><td><div class="cell"><span class="bar"></span><span class="val">1.62&times;</span></div></td></tr>
-                <tr style="--v:1.39"><th scope="row">Output that changes pattern</th><td class="n">3</td><td><div class="cell"><span class="bar"></span><span class="val">1.39&times;</span></div></td></tr>
-                <tr style="--v:1.22"><th scope="row">Prose</th><td class="n">8</td><td><div class="cell"><span class="bar"></span><span class="val">1.22&times;</span></div></td></tr>
-                <tr style="--v:1.13"><th scope="row">Short replies</th><td class="n">8</td><td><div class="cell"><span class="bar"></span><span class="val">1.13&times;</span></div></td></tr>
-                <tr class="total" style="--v:1.49"><th scope="row">All cases</th><td class="n">48</td><td><div class="cell"><span class="bar"></span><span class="val">1.49&times;</span></div></td></tr>
-              </tbody>
-            </table>
-            <ul class="chart-key">
-              <li><span class="swatch base" aria-hidden="true"></span>Qwen3-8B alone (1.0&times;)</li>
-              <li><span class="swatch gain" aria-hidden="true"></span>Gain from speculation</li>
-            </ul>
-            <figcaption>
-              Greedy decoding on an RTX 2080 Ti. Both runs enforce the same constraints, so the gain
-              comes from speculation alone. Every output matched the target's token for token.
-            </figcaption>
-          </figure>
-        </div>
-
-        <div class="how">
-          <h3>How it got there</h3>
-          <ul>
-            <li>
-              <strong>The draft runs as hand-written CUDA graphs.</strong>
-              Reimplementing the draft's decoder step over a static KV cache cut it from
-              7.5–9.8 to 4.1–4.4 ms per token, and raised the overall speedup from 1.17&times;
-              to 1.49&times; in one week.
-            </li>
-            <li>
-              <strong>Output stays bitwise-identical.</strong>
-              Scoring several positions at once can round differently in FP16. When the top two
-              scores are within rounding of each other, Onyx replays the history one token at a time
-              from a clean checkpoint, using CUDA graphs in 8-token blocks.
-            </li>
-            <li>
-              <strong>Grammar masks live on the GPU.</strong>
-              A Rust engine (regex DFAs and a stack-based JSON Schema parser, exposed through PyO3)
-              works out which tokens are legal in each state. Caching those scans by grammar state
-              lifted long constrained outputs from 0.49–0.99&times; to as high as 2.0&times;.
-            </li>
-            <li>
-              <strong>Speculation costs almost nothing up front.</strong>
-              The draft prefills the prompt only after the target has picked the first token, which
-              cut speculation's added time to first token from 637 ms to 0.3 ms.
-            </li>
-          </ul>
-          <p class="stack" aria-label="Built with">
-            <span>Python</span><span>Rust</span><span>CUDA</span><span>PyTorch</span><span>MLX</span><span>PyO3</span><span>FastAPI</span>
-          </p>
-          <p class="cta-row">
-            <a class="btn" href="https://github.com/bayareahomelander/Onyx">View on GitHub</a>
-            <a class="btn ghost" href="https://github.com/bayareahomelander/Onyx/blob/main/onyx_cuda/README.md#demo">Watch the side-by-side demos</a>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- In progress. Always pair the name with its subtitle; no repo link before v0.1. -->
-    <section class="section" id="flint" aria-labelledby="flint-title">
-      <div class="wrap">
-        <div class="next">
-          <p class="eyebrow">In progress · v0.1 in December 2026</p>
-          <h2 id="flint-title">Flint <span class="project-tag">GPT-2 from scratch on hand-written CUDA kernels</span></h2>
-          <p class="body-lg">
-            A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
-            Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
-          </p>
-          <p class="next-why">
-            Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
-            kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
-            PyTorch, but still hand matrix multiplies and attention to NVIDIA's libraries and target
-            newer GPUs with BF16. The question here is how close hand-written kernels can get to
-            cuBLAS when nothing is borrowed, on a Turing GPU that FlashAttention-2 doesn't support,
-            with the same kernels carried through to inference.
-          </p>
-          <p class="early">
-            <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
-            every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
-          </p>
-
-          <div class="flint-grid">
-            <div class="how">
-              <h3>What makes it hard</h3>
-              <ul>
-                <li>
-                  <strong>A tensor-core matrix multiply in inline PTX.</strong>
-                  All three layouts training needs, deterministic split-K, and bias, GELU and
-                  residual-add fused into the output stage. Turing lacks the async copies newer GEMMs
-                  rely on, and the main loop sits at the 128-register limit.
-                </li>
-                <li>
-                  <strong>Flash attention, forward and backward.</strong>
-                  Deterministic with no atomics, inside Turing's 64 KB of shared memory.
-                </li>
-                <li>
-                  <strong>FP16 training, since Turing has no BF16.</strong>
-                  Loss scaling throughout; every kernel's error must stay within <span class="nw">2–3&times;</span> of
-                  PyTorch's own FP16 error against an FP32 reference, and runs are bit-identical.
-                </li>
-                <li>
-                  <strong>Honest measurement.</strong>
-                  Each kernel is reported as a share of cuBLAS from interleaved runs, and as a share
-                  of hardware peak at the clock the GPU actually ran at.
-                </li>
+            <div class="card-body">
+              <p class="card-kicker">Open source · Python, Rust, CUDA</p>
+              <h3>Onyx <span class="project-tag">Grammar-constrained LLM inference engine</span></h3>
+              <p>Speculative decoding that makes an 8B model up to 2.4&times; faster, with output identical to the model alone, token for token.</p>
+              <ul class="card-stats">
+                <li><b>1.49&times;</b> overall</li>
+                <li><b>2.44&times;</b> on code</li>
+                <li><b>0.3 ms</b> added first-token time</li>
               </ul>
+              <span class="card-more">How it works</span>
             </div>
-            <div>
-              <h3>Roadmap</h3>
-              <ol class="roadmap">
-                <li><span class="when">Dec 2026</span><span><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</span></li>
-                <li><span class="when">2027</span><span><b>Training:</b> GPT-2 124M end to end on these kernels.</span></li>
-                <li><span class="when">2027</span><span><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</span></li>
-              </ol>
+          </a>
+          <a class="card in-progress" href="/flint/">
+            <div class="card-preview" aria-hidden="true">
+              <div class="flint-preview" data-flint-preview></div>
             </div>
-          </div>
-
-          <p class="stack" aria-label="Built with">
-            <span>C++17</span><span>CUDA</span><span>Inline PTX</span><span>CMake</span><span>pytest</span><span>Nsight Compute</span><span>compute-sanitizer</span>
-          </p>
-          <p class="note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Experience -->
-    <section class="section" id="experience" aria-labelledby="exp-title">
-      <div class="wrap">
-        <p class="eyebrow">Background</p>
-        <h2 id="exp-title" class="section-title">Experience</h2>
-
-        <ol class="roles">
-          <li class="role">
-            <div class="when">2025 – now</div>
-            <div class="what">
-              <h3>Independent <span class="at">Vancouver</span></h3>
-              <p>Built Onyx, an open-source inference engine. Now building Flint, GPT-2 from scratch
-                 on hand-written CUDA kernels. Writing a step-by-step series on how LLMs work.</p>
+            <div class="card-body">
+              <p class="card-kicker">In progress · v0.1 in December 2026</p>
+              <h3>Flint <span class="project-tag">GPT-2 from scratch on hand-written CUDA kernels</span></h3>
+              <p>Trains GPT-2 (124M) on one consumer GPU and then serves it, with every kernel written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.</p>
+              <p class="card-note">Early result: its matrix multiply already runs at over 80% of cuBLAS on every GPT-2 layer shape.</p>
+              <span class="card-more">Read more</span>
             </div>
-          </li>
-
-          <li class="role">
-            <div class="when">2022 – 2025</div>
-            <div class="what">
-              <h3>Machine Learning Engineer <span class="at">Z.AI · Remote, Canada</span></h3>
-              <ul>
-                <li>Fine-tuned GLM-family LLMs with LoRA and 4-bit QLoRA: <b>+8%</b> multilingual benchmark accuracy at roughly <b>30% lower</b> training cost than full fine-tuning.</li>
-                <li>Cut median serving latency by <b>28%</b> under multi-user load with TensorRT-LLM, Flash Attention, KV-cache reuse, and continuous batching.</li>
-                <li>Built automated retraining and evaluation pipelines (Docker, Kubernetes, MLflow, TensorBoard), taking routine experiments from multiple days to <b>under 24 hours</b>.</li>
-                <li>Prototyped retrieval-augmented generation with vector search and reranking: <b>+7%</b> factual accuracy on internal evaluations.</li>
-                <li>Profiled model bottlenecks and compared quantization settings with engineering and research teams before deployment.</li>
-              </ul>
-            </div>
-          </li>
-
-          <li class="role">
-            <div class="when">2019 – 2021</div>
-            <div class="what">
-              <h3>Data Science Research Assistant <span class="at">University of British Columbia</span></h3>
-              <ul>
-                <li>Analyzed 5,000+ social media observations with pandas and NumPy to find behavioral patterns across demographic groups, supporting two research presentations.</li>
-                <li>Built supervised models over 200+ engineered features: <b>+10%</b> precision over a logistic-regression baseline.</li>
-              </ul>
-            </div>
-          </li>
-
-          <li class="role">
-            <div class="when">2019</div>
-            <div class="what">
-              <h3>Data Scientist Intern <span class="at">TikTok · Shanghai</span></h3>
-              <ul>
-                <li>Designed SQL cleaning and validation workflows for recommendation analytics, cutting inconsistent records by <b>22%</b>.</li>
-                <li>Evaluated experiments across 400,000+ user interactions with A/B tests and confidence intervals, identifying changes tied to a <b>9%</b> engagement lift.</li>
-              </ul>
-            </div>
-          </li>
-        </ol>
-
-        <div class="background">
-          <dl class="skills">
-            <div><dt>Inference</dt><dd>TensorRT-LLM, MLX, PyTorch/CUDA, Flash Attention, continuous batching, speculative decoding, KV-cache optimization, quantization</dd></div>
-            <div><dt>Machine learning</dt><dd>PyTorch, Transformers, TensorFlow, scikit-learn, LoRA/QLoRA, RAG, vector search, reranking</dd></div>
-            <div><dt>MLOps</dt><dd>FastAPI, Docker, Kubernetes, MLflow, TensorBoard</dd></div>
-            <div><dt>Languages</dt><dd>Python, Rust, C++, CUDA</dd></div>
-            <div><dt>Education</dt><dd>Bachelor's degree, University of British Columbia, 2016 – 2021</dd></div>
-          </dl>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Writing -->
-    <section class="section" id="writing" aria-labelledby="writing-title">
+    <section class="section" aria-labelledby="writing-title">
       <div class="wrap">
         <p class="eyebrow">Writing</p>
         <h2 id="writing-title" class="section-title">From Text to Next Token</h2>
         <p class="body-lg">
           A series that follows one prompt, <q>The cat sat on the</q>, through every stage of a
-          transformer. No metaphors: the arithmetic is worked by hand on a model small enough to
-          follow, with a runnable NumPy snippet at each step.
+          transformer, with the arithmetic worked by hand. The latest three:
         </p>
-
-        <ol class="articles">
-          <li><a class="t" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7">What Actually Happens When You Send a Prompt to an LLM?</a><span class="d">The whole path from a typed prompt to the first generated token.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10">Your LLM Doesn’t Read Words</a><span class="d">Why tokenization trips models up on counting the r’s in “strawberry.”</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e">How an LLM Knows “King” Is Closer to “Queen” Than to “Fridge”</a><span class="d">How an embedding lookup turns token IDs into vectors.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c">How a Transformer Tells “Dog Chased Cat” From “Cat Chased Dog”</a><span class="d">Giving each token its position in the sequence.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a">What Is Attention Actually Calculating?</a><span class="d">Five tokens through dot products and causal masking, by hand.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5">Where Do Queries, Keys, and Values Come From?</a><span class="d">The learned projections that feed attention.</span></li>
+        <ol class="articles latest" style="counter-reset: art 6">
           <li><a class="t" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0">Why One Attention Head Isn’t Enough</a><span class="d">Two heads on the same tokens, then concatenation and projection.</span></li>
           <li><a class="t" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468">Attention Is Only Half of a Transformer Block</a><span class="d">Residuals, layer normalization, and the feed-forward network.</span></li>
           <li><a class="t" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417">How an LLM Scores Every Token It Could Say Next</a><span class="d">From the final state to logits and softmax probabilities.</span></li>
         </ol>
         <p class="cta-row">
-          <a class="btn ghost" href="https://medium.com/@pacosun">Read the series on Medium</a>
+          <a class="btn ghost" href="/writing/">All nine articles</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" aria-labelledby="exp-title">
+      <div class="wrap">
+        <p class="eyebrow">Background</p>
+        <h2 id="exp-title" class="section-title">Experience</h2>
+        <ol class="roles compact">
+          <li class="role">
+            <div class="when">2025 – now</div>
+            <div class="what">
+              <h3>Independent <span class="at">Vancouver</span></h3>
+              <p>Building Onyx and Flint (GPT-2 from scratch on hand-written CUDA kernels), and writing the series above.</p>
+            </div>
+          </li>
+          <li class="role">
+            <div class="when">2022 – 2025</div>
+            <div class="what">
+              <h3>Machine Learning Engineer <span class="at">Z.AI · Remote, Canada</span></h3>
+              <p>Fine-tuned GLM models with LoRA and QLoRA (<b>+8%</b> multilingual accuracy) and cut median serving latency by <b>28%</b> with TensorRT-LLM.</p>
+            </div>
+          </li>
+          <li class="role">
+            <div class="when">2019 – 2021</div>
+            <div class="what">
+              <h3>Data Science Research Assistant <span class="at">University of British Columbia</span></h3>
+              <p>Supervised models over 200+ engineered features: <b>+10%</b> precision over baseline.</p>
+            </div>
+          </li>
+          <li class="role">
+            <div class="when">2019</div>
+            <div class="what">
+              <h3>Data Scientist Intern <span class="at">TikTok · Shanghai</span></h3>
+              <p>A/B test analysis across 400,000+ user interactions, tied to a <b>9%</b> engagement lift.</p>
+            </div>
+          </li>
+        </ol>
+        <p class="cta-row">
+          <a class="btn ghost" href="/resume/">Full resume</a>
         </p>
       </div>
     </section>
@@ -346,10 +168,9 @@
   <footer class="site-footer">
     <div class="wrap">
       <span>&copy; 2026 Paco Sun</span>
-      <span>Plain HTML and CSS, hosted on GitHub Pages</span>
+      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
     </div>
   </footer>
-
-  <script src="script.js" defer></script>
+  <script src="/script.js" defer></script>
 </body>
 </html>

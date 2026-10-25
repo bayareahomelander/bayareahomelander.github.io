@@ -1,0 +1,39 @@
+/* Resume page: reuses the experience styles from /styles.css, plus a print layout. */
+.resume-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px 32px; }
+.resume h1 { font-family: var(--serif); font-size: clamp(3rem, 8vw, 4.5rem); line-height: 0.95; letter-spacing: -0.01em; }
+.resume-role { font-size: 1.25rem; margin-top: 12px; }
+.resume-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font-family: var(--mono); font-size: 0.8125rem; color: var(--muted); }
+.resume-contact a { text-decoration: none; }
+.resume-contact a:hover { color: var(--ink); }
+.resume-summary { margin-top: 24px; max-width: 70ch; color: var(--ink-2); }
+.resume.page-head { padding-bottom: 40px; }
+
+.resume-block { padding: 36px 0; border-top: 1px solid var(--line); }
+.resume-h { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.resume-block .roles { margin-top: 0; }
+.resume-block .role:last-child { border-bottom: 0; }
+.resume-block .what h3 a { text-decoration-color: var(--line); }
+.resume-line { margin-top: 12px; color: var(--ink-2); max-width: 70ch; }
+
+@media print {
+  @page { margin: 14mm; }
+  :root {
+    --bg: #fff; --surface: #fff; --ink: #000; --ink-2: #222; --muted: #555; --line: #ccc; --accent: #000;
+    color-scheme: light;
+  }
+  body { font-size: 9.5pt; line-height: 1.4; background: #fff; }
+  .site-header, .site-footer, .skip, .print-btn { display: none !important; }
+  .wrap { max-width: none; padding: 0; }
+  .resume.page-head { padding: 0 0 10pt; }
+  .resume h1 { font-size: 24pt; }
+  .resume-role { font-size: 11pt; margin-top: 4pt; }
+  .resume-contact { font-size: 8.5pt; margin-top: 6pt; }
+  .resume-summary { margin-top: 8pt; }
+  .resume-block { padding: 8pt 0; }
+  .role { grid-template-columns: 80pt 1fr; gap: 10pt; padding: 6pt 0; break-inside: avoid; }
+  .role:first-child { padding-top: 4pt; }
+  .what h3 { font-size: 10.5pt; }
+  .what ul { gap: 1pt; margin-top: 3pt; }
+  .skills div { grid-template-columns: 80pt 1fr; gap: 10pt; padding: 3pt 0; }
+  a { color: inherit; text-decoration: none; }
+}
