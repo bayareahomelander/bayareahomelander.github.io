@@ -349,6 +349,31 @@ function initPage() {
     const whenVisible = () => (visible ? Promise.resolve() : new Promise((r) => waiting.push(r)));
     const setPhase = (t) => { phaseEl.textContent = t || " "; };
 
+    // Reserve the tallest state any workload can reach (every committed token plus a full
+    // round of boxed drafts) so the token area never grows mid-animation.
+    const reserve = () => {
+      if (!line.offsetWidth) return; // not laid out yet; the CSS fallback applies
+      const probe = line.cloneNode(false);
+      probe.removeAttribute("data-line");
+      probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;min-height:0;width:${line.offsetWidth}px`;
+      line.parentNode.appendChild(probe);
+      let max = 0;
+      for (const w of WORKLOADS) {
+        probe.replaceChildren();
+        for (const [draft, accept, own] of w.rounds) {
+          draft.slice(0, accept).forEach((t) => probe.append(tok(t)));
+          if (own) probe.append(tok(own, "target"));
+        }
+        [" draft", " draft", " draft"].forEach((t) => probe.append(tok(t, "draft")));
+        max = Math.max(max, probe.offsetHeight);
+      }
+      probe.remove();
+      line.style.minHeight = `${max}px`;
+    };
+    reserve();
+    let rz = 0;
+    window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(reserve, 150); });
+
     const render = () => {
       tokensEl.textContent = tokens;
       passesEl.textContent = passes;
