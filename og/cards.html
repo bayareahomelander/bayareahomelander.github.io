@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>OG cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf8f4;--ink:#1a1917;--ink2:#3d3a35;--muted:#6b675f;--line:#e4dfd5;--accent:#c2410c;--soft:#fdeee4}
+*{box-sizing:border-box;margin:0}
+html,body{width:1200px;height:627px;overflow:hidden;background:var(--bg);color:var(--ink)}
+.card{display:none;position:relative;width:1200px;height:627px;padding:72px 80px;border-top:6px solid var(--accent)}
+.card:target,.card.on{display:block}
+.label{font:500 20px 'IBM Plex Mono',monospace;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+h1{font:400 120px/1 'Instrument Serif',serif;letter-spacing:-.02em;margin-top:48px}
+.sub{font:400 30px/1.4 'IBM Plex Sans',sans-serif;color:var(--ink2);margin-top:24px;max-width:700px}
+.url{position:absolute;left:80px;bottom:56px;font:400 20px 'IBM Plex Mono',monospace;color:var(--muted)}
+.chips{position:absolute;right:80px;bottom:56px;display:flex;gap:12px;align-items:flex-start}
+.chip{font:400 28px 'IBM Plex Mono',monospace;padding:8px 14px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:4px;white-space:pre}
+.chip.d{color:var(--accent);background:var(--soft);border:1px dashed var(--accent)}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.id{font:400 18px 'IBM Plex Mono',monospace;color:var(--muted)}
+.stats{display:flex;gap:56px;margin-top:36px}
+.stat{font:400 64px/1 'Instrument Serif',serif;color:var(--ink)}
+.stat b{font-weight:400;color:var(--accent)}
+.note{font:400 18px 'IBM Plex Mono',monospace;color:var(--muted);margin-top:14px}
+.grid{position:absolute;right:80px;top:150px;display:grid;grid-template-columns:repeat(6,48px);gap:10px}
+.grid i{width:48px;height:48px;border:1px solid var(--line);background:#fff;border-radius:4px}
+.grid i.t{background:var(--soft);border-color:#f0c9ae}
+.grid i.a{background:var(--accent);border-color:var(--accent)}
+</style></head><body>
+<section class="card" id="home">
+ <div class="label">ML engineer · LLM inference</div><h1>Paco Sun</h1>
+ <p class="sub">Fine-tuning, serving, and decoding that runs faster without changing a single output token.</p>
+ <div class="chips" style="bottom:130px;right:80px"><span class="chip">The</span><span class="chip d"> cat</span><span class="chip">sat</span><span class="chip d"> on</span></div>
+ <div class="url">bayareahomelander.github.io</div></section>
+<section class="card" id="onyx">
+ <div class="label">Open source</div><h1>Onyx</h1>
+ <p class="sub">Grammar-constrained LLM inference engine</p>
+ <div class="stats"><div class="stat"><b>1.49×</b> overall</div><div class="stat"><b>2.44×</b> on code</div></div>
+ <div class="note">RTX 2080 Ti · output identical token for token</div>
+ <div class="chips" style="right:80px;top:90px;bottom:auto"><span class="chip">{"</span><span class="chip d">id</span><span class="chip">":</span><span class="chip d"> 7</span></div>
+ <div class="url">bayareahomelander.github.io</div></section>
+<section class="card" id="flint">
+ <div class="label">In progress · v0.1 December 2026</div><h1>Flint</h1>
+ <p class="sub">GPT-2 from scratch on hand-written CUDA kernels</p>
+ <div class="grid" style="top:130px"><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i></i><i class="a"></i><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i></i><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i></i></div>
+ <div class="url">bayareahomelander.github.io</div></section>
+<section class="card" id="writing">
+ <div class="label">Writing · Medium</div><h1 style="font-size:96px">From Text to Next Token</h1>
+ <p class="sub">One prompt through every stage of a transformer, worked by hand.</p>
+ <div class="chips" style="bottom:56px;right:80px"><div class="col"><span class="chip">The</span><span class="id">464</span></div><div class="col"><span class="chip d"> cat</span><span class="id">3797</span></div><div class="col"><span class="chip"> sat</span><span class="id">3332</span></div><div class="col"><span class="chip"> on</span><span class="id">319</span></div><div class="col"><span class="chip"> the</span><span class="id">262</span></div></div>
+ <div class="url" style="bottom:56px">bayareahomelander.github.io</div></section>
+<script>if(!location.hash)document.getElementById('home').classList.add('on')</script>
+</body></html>
