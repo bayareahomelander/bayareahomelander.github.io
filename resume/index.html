@@ -8,17 +8,17 @@
   <meta property="og:title" content="Resume · Paco Sun · ML Engineer, LLM Inference">
   <meta property="og:description" content="Resume of Paco Sun, machine learning engineer in Vancouver working on LLM inference.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=2">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=3">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Paco Sun, ML engineer focused on LLM inference">
   <meta property="og:url" content="https://bayareahomelander.github.io/resume/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a5c36'/%3E%3Ctext x='16' y='24' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='%23ffffff' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='5.5' cy='5.5' r='2.5' fill='%23ffffff'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
   <script data-goatcounter="https://pacosun.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/resume/resume.css">
@@ -26,9 +26,10 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="/">Paco Sun</a>
+  <header class="strip">
+    <div class="wrap strip-in">
+      <a class="wordmark" href="/">Paco Sun</a>
+      <p class="docline"><a href="/">Front page</a> &rsaquo; Resume</p>
       <nav aria-label="Site">
         <a href="/#work">Work</a>
         <a href="/writing/">Writing</a>
@@ -39,138 +40,175 @@
   </header>
 
   <main id="main">
-    <section class="page-head resume" aria-labelledby="resume-title">
-      <div class="wrap">
-        <div class="resume-top">
-          <div>
-            <h1 id="resume-title">Paco Sun</h1>
-            <p class="resume-role">Machine Learning Engineer · LLM inference</p>
-            <p class="resume-contact">
-              <span>Vancouver, Canada</span>
-              <a href="mailto:SunweichenP@Gmail.com">SunweichenP@Gmail.com</a>
-              <a href="https://github.com/bayareahomelander">github.com/bayareahomelander</a>
-              <a href="https://medium.com/@pacosun">medium.com/@pacosun</a>
-              <a href="https://bayareahomelander.github.io">bayareahomelander.github.io</a>
-            </p>
-          </div>
-          <a class="btn print-btn" href="/resume/Paco-Sun-Resume.pdf" download>Download PDF</a>
-        </div>
-        <p class="resume-summary">
+    <!-- Title block and status box -->
+    <section class="wrap front" id="resume" aria-labelledby="resume-title">
+      <div class="title">
+        <h1 id="resume-title">Paco Sun</h1>
+        <p class="role">Machine Learning Engineer&nbsp;·&nbsp;LLM inference</p>
+        <p class="desc">
           Machine learning engineer focused on LLM inference: fine-tuning, serving, and speculative decoding.
           Built Onyx, an open-source engine that makes an 8B model up to 2.4&times; faster with output
           identical to the model alone, token for token.
         </p>
+        <p class="contact">
+          <span>Vancouver, Canada</span>
+          <a href="https://github.com/bayareahomelander">github.com/bayareahomelander</a>
+          <a href="https://medium.com/@pacosun">medium.com/@pacosun</a>
+          <a href="https://bayareahomelander.github.io">bayareahomelander.github.io</a>
+        </p>
       </div>
+
+      <aside class="status-box" aria-labelledby="status-title">
+        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-active">Active</span></h2>
+        <dl class="box-list">
+          <div><dt>Availability</dt><dd>Available now</dd></div>
+          <div><dt>Open to</dt><dd>ML engineering roles</dd></div>
+          <div><dt>Work mode</dt><dd>Remote, on-site or hybrid in Vancouver, or relocating</dd></div>
+        </dl>
+        <div class="box-act">
+          <a class="btn" href="mailto:SunweichenP@Gmail.com">Email SunweichenP@Gmail.com</a>
+          <a class="btn btn-quiet" href="/resume/Paco-Sun-Resume.pdf" download>Download PDF</a>
+        </div>
+      </aside>
     </section>
 
-    <section class="resume-block" aria-labelledby="r-exp">
-      <div class="wrap">
-        <h2 id="r-exp" class="resume-h">Experience</h2>
-        <ol class="roles">
-          <li class="role">
-            <div class="when">2025 – now</div>
-            <div class="what">
-              <h3>Independent <span class="at">Vancouver</span></h3>
+    <!-- 1 Experience -->
+    <section class="wrap sec first" aria-labelledby="r-exp">
+      <h2 class="sec-head" id="r-exp"><span class="num">1</span> Experience</h2>
+      <table class="ds res">
+        <caption class="sr-only">Experience</caption>
+        <colgroup><col class="c-when"><col class="c-role"><col></colgroup>
+        <thead>
+          <tr><th scope="col">Period</th><th scope="col">Role</th><th scope="col">Highlights</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="when" data-label="Period">2025 – now</td>
+            <th scope="row"><span class="res-name">Independent</span><span class="res-org">Vancouver</span></th>
+            <td data-label="Highlights">
               <p>Built Onyx, an open-source inference engine. Now building Flint, GPT-2 from scratch
                  on hand-written CUDA kernels. Writing a step-by-step series on how LLMs work.</p>
-            </div>
-          </li>
+            </td>
+          </tr>
 
-          <li class="role">
-            <div class="when">2022 – 2025</div>
-            <div class="what">
-              <h3>Machine Learning Engineer <span class="at">Z.AI · Remote, Canada</span></h3>
-              <ul>
+          <tr class="prime">
+            <td class="when" data-label="Period">2022 – 2025</td>
+            <th scope="row"><span class="res-name">Machine Learning Engineer</span><span class="res-org">Z.AI · Remote, Canada</span></th>
+            <td data-label="Highlights">
+              <ul class="pts">
                 <li>Fine-tuned GLM-family LLMs with LoRA and 4-bit QLoRA: <b>+8%</b> multilingual benchmark accuracy at roughly <b>30% lower</b> training cost than full fine-tuning.</li>
                 <li>Cut median serving latency by <b>28%</b> under multi-user load with TensorRT-LLM, Flash Attention, KV-cache reuse, and continuous batching.</li>
                 <li>Built automated retraining and evaluation pipelines (Docker, Kubernetes, MLflow, TensorBoard), taking routine experiments from multiple days to <b>under 24 hours</b>.</li>
                 <li>Prototyped retrieval-augmented generation with vector search and reranking: <b>+7%</b> factual accuracy on internal evaluations.</li>
                 <li>Profiled model bottlenecks and compared quantization settings with engineering and research teams before deployment.</li>
               </ul>
-            </div>
-          </li>
+            </td>
+          </tr>
 
-          <li class="role">
-            <div class="when">2019 – 2021</div>
-            <div class="what">
-              <h3>Data Science Research Assistant <span class="at">University of British Columbia</span></h3>
-              <ul>
+          <tr>
+            <td class="when" data-label="Period">2019 – 2021</td>
+            <th scope="row"><span class="res-name">Data Science Research Assistant</span><span class="res-org">University of British Columbia</span></th>
+            <td data-label="Highlights">
+              <ul class="pts">
                 <li>Analyzed 5,000+ social media observations with pandas and NumPy to find behavioral patterns across demographic groups, supporting two research presentations.</li>
                 <li>Built supervised models over 200+ engineered features: <b>+10%</b> precision over a logistic-regression baseline.</li>
               </ul>
-            </div>
-          </li>
+            </td>
+          </tr>
 
-          <li class="role">
-            <div class="when">2019</div>
-            <div class="what">
-              <h3>Data Scientist Intern <span class="at">TikTok · Shanghai</span></h3>
-              <ul>
+          <tr>
+            <td class="when" data-label="Period">2019</td>
+            <th scope="row"><span class="res-name">Data Scientist Intern</span><span class="res-org">TikTok · Shanghai</span></th>
+            <td data-label="Highlights">
+              <ul class="pts">
                 <li>Designed SQL cleaning and validation workflows for recommendation analytics, cutting inconsistent records by <b>22%</b>.</li>
                 <li>Evaluated experiments across 400,000+ user interactions with A/B tests and confidence intervals, identifying changes tied to a <b>9%</b> engagement lift.</li>
               </ul>
-            </div>
-          </li>
-        </ol>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
-    <!-- Always pair Flint with its subtitle; no repo link before v0.1. -->
-    <section class="resume-block" aria-labelledby="r-proj">
-      <div class="wrap">
-        <h2 id="r-proj" class="resume-h">Projects</h2>
-        <ol class="roles">
-          <li class="role">
-            <div class="when">Open source</div>
-            <div class="what">
-              <h3><a href="https://github.com/bayareahomelander/Onyx">Onyx</a> <span class="at">Grammar-constrained LLM inference engine · Python, Rust, CUDA, MLX</span></h3>
-              <ul>
+    <!-- 2 Projects -->
+    <section class="wrap sec" aria-labelledby="r-proj">
+      <h2 class="sec-head" id="r-proj"><span class="num">2</span> Projects</h2>
+      <table class="ds res proj">
+        <caption class="sr-only">Projects</caption>
+        <colgroup><col class="c-when"><col class="c-role"><col></colgroup>
+        <thead>
+          <tr><th scope="col">Status</th><th scope="col">Project</th><th scope="col">Highlights</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Status"><span class="badge badge-active">Active</span><span class="res-note">Open source</span></td>
+            <th scope="row"><span class="res-name res-proj"><a href="https://github.com/bayareahomelander/Onyx">Onyx</a></span><span class="res-sub">Grammar-constrained LLM inference engine</span><span class="res-stack">Python, Rust, CUDA, MLX</span><span class="res-stack print-only">github.com/bayareahomelander/Onyx</span></th>
+            <td data-label="Highlights">
+              <ul class="pts">
                 <li>Grammar-aware speculative decoding: a Qwen2.5-0.5B draft proposes tokens that a Qwen3-8B FP16 target verifies in one batched pass, with greedy output identical to the target alone. <b>1.49&times;</b> aggregate speedup on a 48-request benchmark (RTX 2080 Ti); <b>2.1–2.4&times;</b> on JSON, regex, and code.</li>
                 <li>Raised the speedup from 1.17&times; to 1.49&times; in one week with hand-written CUDA-graph draft decoding and a deferred draft prefill that cut added time to first token from 637 ms to <b>0.3 ms</b>.</li>
                 <li>Rust grammar engine (regex DFAs and a JSON Schema state machine via PyO3) applied as cached GPU masks; OpenAI-style FastAPI server with SSE streaming; a separate Apple Silicon (MLX) implementation reached <b>1.45&times;</b>.</li>
               </ul>
-            </div>
-          </li>
-          <li class="role">
-            <div class="when">In progress</div>
-            <div class="what">
-              <h3>Flint <span class="at">GPT-2 from scratch on hand-written CUDA kernels · C++17, CUDA, inline PTX</span></h3>
-              <ul>
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Status"><span class="badge badge-preview">Preview</span><span class="res-note">In progress</span></td>
+            <th scope="row"><span class="res-name res-proj">Flint</span><span class="res-sub">GPT-2 from scratch on hand-written CUDA kernels</span><span class="res-stack">C++17, CUDA, inline PTX</span></th>
+            <td data-label="Highlights">
+              <ul class="pts">
                 <li>A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime. v0.1 ships December 2026.</li>
                 <li>Tensor-core matrix multiply in inline PTX with deterministic split-K and fused bias, GELU, and residual-add; it already runs at over <b>80% of cuBLAS</b> on every GPT-2 layer shape.</li>
                 <li>In progress: deterministic flash attention (forward and backward) in 64 KB of shared memory, and FP16 training with loss scaling.</li>
               </ul>
-            </div>
-          </li>
-        </ol>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
-    <section class="resume-block" aria-labelledby="r-writing">
-      <div class="wrap">
-        <h2 id="r-writing" class="resume-h">Writing</h2>
-        <p class="resume-line"><a href="/writing/">From Text to Next Token</a>: a ten-article series on Medium that follows one prompt through every stage of a transformer, with the arithmetic worked by hand.</p>
-      </div>
+    <!-- 3 Writing -->
+    <section class="wrap sec" aria-labelledby="r-writing">
+      <h2 class="sec-head" id="r-writing"><span class="num">3</span> Writing</h2>
+      <table class="ds res">
+        <caption class="sr-only">Writing</caption>
+        <colgroup><col class="c-when"><col class="c-role"><col></colgroup>
+        <thead>
+          <tr><th scope="col">Source</th><th scope="col">Series</th><th scope="col">Summary</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="when" data-label="Source">Medium</td>
+            <th scope="row"><a href="/writing/">From Text to Next Token</a></th>
+            <td data-label="Summary">A ten-article series on Medium that follows one prompt through every stage of a transformer, with the arithmetic worked by hand.</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
-    <section class="resume-block" aria-labelledby="r-skills">
-      <div class="wrap">
-        <h2 id="r-skills" class="resume-h">Skills and education</h2>
-          <dl class="skills">
-            <div><dt>Inference</dt><dd>TensorRT-LLM, MLX, PyTorch/CUDA, Flash Attention, continuous batching, speculative decoding, KV-cache optimization, quantization</dd></div>
-            <div><dt>Machine learning</dt><dd>PyTorch, Transformers, TensorFlow, scikit-learn, LoRA/QLoRA, RAG, vector search, reranking</dd></div>
-            <div><dt>MLOps</dt><dd>FastAPI, Docker, Kubernetes, MLflow, TensorBoard</dd></div>
-            <div><dt>Languages</dt><dd>Python, Rust, C++, CUDA</dd></div>
-            <div><dt>Education</dt><dd>Bachelor's degree, University of British Columbia, 2016 – 2021</dd></div>
-          </dl>
-      </div>
+    <!-- 4 Skills and education -->
+    <section class="wrap sec" aria-labelledby="r-skills">
+      <h2 class="sec-head" id="r-skills"><span class="num">4</span> Skills and education</h2>
+      <table class="ds res skills">
+        <caption class="sr-only">Skills and education</caption>
+        <colgroup><col class="c-when"><col></colgroup>
+        <thead>
+          <tr><th scope="col">Area</th><th scope="col">Detail</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Inference</th><td data-label="Detail">TensorRT-LLM, MLX, PyTorch/CUDA, Flash Attention, continuous batching, speculative decoding, KV-cache optimization, quantization</td></tr>
+          <tr><th scope="row">Machine learning</th><td data-label="Detail">PyTorch, Transformers, TensorFlow, scikit-learn, LoRA/QLoRA, RAG, vector search, reranking</td></tr>
+          <tr><th scope="row">MLOps</th><td data-label="Detail">FastAPI, Docker, Kubernetes, MLflow, TensorBoard</td></tr>
+          <tr><th scope="row">Languages</th><td data-label="Detail">Python, Rust, C++, CUDA</td></tr>
+          <tr><th scope="row">Education</th><td data-label="Detail">Bachelor's degree, University of British Columbia, 2016 – 2021</td></tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <span>&copy; 2026 Paco Sun</span>
-      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>&copy; 2026 Paco Sun · bayareahomelander.github.io</span>
+      <nav aria-label="Elsewhere"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></nav>
     </div>
   </footer>
 </body>

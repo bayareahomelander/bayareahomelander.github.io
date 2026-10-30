@@ -1,123 +1,177 @@
-/* Technique visualizers on the project page. Tokens only (see /styles.css). */
-.viz-block { margin-top: 56px; }
-.next .viz-block .viz-title { display: block; font-family: var(--serif); font-size: 1.875rem; line-height: 1.1; letter-spacing: 0; }
-.viz-lead { color: var(--ink-2); max-width: 64ch; margin-top: 12px; }
-.viz { margin-top: 24px; }
-.viz + .viz { margin-top: 20px; }
+/* flint.css: the Flint page as a datasheet. Builds on /site.css (tokens, strip, numbered
+   sections, ruled tables, buttons, badges, front matter, figure frame, legend). */
 
-.viz-phase {
-  font-family: var(--mono); font-size: 0.75rem; color: var(--accent);
-  min-height: 1.3em; margin: -6px 0 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.lab {
+  margin: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+
+/* The document line carries the full pairing (name and subtitle), so it never wraps;
+   below this width the strip has no room for it and the nav carries the way back. */
+.docline { white-space: nowrap; }
+@media (max-width: 920px) { .docline { display: none; } }
+
+/* ---------- Title block and status box ---------- */
+/* The subtitle is part of the title: it sits directly under the name, inside the h1. */
+.h1-sub {
+  display: block; margin-top: 14px;
+  font-size: 1.5rem; font-weight: 600; font-stretch: 100%; line-height: 1.2; letter-spacing: 0;
+}
+.early { color: var(--ink); }
+.box-note {
+  padding: 8px 12px; border-bottom: 1px solid var(--rule);
+  font-size: 0.8125rem; line-height: 1.5; color: var(--muted);
+}
+
+/* ---------- 1 Background ---------- */
+.sec.first .sec-lede { margin-bottom: 0; }
+
+/* ---------- 2 Two techniques: figures ---------- */
+.viz { margin-top: 0; }
+.viz + .viz { margin-top: 24px; }
+
+/* The step label sits on a fixed line so its length never changes the height. */
+.viz .phase {
+  height: 1.35em; margin: 0 0 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .viz-body { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 32px; align-items: start; }
 .viz.wide .viz-body { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
 .viz-svg { display: block; width: 100%; height: auto; }
-.viz-svg text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
-.viz-svg text.big { font-size: 11px; fill: var(--ink-2); }
-.viz-svg text.num { fill: var(--ink); font-variant-numeric: tabular-nums; }
+.viz-svg rect { rx: 0; ry: 0; }
+.viz-svg text { font-family: var(--font); font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.viz-svg text.big { font-size: 11px; font-weight: 600; fill: var(--ink-2); }
+.viz-svg text.num { fill: var(--ink); }
 .viz-svg text.hd { transition: fill 0.3s ease; }
 .viz-svg text.hd.on, .viz-svg text.num.hi { fill: var(--accent); }
-.viz-svg .rule { stroke: var(--line); stroke-width: 1; }
+.viz-svg .rule { stroke: var(--rule); stroke-width: 1; }
 
-/* Shared: step list, meter, controls */
-.stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: st; }
+/* Step list: a ruled table of rows; the current row takes Group Tint with a green number. */
+.stages {
+  list-style: none; margin: 0; padding: 0; counter-reset: st;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+}
 .stages li {
-  counter-increment: st; position: relative; display: grid; grid-template-columns: 1fr; gap: 0;
-  padding: 7px 10px 7px 34px; border: 1px solid transparent; border-radius: 8px;
-  font-size: 0.875rem; color: var(--muted); line-height: 1.4;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  counter-increment: st; position: relative; padding: 7px 10px 7px 36px;
+  font-size: 0.875rem; line-height: 1.4; color: var(--muted);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+.stages li + li { border-top: 1px solid var(--rule); }
 .stages li::before {
-  content: counter(st); position: absolute; left: 10px; top: 7px;
-  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  content: counter(st); position: absolute; left: 12px; top: 7px;
+  font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted);
 }
-.stages li b { font-weight: 600; color: var(--ink-2); }
-.stages li.on { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.stages li b { display: block; font-weight: 700; color: var(--ink-2); }
+.stages li.on { background: var(--tint-2); color: var(--ink); }
 .stages li.on::before, .stages li.on b { color: var(--accent); }
 .stages li.past { color: var(--ink-2); }
 
 .epi { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.epi .lbl { font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.epi .lbl { margin-right: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .epi li:not(.lbl) {
-  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
-  border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+  padding: 2px 10px; border: 1px dashed var(--muted);
+  font-size: 0.8125rem; font-weight: 600; line-height: 1.5; color: var(--muted);
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
-.epi li.done { color: var(--ink-2); background: var(--ink-soft); }
-.epi li.on { color: var(--ink); background: var(--accent-soft); border-color: var(--accent); }
+.epi li.done { color: var(--ink-2); background: var(--tint); border-style: solid; border-color: var(--rule); }
+.epi li.on { color: var(--ink); background: var(--accent-soft); border: 1px solid var(--accent); }
 
+/* Budget meters: a ruled bar of segments; the segments in use take the verified wash. */
 .meter { margin-top: 18px; }
 .meter-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
-.meter-val { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink); font-variant-numeric: tabular-nums; }
-.meter-bar { display: flex; height: 26px; border: 1px solid var(--ink); border-radius: 6px; overflow: hidden; background: var(--bg); }
-.meter-bar .seg {
+.meter-val { font-size: 0.8125rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.meter-bar { display: flex; gap: 3px; height: 36px; padding: 3px; border: 1px solid var(--ink); background: var(--paper); }
+.m-seg {
   display: flex; align-items: center; justify-content: center; min-width: 0; overflow: hidden; white-space: nowrap;
-  font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-2);
-  background: var(--bar-base); opacity: 0.55; transition: opacity 0.35s ease, background-color 0.35s ease;
+  border-bottom: 3px solid transparent;
+  font-size: 0.6875rem; font-weight: 600; color: var(--muted); background: var(--tint);
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
 }
-.meter-bar .seg + .seg { border-left: 1px solid var(--surface); }
-.meter-bar .seg.on { opacity: 1; background: var(--accent-soft); color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
-.meter-bar .seg.free { background: transparent; opacity: 1; color: var(--muted); border-left-style: dashed; border-left-color: var(--line); }
-.meter-note { font-size: 0.8125rem; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+.m-seg.on { background: var(--accent-soft); color: var(--ink); border-bottom-color: var(--accent); }
+.m-seg.free { background: transparent; border: 1px dashed var(--rule); }
+.meter-note { margin-top: 8px; font-size: 0.8125rem; line-height: 1.5; color: var(--muted); }
 
-.viz-now { margin-top: 16px; min-height: 7.6em; color: var(--ink-2); font-size: 0.9375rem; line-height: 1.5; }
-.viz-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 4px; }
-.vbtn { font-family: var(--sans); cursor: pointer; padding: 8px 16px; min-height: 40px; min-width: 76px; justify-content: center; }
-.viz-count { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-left: 2px; flex-basis: 100%; font-variant-numeric: tabular-nums; }
+/* Reserves three lines (the measured worst case at every width from 390 up), so stepping never moves the controls. */
+.viz-now { margin-top: 16px; min-height: 4.6em; font-size: 0.9375rem; line-height: 1.5; color: var(--ink-2); }
+.viz-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; }
+.viz-controls .btn { min-width: 6.5rem; cursor: pointer; }
+.viz-count { flex-basis: 100%; margin-top: 4px; font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.viz-fact { margin-top: 14px; font-size: 0.875rem; color: var(--ink-2); }
+.viz-noscript { margin-top: 12px; font-size: 0.875rem; color: var(--muted); }
 
-.viz .legend { margin-top: 18px; }
-.viz .legend .sw { display: inline-block; width: 14px; height: 10px; border-radius: 2px; border: 1px solid var(--line); background: var(--surface); flex: none; }
+/* Legend swatches (the legend itself is in site.css) */
+.viz .legend .sw { display: inline-block; flex: none; width: 14px; height: 10px; border: 1px solid var(--rule); background: var(--paper); }
 .viz .legend .sw.fetch { border: 1px dashed var(--accent); }
 .viz .legend .sw.stage { background: var(--accent-soft); border-color: var(--accent); }
-.viz .legend .sw.done { background: var(--bar-base); border-color: var(--bar-base); }
+.viz .legend .sw.done { background: var(--tint-2); }
 .viz .legend .sw.acc { background: var(--accent); opacity: 0.6; border-color: var(--accent); }
-.viz .legend .sw.pbar { background: var(--bar); border-color: var(--bar); }
+.viz .legend .sw.pbar { background: var(--muted); border-color: var(--muted); }
 .viz .legend .sw.warp { border: 1.2px solid var(--muted); }
-.viz-fact { margin-top: 14px; font-size: 0.875rem; color: var(--ink-2); }
-.viz noscript { color: var(--muted); font-size: 0.875rem; }
 
 /* Matrix multiply drawing */
-.viz-svg .strip { fill: var(--surface); stroke: var(--line); stroke-width: 1; transition: fill 0.4s ease, stroke 0.4s ease, fill-opacity 0.4s ease; }
-.viz-svg .strip.done { fill: var(--bar-base); }
+.viz-svg .strip { fill: var(--paper); stroke: var(--rule); stroke-width: 1; transition: fill 0.4s ease, stroke 0.4s ease, fill-opacity 0.4s ease; }
+.viz-svg .strip.done { fill: var(--tint-2); }
 .viz-svg .strip.fetch { stroke: var(--accent); stroke-dasharray: 3 2; }
 .viz-svg .strip.stage { fill: var(--accent-soft); stroke: var(--accent); }
 .viz-svg .strip.frag { fill: var(--accent); fill-opacity: 0.3; stroke: var(--accent); }
 .viz-svg .strip.use { fill: var(--accent); fill-opacity: 0.6; stroke: var(--accent); }
-.viz-svg .cell { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+.viz-svg .cell { fill: var(--paper); stroke: var(--rule); stroke-width: 1; }
 .viz-svg .acc { fill: var(--accent); fill-opacity: 0; pointer-events: none; transition: fill-opacity 0.6s ease, fill 0.6s ease; }
-.viz-svg[data-ph="gelu"] .acc, .viz-svg[data-ph="resid"] .acc, .viz-svg[data-ph="store"] .acc { fill: var(--bar); }
+.viz-svg[data-ph="gelu"] .acc, .viz-svg[data-ph="resid"] .acc, .viz-svg[data-ph="store"] .acc { fill: var(--muted); }
 .viz-svg .warp { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: 0.7; transition: stroke 0.3s ease, opacity 0.3s ease; }
 .viz-svg .warp.on { stroke: var(--accent); opacity: 1; }
 .viz-svg[data-ph="store"] .warp { stroke: var(--ink); opacity: 1; stroke-width: 1.6; }
-.viz-svg .ghost { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 3 3; opacity: 0.55; transition: opacity 0.3s ease, stroke 0.3s ease; }
+.viz-svg .ghost { fill: var(--paper); stroke: var(--muted); stroke-dasharray: 3 3; opacity: 0.55; transition: opacity 0.3s ease, stroke 0.3s ease; }
 .viz-svg .ghost.on { opacity: 1; stroke: var(--accent); }
-.viz-svg .bias { fill: var(--surface); stroke: var(--line); transition: fill 0.3s ease, stroke 0.3s ease; }
+.viz-svg .bias { fill: var(--paper); stroke: var(--rule); transition: fill 0.3s ease, stroke 0.3s ease; }
 .viz-svg .bias.on { fill: var(--accent-soft); stroke: var(--accent); }
 
 /* Attention drawing */
-.viz-svg .chip { fill: var(--surface); stroke: var(--line); stroke-dasharray: 3 2; transition: fill 0.4s ease, stroke 0.4s ease; }
-.viz-svg .chip.done { fill: var(--bar-base); stroke: var(--bar-base); stroke-dasharray: none; }
+.viz-svg .chip { fill: var(--paper); stroke: var(--rule); stroke-dasharray: 3 2; transition: fill 0.4s ease, stroke 0.4s ease; }
+.viz-svg .chip.done { fill: var(--tint-2); stroke: var(--tint-2); stroke-dasharray: none; }
 .viz-svg .chip.on { fill: var(--accent-soft); stroke: var(--accent); stroke-dasharray: none; }
 .viz-svg .link { fill: none; stroke: var(--accent); stroke-width: 1.2; transition: opacity 0.3s ease; }
 .viz-svg .qc { fill: var(--accent-soft); stroke: var(--accent); }
-.viz-svg .sc { stroke: var(--line); stroke-width: 1; transition: opacity 0.5s ease, fill-opacity 0.5s ease; }
+.viz-svg .sc { stroke: var(--rule); stroke-width: 1; transition: opacity 0.5s ease, fill-opacity 0.5s ease; }
 .viz-svg .sc.s { fill: var(--accent); }
-.viz-svg .sc.p { fill: var(--bar); }
-.viz-svg .oc { fill: var(--surface); stroke: var(--line); }
-.viz-svg .ob { fill: var(--bar); transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.7s ease, fill 0.4s ease; }
+.viz-svg .sc.p { fill: var(--muted); }
+.viz-svg .oc { fill: var(--paper); stroke: var(--rule); }
+.viz-svg .ob { fill: var(--muted); transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.7s ease, fill 0.4s ease; }
 .viz-svg .ob.fin { fill: var(--accent); }
 
+/* ---------- 3 What makes it hard ---------- */
+.how { list-style: none; padding: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.how li { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 0 32px; padding: 14px 12px; }
+.how li + li { border-top: 1px solid var(--rule); }
+.how h3 { display: flex; align-items: baseline; gap: 0.7em; font-size: 1rem; font-weight: 700; font-stretch: 92%; line-height: 1.25; }
+.how .num { flex: none; color: var(--accent); font-variant-numeric: tabular-nums; }
+.how p { max-width: 70ch; color: var(--ink-2); }
+
+/* ---------- 4 Roadmap ---------- */
+.road .c-when { width: 9rem; }
+.road td { color: var(--ink-2); }
+.road td b { color: var(--ink); }
+
+/* ---------- Tablet and phone ---------- */
 @media (max-width: 760px) {
   .viz-body, .viz.wide .viz-body { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .viz-svg { max-width: 420px; margin: 0 auto; }
-  .viz-now { min-height: 7.6em; }
-  .viz-block { margin-top: 44px; }
+  .viz-svg { max-width: 420px; margin-inline: auto; }
+
+  .how li { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 8px; }
+
+  /* Two columns: the date becomes the row's first line, the milestone follows without a label. */
+  .road tbody th[scope="row"] { padding-bottom: 2px; }
+  .road td[data-label] { padding-left: 0; }
+  .road td[data-label]::before { content: none; }
 }
+
+@media (max-width: 359px) {
+  .viz-now { min-height: 6.1em; }
+}
+
 @media (max-width: 640px) {
-  .next .viz-block .viz-title { font-size: 1.625rem; }
-  .vbtn { padding: 8px 12px; min-width: 0; flex: 1 1 auto; }
-  .viz-count { flex-basis: 100%; margin-left: 0; }
+  .h1-sub { font-size: 1.3125rem; }
+  .viz-controls .btn { flex: 1 1 auto; min-width: 0; padding-inline: 12px; }
 }
+
 @media (prefers-reduced-motion: reduce) {
   .viz *, .viz *::before { transition: none !important; }
 }

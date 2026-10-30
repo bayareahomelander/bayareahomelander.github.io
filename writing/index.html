@@ -8,17 +8,17 @@
   <meta property="og:title" content="From Text to Next Token · Writing · Paco Sun">
   <meta property="og:description" content="A series that follows one prompt through every stage of a transformer, with the arithmetic worked by hand and runnable NumPy at each step.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/writing.png?v=2">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/writing.png?v=3">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="From Text to Next Token, an article on transformers">
   <meta property="og:url" content="https://bayareahomelander.github.io/writing/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a5c36'/%3E%3Ctext x='16' y='24' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='%23ffffff' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='5.5' cy='5.5' r='2.5' fill='%23ffffff'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
   <script data-goatcounter="https://pacosun.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/writing/writing.css">
@@ -27,9 +27,10 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="/">Paco Sun</a>
+  <header class="strip">
+    <div class="wrap strip-in">
+      <a class="wordmark" href="/">Paco Sun</a>
+      <p class="docline"><a href="/">Front page</a> &rsaquo; Writing</p>
       <nav aria-label="Site">
         <a href="/#work">Work</a>
         <a href="/writing/" aria-current="page">Writing</a>
@@ -40,112 +41,186 @@
   </header>
 
   <main id="main">
-    <section class="page-head" id="writing" aria-labelledby="writing-title">
-      <div class="wrap">
-        <p class="eyebrow">Writing</p>
-        <h1 id="writing-title" class="section-title">From Text to Next Token</h1>
-        <p class="body-lg">
+    <!-- Title block and status box -->
+    <section class="wrap front" id="writing" aria-labelledby="writing-title">
+      <div class="title">
+        <h1 id="writing-title">From Text to Next Token</h1>
+        <p class="desc">
           A series that follows one prompt, <q>The cat sat on the</q>, through every stage of a
           transformer. No metaphors: the arithmetic is worked by hand on a model small enough to
           follow, with a runnable NumPy snippet at each step.
         </p>
+      </div>
 
-        <div class="tmap" id="tmap">
-          <p class="eyebrow tmap-eyebrow">The path of one prompt</p>
-          <div class="tmap-grid">
-            <ol class="tmap-list" aria-label="Stages of the transformer, in order">
+      <aside class="status-box" aria-labelledby="status-title">
+        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-active">Active</span></h2>
+        <dl class="box-list">
+          <div><dt>Published</dt><dd>10 articles</dd></div>
+          <div><dt>Platform</dt><dd>Medium</dd></div>
+          <div><dt>Format</dt><dd>Worked by hand, with NumPy</dd></div>
+          <div><dt>Next</dt><dd>More stages coming</dd></div>
+        </dl>
+        <div class="box-act">
+          <a class="btn" href="https://medium.com/@pacosun">Read the series on Medium</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- 1 Functional Block Diagram: the transformer map (writing.js) -->
+    <section class="wrap sec first" aria-labelledby="map-title">
+      <h2 class="sec-head" id="map-title"><span class="num">1</span> Functional Block Diagram</h2>
+      <figure class="tmap" id="tmap" aria-labelledby="tmap-cap">
+        <div class="tmap-grid">
+          <ol class="tmap-list" aria-label="Stages of the transformer, in order">
             <li class="is-overview" data-i="0">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">01</span><span class="nm">The whole path</span></button>
-                <a class="go" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7" aria-label="Read article: The whole path">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7" aria-label="Read article: The whole path">Read</a>
               </div>
             </li>
             <li data-i="1">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">02</span><span class="nm">Text → tokens</span></button>
-                <a class="go" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10" aria-label="Read article: Text → tokens">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10" aria-label="Read article: Text → tokens">Read</a>
               </div>
             </li>
             <li data-i="2">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">03</span><span class="nm">Token IDs → embeddings</span></button>
-                <a class="go" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e" aria-label="Read article: Token IDs → embeddings">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e" aria-label="Read article: Token IDs → embeddings">Read</a>
               </div>
             </li>
             <li data-i="3">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">04</span><span class="nm">Adding position</span></button>
-                <a class="go" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c" aria-label="Read article: Adding position">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c" aria-label="Read article: Adding position">Read</a>
               </div>
             </li>
             <li data-i="4">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">05</span><span class="nm">Attention scores and causal mask</span></button>
-                <a class="go" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a" aria-label="Read article: Attention scores and causal mask">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a" aria-label="Read article: Attention scores and causal mask">Read</a>
               </div>
             </li>
             <li data-i="5">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">06</span><span class="nm">Queries, keys, values</span></button>
-                <a class="go" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5" aria-label="Read article: Queries, keys, values">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5" aria-label="Read article: Queries, keys, values">Read</a>
               </div>
             </li>
             <li data-i="6">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">07</span><span class="nm">Multiple heads</span></button>
-                <a class="go" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0" aria-label="Read article: Multiple heads">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0" aria-label="Read article: Multiple heads">Read</a>
               </div>
             </li>
             <li data-i="7">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">08</span><span class="nm">Residual, layer norm, feed-forward</span></button>
-                <a class="go" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468" aria-label="Read article: Residual, layer norm, feed-forward">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468" aria-label="Read article: Residual, layer norm, feed-forward">Read</a>
               </div>
             </li>
             <li data-i="8">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">09</span><span class="nm">Final state → logits → softmax</span></button>
-                <a class="go" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417" aria-label="Read article: Final state → logits → softmax">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417" aria-label="Read article: Final state → logits → softmax">Read</a>
               </div>
             </li>
             <li data-i="9">
               <div class="row">
                 <button type="button" class="node" aria-pressed="false" aria-controls="tmap-panel"><span class="num">10</span><span class="nm">Sampling the next token</span></button>
-                <a class="go" href="https://medium.com/@pacosun/why-can-the-same-prompt-produce-different-answers-3d35af5d63f4" aria-label="Read article: Sampling the next token">Read<span aria-hidden="true"> ↗</span></a>
+                <a class="go" href="https://medium.com/@pacosun/why-can-the-same-prompt-produce-different-answers-3d35af5d63f4" aria-label="Read article: Sampling the next token">Read</a>
               </div>
             </li>
             <li class="is-coming"><div class="row"><span class="node"><span class="num">&middot;&middot;&middot;</span><span class="nm">More stages coming</span></span></div></li>
-            </ol>
-            <div class="tmap-side">
-              <div class="panel tmap-panel" id="tmap-panel" role="region" aria-label="Stage detail"></div>
-            </div>
+          </ol>
+          <div class="tmap-side">
+            <div class="tmap-panel" id="tmap-panel" role="region" aria-label="Stage detail"></div>
           </div>
-          <p class="tmap-hint">Select a stage to preview it; each links to its article. The full list follows below.</p>
         </div>
+        <figcaption class="fig-cap" id="tmap-cap"><b>Figure 1.</b> The path of one prompt. Select a stage to preview it; each links to its article. The full list follows below.</figcaption>
+      </figure>
+    </section>
 
-        <ol class="articles">
-          <li><a class="t" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7">What Actually Happens When You Send a Prompt to an LLM?</a><span class="d">The whole path from a typed prompt to the first generated token.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10">Your LLM Doesn’t Read Words</a><span class="d">Why tokenization trips models up on counting the r’s in “strawberry.”</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e">How an LLM Knows “King” Is Closer to “Queen” Than to “Fridge”</a><span class="d">How an embedding lookup turns token IDs into vectors.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c">How a Transformer Tells “Dog Chased Cat” From “Cat Chased Dog”</a><span class="d">Giving each token its position in the sequence.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a">What Is Attention Actually Calculating?</a><span class="d">Five tokens through dot products and causal masking, by hand.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5">Where Do Queries, Keys, and Values Come From?</a><span class="d">The learned projections that feed attention.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0">Why One Attention Head Isn’t Enough</a><span class="d">Two heads on the same tokens, then concatenation and projection.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468">Attention Is Only Half of a Transformer Block</a><span class="d">Residuals, layer normalization, and the feed-forward network.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417">How an LLM Scores Every Token It Could Say Next</a><span class="d">From the final state to logits and softmax probabilities.</span></li>
-          <li><a class="t" href="https://medium.com/@pacosun/why-can-the-same-prompt-produce-different-answers-3d35af5d63f4">Why Can the Same Prompt Produce Different Answers?</a><span class="d">Greedy decoding, temperature, top-k, and top-p, applied to one distribution.</span></li>
-        </ol>
-        <p class="cta-row">
-          <a class="btn ghost" href="https://medium.com/@pacosun">Read the series on Medium</a>
-        </p>
-      </div>
+    <!-- 2 Application Notes: one row per article. A new article is one more row here,
+         a node in writing.js, and the counts on the home page, the resume and the status box above. -->
+    <section class="wrap sec" aria-labelledby="notes-title">
+      <h2 class="sec-head" id="notes-title"><span class="num">2</span> Application Notes</h2>
+      <table class="ds notes articles">
+        <colgroup><col class="c-no"><col class="c-title"><col><col class="c-src"></colgroup>
+        <thead>
+          <tr><th scope="col">No.</th><th scope="col">Title</th><th scope="col">Summary</th><th scope="col">Source</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="no" data-label="No.">01</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/what-actually-happens-when-you-send-a-prompt-to-an-llm-86ff65577ba7">What Actually Happens When You Send a Prompt to an LLM?</a></th>
+            <td class="d" data-label="Summary">The whole path from a typed prompt to the first generated token.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">02</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/your-llm-doesnt-read-words-c2fdaa803c10">Your LLM Doesn’t Read Words</a></th>
+            <td class="d" data-label="Summary">Why tokenization trips models up on counting the r’s in “strawberry.”</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">03</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/how-does-an-integer-become-meaning-cb5763c9936e">How an LLM Knows “King” Is Closer to “Queen” Than to “Fridge”</a></th>
+            <td class="d" data-label="Summary">How an embedding lookup turns token IDs into vectors.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">04</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/a-transformer-needs-to-know-where-words-are-87474ce7447c">How a Transformer Tells “Dog Chased Cat” From “Cat Chased Dog”</a></th>
+            <td class="d" data-label="Summary">Giving each token its position in the sequence.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">05</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/what-is-attention-calculating-09760ac9509a">What Is Attention Actually Calculating?</a></th>
+            <td class="d" data-label="Summary">Five tokens through dot products and causal masking, by hand.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">06</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/where-do-queries-keys-and-values-come-from-9a28771308e5">Where Do Queries, Keys, and Values Come From?</a></th>
+            <td class="d" data-label="Summary">The learned projections that feed attention.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">07</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/why-are-there-multiple-attention-heads-dfc8e03cfeb0">Why One Attention Head Isn’t Enough</a></th>
+            <td class="d" data-label="Summary">Two heads on the same tokens, then concatenation and projection.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">08</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/what-happens-after-attention-087b733be468">Attention Is Only Half of a Transformer Block</a></th>
+            <td class="d" data-label="Summary">Residuals, layer normalization, and the feed-forward network.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">09</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/how-does-the-model-turn-its-final-state-into-words-e1f06dba1417">How an LLM Scores Every Token It Could Say Next</a></th>
+            <td class="d" data-label="Summary">From the final state to logits and softmax probabilities.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+          <tr>
+            <td class="no" data-label="No.">10</td>
+            <th scope="row"><a class="t" href="https://medium.com/@pacosun/why-can-the-same-prompt-produce-different-answers-3d35af5d63f4">Why Can the Same Prompt Produce Different Answers?</a></th>
+            <td class="d" data-label="Summary">Greedy decoding, temperature, top-k, and top-p, applied to one distribution.</td>
+            <td data-label="Source">Medium</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <span>&copy; 2026 Paco Sun</span>
-      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>&copy; 2026 Paco Sun · bayareahomelander.github.io</span>
+      <nav aria-label="Elsewhere"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></nav>
     </div>
   </footer>
 </body>

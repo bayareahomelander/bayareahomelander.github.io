@@ -3,3 +3,8 @@ Paco Sun Resume 2026.md
 
 # Local tooling
 .claude/
+
+# Design tooling (Impeccable): local only, not part of the public site
+PRODUCT.md
+DESIGN.md
+.impeccable/

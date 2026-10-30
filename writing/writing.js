@@ -5,7 +5,7 @@
   const panel = document.getElementById('tmap-panel');
   const side = root.querySelector('.tmap-side');
   const items = [...root.querySelectorAll('.tmap-list > li[data-i]')];
-  const articles = [...document.querySelectorAll('ol.articles > li')].map((li) => ({
+  const articles = [...document.querySelectorAll('table.articles tbody tr')].map((li) => ({
     href: li.querySelector('a.t').href,
     title: li.querySelector('a.t').textContent.trim(),
     desc: li.querySelector('.d').textContent.trim(),
@@ -207,10 +207,9 @@
     const v = visuals[i]();
     const isOv = i === 0;
     panel.innerHTML =
-      `<div class="panel-top"><span class="panel-title">${'Article ' + String(i + 1).padStart(2, '0') + (isOv ? ' · Overview' : '')}</span></div>` +
-      `<h3>${NAMES[i]}</h3>` +
+      `<h3><span class="num"><span class="sr-only">Article </span>${String(i + 1).padStart(2, '0')}</span> <span>${NAMES[i]}</span>${isOv ? '<span class="sr-only"> (overview)</span>' : ''}</h3>` +
       `<p class="art">${a.title}</p><p class="desc">${a.desc}</p>` +
-      `<p class="read"><a href="${a.href}">Read article<span aria-hidden="true"> ↗</span></a></p>` +
+      `<p class="read"><a href="${a.href}">Read article</a></p>` +
       `<figure class="viz" style="margin-bottom:0"><div class="viz-box">${v.html}</div>${v.cap}</figure>`;
     items.forEach((li, k) => {
       const on = k === i;

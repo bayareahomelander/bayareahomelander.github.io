@@ -1,9 +1,9 @@
 /* Home-card preview: a tiled matrix filling in K-step by K-step. Tokens only. */
 .fp { display: block; width: 100%; height: 100%; }
-.fp .t { fill: var(--surface); stroke: var(--muted); stroke-opacity: 0.6; stroke-width: 0.8; }
-.fp .c { fill: var(--accent); fill-opacity: 0; stroke: var(--line); stroke-width: 0.5; transition: fill-opacity 0.9s ease var(--d, 0s); }
-.fp .s { fill: var(--surface); stroke: var(--line); stroke-width: 0.6; transition: fill 0.6s ease, stroke 0.6s ease; }
-.fp .s.done { fill: var(--bar-base); }
+.fp .t { fill: var(--paper); stroke: var(--muted); stroke-opacity: 0.6; stroke-width: 0.8; }
+.fp .c { fill: var(--accent); fill-opacity: 0; stroke: var(--rule); stroke-width: 0.5; transition: fill-opacity 0.9s ease var(--d, 0s); }
+.fp .s { fill: var(--paper); stroke: var(--rule); stroke-width: 0.6; transition: fill 0.6s ease, stroke 0.6s ease; }
+.fp .s.done { fill: var(--tint-2); }
 .fp .s.cur { fill: var(--accent-soft); stroke: var(--accent); }
 .fp[data-k="1"] .c { fill-opacity: 0.1; }
 .fp[data-k="2"] .c { fill-opacity: 0.2; }

@@ -8,17 +8,17 @@
   <meta property="og:title" content="Flint · GPT-2 from scratch on hand-written CUDA kernels · Paco Sun">
   <meta property="og:description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/flint.png?v=2">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/flint.png?v=3">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Flint, GPT-2 from scratch on hand-written CUDA kernels">
   <meta property="og:url" content="https://bayareahomelander.github.io/flint/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a5c36'/%3E%3Ctext x='16' y='24' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='%23ffffff' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='5.5' cy='5.5' r='2.5' fill='%23ffffff'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
   <script data-goatcounter="https://pacosun.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/flint/flint.css">
@@ -27,9 +27,10 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="/">Paco Sun</a>
+  <header class="strip">
+    <div class="wrap strip-in">
+      <a class="wordmark" href="/">Paco Sun</a>
+      <p class="docline"><a href="/#work">All work</a> &rsaquo; Flint, GPT-2 from scratch on hand-written CUDA kernels</p>
       <nav aria-label="Site">
         <a href="/#work" aria-current="true">Work</a>
         <a href="/writing/">Writing</a>
@@ -40,201 +41,235 @@
   </header>
 
   <main id="main">
-    <!-- Always pair the name with its subtitle; no repo link before v0.1. -->
-    <section class="page-head" id="flint" aria-labelledby="flint-title">
-      <div class="wrap">
-        <div class="next is-page">
-          <a class="crumb" href="/#work">All work</a>
-          <p class="eyebrow">In progress · v0.1 in December 2026</p>
-          <h1 id="flint-title">Flint <span class="project-tag">GPT-2 from scratch on hand-written CUDA kernels</span></h1>
-          <p class="body-lg">
-            A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
-            Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
-          </p>
-          <p class="next-why">
-            Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
-            kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
-            PyTorch, but still hand matrix multiplies and attention to NVIDIA's libraries and target
-            newer GPUs with BF16. The question here is how close hand-written kernels can get to
-            cuBLAS when nothing is borrowed, on a Turing GPU that FlashAttention-2 doesn't support,
-            with the same kernels carried through to inference.
-          </p>
-          <p class="early">
-            <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
-            every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
-          </p>
-
-          <!-- VISUALIZERS: generic technique explainers; no performance numbers, no hardware details. -->
-          <div class="viz-block" aria-labelledby="viz-title">
-            <h2 class="viz-title" id="viz-title">Two techniques, step by step</h2>
-            <p class="viz-lead">
-              The two kernels at the heart of the project, drawn generically. Press play, or step
-              through one stage at a time.
-            </p>
-
-            <figure class="panel viz" data-viz="gemm" aria-labelledby="gemm-t">
-              <div class="panel-top">
-                <span class="panel-title" id="gemm-t">Tensor-core matrix multiply: one thread block's tile of C = A &times; B</span>
-              </div>
-              <div class="viz-phase" data-phase aria-hidden="true">&nbsp;</div>
-              <div class="viz-body">
-                <div class="viz-main">
-                  <svg class="viz-svg" data-svg viewBox="0 0 240 246" role="img"
-                       aria-label="A matrix on the left, B matrix on top, and the C output tile, split into four warp tiles of tensor-core fragments. The K dimension is walked in four steps."></svg>
-                  <p class="viz-now" data-now aria-live="polite"></p>
-                  <div class="viz-controls">
-                    <button type="button" class="btn vbtn" data-act="play">Play</button>
-                    <button type="button" class="btn ghost vbtn" data-act="step">Step</button>
-                    <button type="button" class="btn ghost vbtn" data-act="restart">Restart</button>
-                    <span class="viz-count" data-count>Step 0 / 20</span>
-                  </div>
-                </div>
-                <div class="viz-side">
-                  <ol class="stages" aria-label="Where the tile is during a K-step" data-stages>
-                    <li><b>Global memory</b><span>A and B tiles for this K-step</span></li>
-                    <li><b>Registers</b><span>staging buffer, since Turing has no async copy</span></li>
-                    <li><b>Shared memory</b><span>the tile every warp reads from</span></li>
-                    <li><b>Fragments</b><span>operands for the tensor-core instructions</span></li>
-                    <li><b>Accumulators</b><span>the C tile, kept in registers across all of K</span></li>
-                  </ol>
-                  <ul class="epi" aria-label="Output stage, fused" data-epi>
-                    <li class="lbl">Output stage</li>
-                    <li>Bias</li><li>GELU</li><li>Residual add</li><li>Store C</li>
-                  </ul>
-                  <div class="meter" role="img" aria-label="Register budget: the main loop uses 128 of the 128 registers available per thread. Illustrative split between accumulators, fragments, staging and loop state.">
-                    <div class="meter-top">
-                      <span class="panel-title">Registers per thread, main loop</span>
-                      <span class="meter-val">128 / 128</span>
-                    </div>
-                    <div class="meter-bar" aria-hidden="true">
-                      <span class="seg" data-seg="acc" style="flex:56">accumulators</span>
-                      <span class="seg" data-seg="frag" style="flex:28">frags</span>
-                      <span class="seg" data-seg="stg" style="flex:24">staging</span>
-                      <span class="seg" data-seg="loop" style="flex:20">loop</span>
-                    </div>
-                    <p class="meter-note">The loop sits at the 128-register limit, so small changes cost real speed. The split shown is made up.</p>
-                  </div>
-                </div>
-              </div>
-              <ul class="legend" aria-hidden="true">
-                <li><span class="sw fetch"></span>tile in flight</li>
-                <li><span class="sw stage"></span>staged</li>
-                <li><span class="sw acc"></span>in use by tensor cores</li>
-                <li><span class="sw done"></span>consumed</li>
-                <li><span class="sw warp"></span>warp tile (4&times;4 fragments)</li>
-              </ul>
-              <figcaption>
-                Illustration; not the project’s exact configuration. Tile counts and sizes are chosen for legibility.
-              </figcaption>
-              <noscript><p>This step-through needs JavaScript.</p></noscript>
-            </figure>
-
-            <figure class="panel viz wide" data-viz="attn" aria-labelledby="attn-t">
-              <div class="panel-top">
-                <span class="panel-title" id="attn-t">Flash attention, forward pass: online softmax over streamed K/V blocks</span>
-              </div>
-              <div class="viz-phase" data-phase aria-hidden="true">&nbsp;</div>
-              <div class="viz-body">
-                <div class="viz-main">
-                  <svg class="viz-svg" data-svg viewBox="0 0 348 214" role="img"
-                       aria-label="Four query rows held on chip. Three blocks of keys and values stream through. For each block the score tile, the running row max m, the rescale factor alpha, the running sum l and the output accumulator O are updated."></svg>
-                  <p class="viz-now" data-now aria-live="polite"></p>
-                  <div class="viz-controls">
-                    <button type="button" class="btn vbtn" data-act="play">Play</button>
-                    <button type="button" class="btn ghost vbtn" data-act="step">Step</button>
-                    <button type="button" class="btn ghost vbtn" data-act="restart">Restart</button>
-                    <span class="viz-count" data-count>Step 0 / 19</span>
-                  </div>
-                </div>
-                <div class="viz-side">
-                  <ol class="stages" aria-label="Stages of one K/V block" data-stages>
-                    <li><b>Stream in</b><span>a K and V block, Q stays put</span></li>
-                    <li><b>Score tile</b><span>S = Q &middot; K&#7488;</span></li>
-                    <li><b>Running max</b><span>m = max(m, row max of S)</span></li>
-                    <li><b>Exponentiate</b><span>P = exp(S &minus; m); update the running sum l</span></li>
-                    <li><b>Rescale</b><span>O &times; &alpha;, where &alpha; = exp(m<sub>old</sub> &minus; m<sub>new</sub>)</span></li>
-                    <li><b>Accumulate</b><span>O += P &middot; V</span></li>
-                    <li><b>Normalize</b><span>after the last block, O &divide; l</span></li>
-                  </ol>
-                  <div class="meter" role="img" aria-label="Shared-memory budget: Q, K and V tiles use 48 KB of the 64 KB available. Illustrative sizes.">
-                    <div class="meter-top">
-                      <span class="panel-title">Shared memory</span>
-                      <span class="meter-val">48 / 64 KB</span>
-                    </div>
-                    <div class="meter-bar" aria-hidden="true">
-                      <span class="seg" data-seg="q" style="flex:16">Q 16</span>
-                      <span class="seg" data-seg="k" style="flex:16">K 16</span>
-                      <span class="seg" data-seg="v" style="flex:16">V 16</span>
-                      <span class="seg free" style="flex:16">free</span>
-                    </div>
-                    <p class="meter-note">Q, K and V tiles fit within Turing's 64 KB of shared memory. Sizes are illustrative.</p>
-                  </div>
-                  <p class="viz-fact">Forward and backward passes are both deterministic, with no atomics.</p>
-                </div>
-              </div>
-              <ul class="legend" aria-hidden="true">
-                <li><span class="sw acc"></span>scores S (stronger = larger)</li>
-                <li><span class="sw pbar"></span>probabilities P, and O</li>
-                <li><span class="sw stage"></span>block in use</li>
-                <li><span class="sw done"></span>block finished</li>
-              </ul>
-              <figcaption>
-                Illustration; not the project’s exact configuration. Four query rows, three blocks of four keys and a head size of four keep
-                the arithmetic readable; the numbers shown are computed from made-up scores.
-              </figcaption>
-              <noscript><p>This step-through needs JavaScript.</p></noscript>
-            </figure>
-          </div>
-
-          <div class="flint-grid">
-            <div class="how">
-              <h3>What makes it hard</h3>
-              <ul>
-                <li>
-                  <strong>A tensor-core matrix multiply in inline PTX.</strong>
-                  All three layouts training needs, deterministic split-K, and bias, GELU and
-                  residual-add fused into the output stage. Turing lacks the async copies newer GEMMs
-                  rely on, and the main loop sits at the 128-register limit.
-                </li>
-                <li>
-                  <strong>Flash attention, forward and backward.</strong>
-                  Deterministic with no atomics, inside Turing's 64 KB of shared memory.
-                </li>
-                <li>
-                  <strong>FP16 training, since Turing has no BF16.</strong>
-                  Loss scaling throughout; every kernel's error must stay within <span class="nw">2–3&times;</span> of
-                  PyTorch's own FP16 error against an FP32 reference, and runs are bit-identical.
-                </li>
-                <li>
-                  <strong>Honest measurement.</strong>
-                  Each kernel is reported as a share of cuBLAS from interleaved runs, and as a share
-                  of hardware peak at the clock the GPU actually ran at.
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3>Roadmap</h3>
-              <ol class="roadmap">
-                <li><span class="when">Dec 2026</span><span><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</span></li>
-                <li><span class="when">2027</span><span><b>Training:</b> GPT-2 124M end to end on these kernels.</span></li>
-                <li><span class="when">2027</span><span><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</span></li>
-              </ol>
-            </div>
-          </div>
-
-          <p class="stack" aria-label="Built with">
-            <span>C++17</span><span>CUDA</span><span>Inline PTX</span><span>CMake</span><span>pytest</span><span>Nsight Compute</span><span>compute-sanitizer</span>
-          </p>
-          <p class="note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
-        </div>
+        <!-- Title block and status box -->
+    <section class="wrap front" id="flint" aria-labelledby="flint-title">
+      <div class="title">
+        <h1 id="flint-title">Flint <span class="h1-sub">GPT-2 from scratch on hand-written CUDA kernels</span></h1>
+        <p class="desc">
+          A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
+          Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
+        </p>
+        <p class="desc early">
+          <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
+          every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
+        </p>
       </div>
+
+      <aside class="status-box" aria-labelledby="status-title">
+        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-preview">Preview</span></h2>
+        <dl class="box-list">
+          <div><dt>Stage</dt><dd>In progress</dd></div>
+          <div><dt>Release</dt><dd>v0.1 in December 2026</dd></div>
+          <div><dt>Built with</dt><dd>C++17, CUDA, Inline PTX, CMake, pytest, Nsight Compute, compute-sanitizer</dd></div>
+        </dl>
+        <p class="box-note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
+        <div class="box-act">
+          <a class="btn" href="#techniques">See the two techniques</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- 1 Background -->
+    <section class="wrap sec first" aria-labelledby="bg-title">
+      <h2 class="sec-head" id="bg-title"><span class="num">1</span> Background</h2>
+      <p class="sec-lede">
+        Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
+        kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
+        PyTorch, but still hand matrix multiplies and attention to NVIDIA's libraries and target
+        newer GPUs with BF16. The question here is how close hand-written kernels can get to
+        cuBLAS when nothing is borrowed, on a Turing GPU that FlashAttention-2 doesn't support,
+        with the same kernels carried through to inference.
+      </p>
+    </section>
+
+    <!-- 2 Two techniques -->
+    <section class="wrap sec" id="techniques" aria-labelledby="viz-title">
+      <h2 class="sec-head" id="viz-title"><span class="num">2</span> Two techniques, step by step</h2>
+      <p class="sec-lede">
+        The two kernels at the heart of the project, drawn generically. Press play, or step
+        through one stage at a time.
+      </p>
+
+      <figure class="fig viz" data-viz="gemm" aria-labelledby="gemm-t">
+        <div class="fig-frame">
+          <div class="fig-head">
+            <span class="fig-title" id="gemm-t">Tensor-core matrix multiply: one thread block's tile of C = A &times; B</span>
+            <span class="badge badge-illus">Illustration</span>
+          </div>
+          <div class="fig-body">
+            <div class="phase" data-phase aria-hidden="true">&nbsp;</div>
+            <div class="viz-body">
+              <div class="viz-main">
+                <svg class="viz-svg" data-svg viewBox="0 0 240 246" role="img"
+                     aria-label="A matrix on the left, B matrix on top, and the C output tile, split into four warp tiles of tensor-core fragments. The K dimension is walked in four steps."></svg>
+                <p class="viz-now" data-now aria-live="polite"></p>
+                <div class="viz-controls">
+                  <button type="button" class="btn" data-act="play">Play</button>
+                  <button type="button" class="btn btn-quiet" data-act="step">Step</button>
+                  <button type="button" class="btn btn-quiet" data-act="restart">Restart</button>
+                  <span class="viz-count" data-count>Step 0 / 20</span>
+                </div>
+              </div>
+              <div class="viz-side">
+                <ol class="stages" aria-label="Where the tile is during a K-step" data-stages>
+                  <li><b>Global memory</b><span>A and B tiles for this K-step</span></li>
+                  <li><b>Registers</b><span>staging buffer, since Turing has no async copy</span></li>
+                  <li><b>Shared memory</b><span>the tile every warp reads from</span></li>
+                  <li><b>Fragments</b><span>operands for the tensor-core instructions</span></li>
+                  <li><b>Accumulators</b><span>the C tile, kept in registers across all of K</span></li>
+                </ol>
+                <ul class="epi" aria-label="Output stage, fused" data-epi>
+                  <li class="lbl">Output stage</li>
+                  <li>Bias</li><li>GELU</li><li>Residual add</li><li>Store C</li>
+                </ul>
+                <div class="meter" role="img" aria-label="Register budget: the main loop uses 128 of the 128 registers available per thread. Illustrative split between accumulators, fragments, staging and loop state.">
+                  <div class="meter-top">
+                    <span class="lab">Registers per thread, main loop</span>
+                    <span class="meter-val">128 / 128</span>
+                  </div>
+                  <div class="meter-bar" aria-hidden="true">
+                    <span class="m-seg" data-seg="acc" style="flex:56">accumulators</span>
+                    <span class="m-seg" data-seg="frag" style="flex:28">frags</span>
+                    <span class="m-seg" data-seg="stg" style="flex:24">staging</span>
+                    <span class="m-seg" data-seg="loop" style="flex:20">loop</span>
+                  </div>
+                  <p class="meter-note">The loop sits at the 128-register limit, so small changes cost real speed. The split shown is made up.</p>
+                </div>
+              </div>
+            </div>
+            <ul class="legend" aria-hidden="true">
+              <li><span class="sw fetch"></span>tile in flight</li>
+              <li><span class="sw stage"></span>staged</li>
+              <li><span class="sw acc"></span>in use by tensor cores</li>
+              <li><span class="sw done"></span>consumed</li>
+              <li><span class="sw warp"></span>warp tile (4&times;4 fragments)</li>
+            </ul>
+            <noscript><p class="viz-noscript">This step-through needs JavaScript.</p></noscript>
+          </div>
+        </div>
+        <figcaption class="fig-cap">
+          <b>Figure 1.</b> Illustration; not the project’s exact configuration. Tile counts and sizes are chosen for legibility.
+        </figcaption>
+      </figure>
+
+      <figure class="fig viz wide" data-viz="attn" aria-labelledby="attn-t">
+        <div class="fig-frame">
+          <div class="fig-head">
+            <span class="fig-title" id="attn-t">Flash attention, forward pass: online softmax over streamed K/V blocks</span>
+            <span class="badge badge-illus">Illustration</span>
+          </div>
+          <div class="fig-body">
+            <div class="phase" data-phase aria-hidden="true">&nbsp;</div>
+            <div class="viz-body">
+              <div class="viz-main">
+                <svg class="viz-svg" data-svg viewBox="0 0 348 214" role="img"
+                     aria-label="Four query rows held on chip. Three blocks of keys and values stream through. For each block the score tile, the running row max m, the rescale factor alpha, the running sum l and the output accumulator O are updated."></svg>
+                <p class="viz-now" data-now aria-live="polite"></p>
+                <div class="viz-controls">
+                  <button type="button" class="btn" data-act="play">Play</button>
+                  <button type="button" class="btn btn-quiet" data-act="step">Step</button>
+                  <button type="button" class="btn btn-quiet" data-act="restart">Restart</button>
+                  <span class="viz-count" data-count>Step 0 / 19</span>
+                </div>
+              </div>
+              <div class="viz-side">
+                <ol class="stages" aria-label="Stages of one K/V block" data-stages>
+                  <li><b>Stream in</b><span>a K and V block, Q stays put</span></li>
+                  <li><b>Score tile</b><span>S = Q &middot; K&#7488;</span></li>
+                  <li><b>Running max</b><span>m = max(m, row max of S)</span></li>
+                  <li><b>Exponentiate</b><span>P = exp(S &minus; m); update the running sum l</span></li>
+                  <li><b>Rescale</b><span>O &times; &alpha;, where &alpha; = exp(m<sub>old</sub> &minus; m<sub>new</sub>)</span></li>
+                  <li><b>Accumulate</b><span>O += P &middot; V</span></li>
+                  <li><b>Normalize</b><span>after the last block, O &divide; l</span></li>
+                </ol>
+                <div class="meter" role="img" aria-label="Shared-memory budget: Q, K and V tiles use 48 KB of the 64 KB available. Illustrative sizes.">
+                  <div class="meter-top">
+                    <span class="lab">Shared memory</span>
+                    <span class="meter-val">48 / 64 KB</span>
+                  </div>
+                  <div class="meter-bar" aria-hidden="true">
+                    <span class="m-seg" data-seg="q" style="flex:16">Q 16</span>
+                    <span class="m-seg" data-seg="k" style="flex:16">K 16</span>
+                    <span class="m-seg" data-seg="v" style="flex:16">V 16</span>
+                    <span class="m-seg free" style="flex:16">free</span>
+                  </div>
+                  <p class="meter-note">Q, K and V tiles fit within Turing's 64 KB of shared memory. Sizes are illustrative.</p>
+                </div>
+                <p class="viz-fact">Forward and backward passes are both deterministic, with no atomics.</p>
+              </div>
+            </div>
+            <ul class="legend" aria-hidden="true">
+              <li><span class="sw acc"></span>scores S (stronger = larger)</li>
+              <li><span class="sw pbar"></span>probabilities P, and O</li>
+              <li><span class="sw stage"></span>block in use</li>
+              <li><span class="sw done"></span>block finished</li>
+            </ul>
+            <noscript><p class="viz-noscript">This step-through needs JavaScript.</p></noscript>
+          </div>
+        </div>
+        <figcaption class="fig-cap">
+          <b>Figure 2.</b> Illustration; not the project’s exact configuration. Four query rows, three blocks of four keys and a head size of four keep
+          the arithmetic readable; the numbers shown are computed from made-up scores.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- 3 What makes it hard -->
+    <section class="wrap sec" aria-labelledby="hard-title">
+      <h2 class="sec-head" id="hard-title"><span class="num">3</span> What makes it hard</h2>
+      <ol class="how">
+        <li>
+          <h3><span class="num">3.1</span> A tensor-core matrix multiply in inline PTX.</h3>
+          <p>
+            All three layouts training needs, deterministic split-K, and bias, GELU and
+            residual-add fused into the output stage. Turing lacks the async copies newer GEMMs
+            rely on, and the main loop sits at the 128-register limit.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">3.2</span> Flash attention, forward and backward.</h3>
+          <p>
+            Deterministic with no atomics, inside Turing's 64 KB of shared memory.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">3.3</span> FP16 training, since Turing has no BF16.</h3>
+          <p>
+            Loss scaling throughout; every kernel's error must stay within <span class="nw">2–3&times;</span> of
+            PyTorch's own FP16 error against an FP32 reference, and runs are bit-identical.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">3.4</span> Honest measurement.</h3>
+          <p>
+            Each kernel is reported as a share of cuBLAS from interleaved runs, and as a share
+            of hardware peak at the clock the GPU actually ran at.
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 4 Roadmap -->
+    <section class="wrap sec" aria-labelledby="road-title">
+      <h2 class="sec-head" id="road-title"><span class="num">4</span> Roadmap</h2>
+      <table class="ds road">
+        <colgroup><col class="c-when"><col></colgroup>
+        <thead>
+          <tr><th scope="col">Date</th><th scope="col">Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Dec 2026</th><td data-label="Milestone"><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</td></tr>
+          <tr><th scope="row">2027</th><td data-label="Milestone"><b>Training:</b> GPT-2 124M end to end on these kernels.</td></tr>
+          <tr><th scope="row">2027</th><td data-label="Milestone"><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</td></tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <span>&copy; 2026 Paco Sun</span>
-      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>&copy; 2026 Paco Sun · bayareahomelander.github.io</span>
+      <nav aria-label="Elsewhere"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></nav>
     </div>
   </footer>
 </body>

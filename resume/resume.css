@@ -1,39 +1,171 @@
-/* Resume page: reuses the experience styles from /styles.css, plus a print layout. */
-.resume-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px 32px; }
-.resume h1 { font-family: var(--serif); font-size: clamp(3rem, 8vw, 4.5rem); line-height: 0.95; letter-spacing: -0.01em; }
-.resume-role { font-size: 1.25rem; margin-top: 12px; }
-.resume-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 14px; font-family: var(--mono); font-size: 0.8125rem; color: var(--muted); }
-.resume-contact a { text-decoration: none; }
-.resume-contact a:hover { color: var(--ink); }
-.resume-summary { margin-top: 24px; max-width: 70ch; color: var(--ink-2); }
-.resume.page-head { padding-bottom: 40px; }
+/* resume.css: the Resume page as a datasheet. Builds on /site.css (tokens, strip, title block,
+   status box, numbered section headings, ruled tables, badges, buttons, footer).
+   This file holds the resume tables (a date column and a content column) and the print layout. */
 
-.resume-block { padding: 36px 0; border-top: 1px solid var(--line); }
-.resume-h { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
-.resume-block .roles { margin-top: 0; }
-.resume-block .role:last-child { border-bottom: 0; }
-.resume-block .what h3 a { text-decoration-color: var(--line); }
-.resume-line { margin-top: 12px; color: var(--ink-2); max-width: 70ch; }
+/* ---------- Title block extras ---------- */
+.role { text-wrap: balance; }
+.contact { display: flex; flex-wrap: wrap; gap: 0 18px; margin-top: 10px; font-size: 0.875rem; color: var(--ink-2); }
+.contact > * { display: inline-flex; align-items: center; min-height: 24px; }
+.contact a { color: var(--ink-2); }
+.box-act .btn + .btn { margin-top: 8px; }
+.print-only, .res-stack.print-only { display: none; }
 
+/* ---------- Resume tables ---------- */
+.res .c-when { width: 9.5rem; }
+.res .c-role { width: 17rem; }
+.res tbody tr > * { padding-block: 12px; }
+.res td.when, .res tbody td[data-label="Period"] { font-weight: 600; white-space: nowrap; }
+
+.res-name { display: block; font-size: 1rem; font-weight: 700; line-height: 1.25; }
+.res-org, .res-sub, .res-stack, .res-note {
+  display: block; margin-top: 3px; font-size: 0.875rem; font-weight: 400; line-height: 1.4; color: var(--ink-2);
+}
+.res-stack, .res-note { color: var(--muted); }
+.res-note { margin-top: 6px; }
+.res tbody th[scope="row"] a { font-weight: 700; color: var(--ink); }
+.res tbody th[scope="row"] a:hover { color: var(--accent); }
+
+.res td p { max-width: 70ch; }
+.res td > p, .res td { color: var(--ink-2); }
+
+/* Bullets: small square marks, in keeping with the square corners. */
+.pts { list-style: none; display: grid; gap: 5px; max-width: 74ch; }
+.pts li { position: relative; padding-left: 16px; }
+.pts li::before {
+  content: ""; position: absolute; left: 1px; top: 0.58em; width: 5px; height: 5px; background: var(--ink);
+}
+.res b { color: var(--ink); }
+
+/* Z.AI: the weightiest role. A larger name, larger text, and results set in the condensed face. */
+.res tr.prime > * { padding-block: 22px; }
+.res tr.prime .res-name { font-size: 1.5rem; font-weight: 800; font-stretch: 85%; line-height: 1.1; }
+.res tr.prime .res-org { font-size: 0.9375rem; margin-top: 5px; color: var(--ink); font-weight: 500; }
+.res tr.prime td { color: var(--ink); }
+.res tr.prime .pts { gap: 7px; font-size: 1rem; }
+.res tr.prime .pts li::before { top: 0.62em; }
+.res tr.prime b { font-size: 1.125em; font-weight: 800; font-stretch: 80%; }
+
+/* Projects: names set like device names on the front page. */
+.proj .res-name.res-proj { font-size: 1.375rem; font-weight: 800; font-stretch: 80%; line-height: 1.1; }
+.proj .res-sub { margin-top: 5px; color: var(--ink); }
+.proj tbody td:first-child .badge { margin-bottom: 0; }
+
+/* Skills and education */
+.skills tbody th[scope="row"] { font-weight: 700; }
+.skills tbody tr > * { padding-block: 9px; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1000px) {
+  .res .c-when { width: 7.5rem; }
+  .res .c-role { width: 13rem; }
+  .skills .c-when { width: 9rem; }
+}
+
+/* ---------- Phone: stacked rows, period first, then role, then highlights.
+   Screen only: the printed page is narrow too, and must keep its table. ---------- */
+@media screen and (max-width: 760px) {
+  .contact { flex-direction: column; align-items: flex-start; gap: 0; }
+
+  .ds.res td[data-label] { padding: 0; min-height: 0; }
+  .ds.res td[data-label]::before { content: none; }
+  .ds.res tbody tr { padding: 14px 0 16px; }
+  .ds.res tbody td.when, .ds.res tbody td[data-label="Period"] {
+    font-size: 0.875rem; font-weight: 600; color: var(--muted); white-space: normal;
+  }
+  .res-name { font-size: 1.0625rem; }
+  .res tr.prime > *, .res tbody tr > * { padding-block: 0; }
+  .ds.res tbody th[scope="row"] { padding-block: 2px 6px; }
+  .ds.res tbody tr.prime { padding-block: 18px 20px; }
+  .res tr.prime .res-name { font-size: 1.375rem; }
+  .res tr.prime .pts { font-size: 0.9375rem; }
+  .proj .res-name.res-proj { font-size: 1.25rem; }
+  .proj tbody td:first-child { display: flex; align-items: center; gap: 4px 10px; flex-wrap: wrap; }
+  .proj .res-note { margin-top: 0; }
+  .res td p, .pts { max-width: none; }
+  .ds.skills tbody tr { padding-block: 10px 12px; }
+  .ds.skills tbody th[scope="row"] { padding-block: 0 2px; }
+}
+
+/* ---------- Print: a clean, black-on-white, compact document ---------- */
 @media print {
-  @page { margin: 14mm; }
+  @page { margin: 12mm 14mm; }
+
+  /* Always print the light sheet, whatever the reader's color scheme. */
   :root {
-    --bg: #fff; --surface: #fff; --ink: #000; --ink-2: #222; --muted: #555; --line: #ccc; --accent: #000;
+    --paper: #ffffff; --ink: #0b0d0c; --ink-2: #2c322f; --muted: #55605a; --rule: #b9c1bc;
+    --tint: #ffffff; --tint-2: #ffffff; --accent: #0b0d0c; --accent-soft: #ffffff; --on-accent: #0b0d0c;
     color-scheme: light;
   }
-  body { font-size: 9.5pt; line-height: 1.4; background: #fff; }
-  .site-header, .site-footer, .skip, .print-btn { display: none !important; }
-  .wrap { max-width: none; padding: 0; }
-  .resume.page-head { padding: 0 0 10pt; }
-  .resume h1 { font-size: 24pt; }
-  .resume-role { font-size: 11pt; margin-top: 4pt; }
-  .resume-contact { font-size: 8.5pt; margin-top: 6pt; }
-  .resume-summary { margin-top: 8pt; }
-  .resume-block { padding: 8pt 0; }
-  .role { grid-template-columns: 80pt 1fr; gap: 10pt; padding: 6pt 0; break-inside: avoid; }
-  .role:first-child { padding-top: 4pt; }
-  .what h3 { font-size: 10.5pt; }
-  .what ul { gap: 1pt; margin-top: 3pt; }
-  .skills div { grid-template-columns: 80pt 1fr; gap: 10pt; padding: 3pt 0; }
-  a { color: inherit; text-decoration: none; }
+  html { scrollbar-color: auto; }
+  body { font-size: 9pt; line-height: 1.32; background: var(--paper); color: var(--ink); -webkit-print-color-adjust: economy; }
+
+  .skip, .strip, .foot, .btn-quiet { display: none !important; }
+  .print-only, .res-stack.print-only { display: block; }
+  .wrap { max-width: none; padding-inline: 0; }
+  a { display: inline; min-height: 0; color: inherit; text-decoration: none; }
+
+  /* Title block: name and summary at left, the status box as plain lines at right. */
+  .front { grid-template-columns: minmax(0, 1fr) 66mm; gap: 0 9mm; align-items: end; padding: 0 0 6pt; }
+  .title h1 { font-size: 30pt; line-height: 0.9; }
+  .role { margin-top: 5pt; font-size: 12pt; }
+  .desc { margin-top: 4pt; max-width: none; font-size: 9pt; color: var(--ink-2); }
+  .contact { margin-top: 4pt; gap: 0 12pt; font-size: 8.5pt; color: var(--ink); }
+  .contact > * { min-height: 0; }
+
+  .status-box { border: 0; max-width: none; }
+  .box-head { padding: 0 0 1pt; background: none; border: 0; justify-content: flex-start; gap: 6pt; font-size: 7.5pt; color: var(--ink); }
+  .box-head .badge { padding: 0; border: 0; background: none; color: var(--ink); font-size: 7.5pt; }
+  .box-list > div { grid-template-columns: 21mm minmax(0, 1fr); gap: 6pt; padding: 1.5pt 0; border: 0; border-top: 1px solid var(--rule); font-size: 8.5pt; line-height: 1.3; }
+  .box-list dt { font-size: 7pt; color: var(--muted); padding-top: 0.15em; }
+  .box-list dd { font-weight: 500; }
+  .status-box .box-act { padding: 1.5pt 0 0; border-top: 1px solid var(--rule); }
+  .status-box .box-act .btn {
+    display: block; width: auto; min-height: 0; padding: 0; border: 0; background: none; color: var(--ink);
+    font-size: 8.5pt; font-weight: 500; text-align: left;
+  }
+
+  /* Sections */
+  .sec, .sec.first { padding-top: 9pt; break-inside: avoid; }
+  .sec-head { margin-bottom: 3pt; padding-bottom: 2pt; font-size: 12pt; border-bottom-color: var(--ink); break-after: avoid; }
+  .sec-head .num { color: var(--ink); }
+
+  .ds { font-size: 9pt; line-height: 1.32; border-top-color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* The printed page is under 760px wide, so site.css would stack the tables as on a phone.
+     Put the resume tables back to real tables. */
+  .ds.res { display: table; width: 100%; }
+  .ds.res colgroup { display: table-column-group; }
+  .ds.res col { display: table-column; }
+  .ds.res thead { display: none; }
+  .ds.res tbody { display: table-row-group; }
+  .ds.res tr { display: table-row; padding: 0; break-inside: avoid; }
+  .ds.res th, .ds.res td { display: table-cell; }
+  .ds.res td[data-label] { position: static; min-height: 0; }
+  .ds.res td[data-label]::before { content: none; }
+  .ds.res tbody tr + tr { border-top: 0; }
+  .ds.res tbody tr + tr > * { border-top: 1px solid var(--rule); }
+  .ds.res tbody tr > * + * { border-left: 0; }
+  .res .c-when { width: 25mm; }
+  .skills .c-when { width: 30mm; }
+  .res .c-role { width: 54mm; }
+  .res-stack.print-only { overflow-wrap: anywhere; }
+  .ds.res tbody th, .ds.res tbody td[data-label] { padding-block: 4pt; padding-inline: 6pt; }
+  .ds.res tbody tr > :first-child { padding-inline-start: 0; }
+  .ds.res tbody tr.prime > * { padding-block: 5pt; }
+
+  .res-name, .res-name.res-proj, .proj .res-name.res-proj { font-size: 9.5pt; font-stretch: 100%; font-weight: 700; }
+  .res tr.prime .res-name { font-size: 11.5pt; font-stretch: 85%; font-weight: 800; }
+  .res-org, .res-sub, .res-stack, .res-note, .res tr.prime .res-org { margin-top: 1pt; font-size: 8pt; line-height: 1.3; color: var(--ink-2); font-weight: 400; }
+  .proj .res-sub { color: var(--ink-2); }
+  .res-note { margin-top: 3pt; }
+  .res td, .res tr.prime td { color: var(--ink); }
+  .res tr.prime .pts, .pts { gap: 1.5pt; font-size: 9pt; max-width: none; }
+  .res tr.prime .pts { gap: 2pt; }
+  .pts li { padding-left: 9pt; }
+  .pts li::before, .res tr.prime .pts li::before { left: 0.5pt; top: 0.55em; width: 3.5pt; height: 3.5pt; background: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .res tr.prime b { font-size: 1.05em; }
+  .res td p { max-width: none; }
+
+  .badge { padding: 0 3pt; border: 1px solid var(--ink); background: none; color: var(--ink); font-size: 7pt; line-height: 1.4; }
+  .badge-preview { border-style: dashed; }
 }

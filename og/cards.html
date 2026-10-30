@@ -4,52 +4,152 @@
 <title>OG cards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#faf8f4;--ink:#1a1917;--ink2:#3d3a35;--muted:#6b675f;--line:#e4dfd5;--accent:#c2410c;--soft:#fdeee4}
-*{box-sizing:border-box;margin:0}
-html,body{width:1200px;height:627px;overflow:hidden;background:var(--bg);color:var(--ink)}
-.card{display:none;position:relative;width:1200px;height:627px;padding:72px 80px;border-top:6px solid var(--accent)}
+/* Social preview cards, 1200x627, drawn as a datasheet front page.
+   Pick a card with the URL hash: #home #onyx #flint #writing (no hash = home).
+   Render each at 2x (2400x1254) to og/<name>.png in LIGHT mode. */
+:root{
+  color-scheme:light;
+  --sheet:#ffffff;--ink:#0b0d0c;--body:#2c322f;--muted:#55605a;
+  --rule:#b9c1bc;--tint:#edf2ef;--green:#0a5c36;--on-green:#ffffff;
+  --sans:Archivo,"Arial Narrow",system-ui,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:627px;overflow:hidden;background:var(--sheet);color:var(--ink);font:400 26px/1.35 var(--sans);font-variant-numeric:lining-nums tabular-nums}
+.card{display:none;position:relative;width:1200px;height:627px;background:var(--sheet)}
 .card:target,.card.on{display:block}
-.label{font:500 20px 'IBM Plex Mono',monospace;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
-h1{font:400 120px/1 'Instrument Serif',serif;letter-spacing:-.02em;margin-top:48px}
-.sub{font:400 30px/1.4 'IBM Plex Sans',sans-serif;color:var(--ink2);margin-top:24px;max-width:700px}
-.url{position:absolute;left:80px;bottom:56px;font:400 20px 'IBM Plex Mono',monospace;color:var(--muted)}
-.chips{position:absolute;right:80px;bottom:56px;display:flex;gap:12px;align-items:flex-start}
-.chip{font:400 28px 'IBM Plex Mono',monospace;padding:8px 14px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:4px;white-space:pre}
-.chip.d{color:var(--accent);background:var(--soft);border:1px dashed var(--accent)}
-.col{display:flex;flex-direction:column;align-items:center;gap:8px}
-.id{font:400 18px 'IBM Plex Mono',monospace;color:var(--muted)}
-.stats{display:flex;gap:56px;margin-top:36px}
-.stat{font:400 64px/1 'Instrument Serif',serif;color:var(--ink)}
-.stat b{font-weight:400;color:var(--accent)}
-.note{font:400 18px 'IBM Plex Mono',monospace;color:var(--muted);margin-top:14px}
-.grid{position:absolute;right:80px;top:150px;display:grid;grid-template-columns:repeat(6,48px);gap:10px}
-.grid i{width:48px;height:48px;border:1px solid var(--line);background:#fff;border-radius:4px}
-.grid i.t{background:var(--soft);border-color:#f0c9ae}
-.grid i.a{background:var(--accent);border-color:var(--accent)}
+
+/* top strip */
+.strip{display:flex;align-items:center;height:58px;padding:0 56px;border-bottom:2px solid var(--ink)}
+.wm{font:800 29px/1 var(--sans);font-variation-settings:'wdth' 75;letter-spacing:-.005em}
+.doc{margin-left:30px;font-size:22px;color:var(--muted)}
+.host{margin-left:auto;font-size:22px;color:var(--muted)}
+
+/* title block */
+.title{position:absolute;left:56px;top:84px;right:56px}
+h1{font:800 190px/.88 var(--sans);font-variation-settings:'wdth' 62;letter-spacing:-.01em;color:var(--ink)}
+.role{margin-top:18px;font:700 42px/1.1 var(--sans);font-variation-settings:'wdth' 88;color:var(--ink)}
+.desc{margin-top:14px;font-size:27px;line-height:1.35;color:var(--body)}
+
+/* status box */
+.box{position:absolute;right:56px;top:92px;width:464px;border:2px solid var(--ink);background:var(--sheet)}
+.box-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--tint);font:700 20px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--body)}
+.box-row{display:grid;grid-template-columns:142px 1fr;gap:0 10px;padding:10px 14px;border-top:1px solid var(--rule);align-items:baseline}
+.box-head+.box-row{border-top:2px solid var(--ink)}
+.box dt{font:700 17px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.box dd{font:500 24px/1.25 var(--sans);color:var(--ink);text-wrap:balance}
+
+/* badges (square; ACTIVE solid, PREVIEW dashed) */
+.badge{display:inline-block;padding:1px 10px;border:2px solid var(--green);font:700 19px/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase}
+.badge.active{background:var(--green);color:var(--on-green)}
+.badge.preview{background:transparent;color:var(--green);border-style:dashed}
+
+/* ruled mini table */
+.ds{position:absolute;left:56px;right:56px;bottom:44px;width:calc(100% - 112px);border-collapse:collapse;table-layout:fixed;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.ds th,.ds td{text-align:left;vertical-align:middle;padding:8px 14px;border-left:1px solid var(--rule)}
+.ds th:first-child,.ds td:first-child{border-left:0}
+.ds thead th{background:var(--tint);font:700 19px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--body);padding:8px 14px;border-bottom:2px solid var(--ink)}
+.ds tbody tr+tr th,.ds tbody tr+tr td{border-top:1px solid var(--rule)}
+.ds tbody th{font:700 26px/1.2 var(--sans);font-variation-settings:'wdth' 92;color:var(--ink)}
+.ds td{font:400 26px/1.25 var(--sans);color:var(--body)}
+.ds td.val{font:750 40px/1 var(--sans);font-variation-settings:'wdth' 78;letter-spacing:-.005em;color:var(--ink)}
+.ds td.spec{font:750 34px/1.05 var(--sans);font-variation-settings:'wdth' 78;color:var(--ink)}
+.ds td.tok,.ds thead th.tok{font:600 27px/1.2 var(--mono);letter-spacing:0;text-transform:none;color:var(--ink)}
+.ds td.id{font:750 42px/1 var(--sans);font-variation-settings:'wdth' 78;color:var(--ink)}
 </style></head><body>
+
 <section class="card" id="home">
- <div class="label">ML engineer · LLM inference</div><h1>Paco Sun</h1>
- <p class="sub" style="max-width:900px">Machine learning engineer in Vancouver, open to LLM inference and ML systems roles.</p>
- <div class="note" style="position:absolute;left:80px;bottom:130px;margin:0;font-size:24px">Onyx · GPT-2 from scratch in CUDA · From Text to Next Token</div>
- <div class="url">bayareahomelander.github.io</div></section>
+ <header class="strip"><span class="wm">Paco Sun</span><span class="doc">Front page</span><span class="host">bayareahomelander.github.io</span></header>
+ <div class="title">
+  <h1>Paco Sun</h1>
+  <p class="role">ML Engineer, LLM Inference</p>
+  <p class="desc" style="max-width:640px">Fine-tuning, serving, and decoding that runs faster without changing a single output token.</p>
+ </div>
+ <aside class="box">
+  <h2 class="box-head"><span>Status</span><span class="badge active">Active</span></h2>
+  <dl>
+   <div class="box-row"><dt>Availability</dt><dd>Available now</dd></div>
+   <div class="box-row"><dt>Open to</dt><dd>ML engineering roles</dd></div>
+   <div class="box-row"><dt>Based in</dt><dd>Vancouver</dd></div>
+  </dl>
+ </aside>
+ <table class="ds">
+  <colgroup><col style="width:28%"><col style="width:38%"><col></colgroup>
+  <thead><tr><th>Open source</th><th>In progress</th><th>Writing</th></tr></thead>
+  <tbody><tr><td class="spec">Onyx</td><td class="spec">GPT-2 from scratch in CUDA</td><td class="spec">From Text to Next Token</td></tr></tbody>
+ </table>
+</section>
+
 <section class="card" id="onyx">
- <div class="label">Open source</div><h1>Onyx</h1>
- <p class="sub">Grammar-constrained LLM inference engine</p>
- <div class="stats"><div class="stat"><b>1.49×</b> overall</div><div class="stat"><b>2.44×</b> on code</div></div>
- <div class="note">RTX 2080 Ti · output identical token for token</div>
- <div class="chips" style="right:80px;top:90px;bottom:auto"><span class="chip">{"</span><span class="chip d">id</span><span class="chip">":</span><span class="chip d"> 7</span></div>
- <div class="url">bayareahomelander.github.io</div></section>
+ <header class="strip"><span class="wm">Paco Sun</span><span class="doc">All work &rsaquo; Onyx</span><span class="host">bayareahomelander.github.io</span></header>
+ <div class="title">
+  <h1>Onyx</h1>
+  <p class="role">Grammar-constrained LLM inference engine</p>
+ </div>
+ <aside class="box">
+  <h2 class="box-head"><span>Status</span><span class="badge active">Active</span></h2>
+  <dl>
+   <div class="box-row"><dt>Source</dt><dd>Open source</dd></div>
+   <div class="box-row"><dt>Languages</dt><dd>Python, Rust, CUDA</dd></div>
+  </dl>
+ </aside>
+ <table class="ds">
+  <colgroup><col style="width:38%"><col style="width:22%"><col></colgroup>
+  <thead><tr><th>Parameter</th><th>Value</th><th>Test conditions</th></tr></thead>
+  <tbody>
+   <tr><th>Speedup, overall</th><td class="val">1.49&times;</td><td>RTX 2080 Ti</td></tr>
+   <tr><th>Speedup, code</th><td class="val">2.44&times;</td><td>RTX 2080 Ti</td></tr>
+   <tr><th>Output vs. model alone</th><td class="val">Identical</td><td>Token for token</td></tr>
+  </tbody>
+ </table>
+</section>
+
 <section class="card" id="flint">
- <div class="label">In progress · v0.1 December 2026</div><h1>Flint</h1>
- <p class="sub">GPT-2 from scratch on hand-written CUDA kernels</p>
- <div class="grid" style="top:130px"><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i class="t"></i><i></i><i></i><i class="a"></i><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i></i><i></i><i class="t"></i><i></i><i></i><i class="t"></i><i></i><i></i></div>
- <div class="url">bayareahomelander.github.io</div></section>
+ <header class="strip"><span class="wm">Paco Sun</span><span class="doc">All work</span><span class="host">bayareahomelander.github.io</span></header>
+ <div class="title">
+  <h1>Flint</h1>
+  <p class="role">GPT-2 from scratch on hand-written CUDA kernels</p>
+ </div>
+ <aside class="box">
+  <h2 class="box-head"><span>Status</span><span class="badge preview">Preview</span></h2>
+  <dl>
+   <div class="box-row"><dt>Stage</dt><dd>In progress</dd></div>
+   <div class="box-row"><dt>Release</dt><dd>v0.1 in December 2026</dd></div>
+  </dl>
+ </aside>
+ <table class="ds">
+  <colgroup><col style="width:30%"><col></colgroup>
+  <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+  <tbody>
+   <tr><th>Kernels</th><td class="spec">Written by hand</td></tr>
+   <tr><th>At runtime</th><td class="spec">No cuBLAS, cuDNN, or PyTorch</td></tr>
+   <tr><th>Built with</th><td class="spec">CUDA, Inline PTX, CMake</td></tr>
+  </tbody>
+ </table>
+</section>
+
 <section class="card" id="writing">
- <div class="label">Writing · Medium</div><h1 style="font-size:96px">From Text to Next Token</h1>
- <p class="sub">One prompt through every stage of a transformer, worked by hand.</p>
- <div class="chips" style="bottom:56px;right:80px"><div class="col"><span class="chip">The</span><span class="id">464</span></div><div class="col"><span class="chip d"> cat</span><span class="id">3797</span></div><div class="col"><span class="chip"> sat</span><span class="id">3332</span></div><div class="col"><span class="chip"> on</span><span class="id">319</span></div><div class="col"><span class="chip"> the</span><span class="id">262</span></div></div>
- <div class="url" style="bottom:56px">bayareahomelander.github.io</div></section>
+ <header class="strip"><span class="wm">Paco Sun</span><span class="doc">Front page &rsaquo; Writing</span><span class="host">bayareahomelander.github.io</span></header>
+ <div class="title">
+  <h1 style="font-size:150px;max-width:640px">From Text to Next Token</h1>
+  <p class="desc" style="margin-top:20px;font-size:28px">One prompt through every stage of a transformer, worked by hand.</p>
+ </div>
+ <aside class="box">
+  <h2 class="box-head"><span>Status</span><span class="badge active">Active</span></h2>
+  <dl>
+   <div class="box-row"><dt>Published</dt><dd>10 articles</dd></div>
+   <div class="box-row"><dt>Platform</dt><dd>Medium</dd></div>
+   <div class="box-row"><dt>Format</dt><dd>Worked by hand, with NumPy</dd></div>
+  </dl>
+ </aside>
+ <table class="ds">
+  <colgroup><col><col><col><col><col></colgroup>
+  <thead><tr><th class="tok">The</th><th class="tok">&middot;cat</th><th class="tok">&middot;sat</th><th class="tok">&middot;on</th><th class="tok">&middot;the</th></tr></thead>
+  <tbody><tr><td class="id">464</td><td class="id">3797</td><td class="id">3332</td><td class="id">319</td><td class="id">262</td></tr></tbody>
+ </table>
+</section>
+
 <script>if(!location.hash)document.getElementById('home').classList.add('on')</script>
 </body></html>

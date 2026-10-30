@@ -9,10 +9,10 @@ Personal site for Paco Sun. Plain HTML, CSS, and a little JavaScript, with no bu
 | `flint/` | Flint project page, its technique visualizers, and the home-card preview |
 | `writing/` | The article series and its transformer map |
 | `resume/` | Full resume, styled to print cleanly to PDF |
-| `styles.css` | Shared layout, colors (light and dark), and components |
+| `site.css` | The shared datasheet system: color tokens (light and dark), type, ruled tables, buttons, page front matter, and the figure frame |
 | `script.js` | The scripted speculative-decoding preview on the home page |
 
-Each page folder keeps its own CSS and JS; only `styles.css` and `script.js` are shared.
+Every page loads `site.css` and adds its own CSS and JS; the home page's are `home.css`, `home.js`, and `script.js`.
 
 ## Preview locally
 

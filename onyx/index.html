@@ -8,17 +8,17 @@
   <meta property="og:title" content="Onyx · Grammar-constrained LLM inference engine · Paco Sun">
   <meta property="og:description" content="Onyx makes an 8B model generate up to 2.4x faster with output identical to the model alone, using grammar-aware speculative decoding, hand-written CUDA graphs, and a Rust grammar engine.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/onyx.png?v=2">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/onyx.png?v=3">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Onyx, a grammar-constrained LLM inference engine">
   <meta property="og:url" content="https://bayareahomelander.github.io/onyx/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1917'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23faf8f4' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='24.5' cy='8' r='3' fill='%23e8590c'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a5c36'/%3E%3Ctext x='16' y='24' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='%23ffffff' text-anchor='middle'%3EP%3C/text%3E%3Ccircle cx='5.5' cy='5.5' r='2.5' fill='%23ffffff'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
   <script data-goatcounter="https://pacosun.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/onyx/onyx.css">
@@ -26,9 +26,10 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="/">Paco Sun</a>
+  <header class="strip">
+    <div class="wrap strip-in">
+      <a class="wordmark" href="/">Paco Sun</a>
+      <p class="docline"><a href="/#work">All work</a> &rsaquo; Onyx</p>
       <nav aria-label="Site">
         <a href="/#work" aria-current="true">Work</a>
         <a href="/writing/">Writing</a>
@@ -39,41 +40,56 @@
   </header>
 
   <main id="main">
-    <section class="page-head" id="onyx" aria-labelledby="onyx-title">
-      <div class="wrap">
-        <a class="crumb" href="/#work">All work</a>
-        <div class="project-head">
-          <h1 id="onyx-title">Onyx</h1>
-          <p class="project-tag">Grammar-constrained LLM inference engine</p>
-        </div>
-        <p class="body-lg">
+    <!-- Title block and status box -->
+    <section class="wrap front" id="onyx" aria-labelledby="onyx-title">
+      <div class="title">
+        <h1 id="onyx-title">Onyx</h1>
+        <p class="role">Grammar-constrained LLM inference engine</p>
+        <p class="desc">
           Onyx makes an 8B model generate up to 2.4&times; faster while producing exactly the
           same output, token for token. A small draft model guesses ahead; the large target
           model checks every guess in one pass and keeps only what it agrees with. A Rust grammar
           engine forces every token to fit a regex or JSON Schema, so structured output is valid
           by construction.
         </p>
+      </div>
 
-        <ul class="stats" aria-label="Onyx results">
-          <li><strong>1.49&times;</strong><span>faster overall across a 48-request benchmark, output identical</span></li>
-          <li><strong>2.44&times;</strong><span>faster on code; 2.1&times; on JSON Schema and regex output</span></li>
-          <li><strong>0.3 ms</strong><span>added time to first token, down from 637 ms</span></li>
-          <li><strong>1.45&times;</strong><span>on Apple Silicon (MLX, 4-bit), in a separate implementation</span></li>
-        </ul>
+      <aside class="status-box" aria-labelledby="status-title">
+        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-active">Active</span></h2>
+        <dl class="box-list">
+          <div><dt>Source</dt><dd>Open source</dd></div>
+          <div><dt>Languages</dt><dd>Python, Rust, CUDA</dd></div>
+          <div><dt>Built with</dt><dd>PyTorch, MLX, PyO3, FastAPI</dd></div>
+        </dl>
+        <div class="box-act">
+          <a class="btn" href="https://github.com/bayareahomelander/Onyx">View on GitHub</a>
+        </div>
+      </aside>
+    </section>
 
-        <section class="sec" aria-labelledby="try-title">
-          <p class="eyebrow">Interactive</p>
-          <h2 id="try-title">Try it</h2>
-          <p class="sec-lede">
-            Pick a workload and watch the draft and the target take turns, then see how the length
-            of the draft changes the trade-off.
-          </p>
-          <div class="try-grid">
-            <figure class="panel demo" aria-labelledby="demo-cap" data-demo-root>
-              <div class="panel-top stacked">
-                <span class="panel-title">Speculative decoding, one round at a time</span>
-                <span class="phase" aria-live="off" data-phase>&nbsp;</span>
-              </div>
+    <!-- 1 Features -->
+    <section class="wrap sec first" aria-labelledby="feat-title">
+      <h2 class="sec-head" id="feat-title"><span class="num">1</span> Features</h2>
+      <ul class="feat" aria-label="Onyx results">
+        <li><strong>1.49&times;</strong><span>faster overall across a 48-request benchmark, output identical</span></li>
+        <li><strong>2.44&times;</strong><span>faster on code; 2.1&times; on JSON Schema and regex output</span></li>
+        <li><strong>0.3 ms</strong><span>added time to first token, down from 637 ms</span></li>
+        <li><strong>1.45&times;</strong><span>on Apple Silicon (MLX, 4-bit), in a separate implementation</span></li>
+      </ul>
+    </section>
+
+    <!-- 2 Try it -->
+    <section class="wrap sec" aria-labelledby="try-title">
+      <h2 class="sec-head" id="try-title"><span class="num">2</span> Try it</h2>
+      <p class="sec-lede">
+        Pick a workload and watch the draft and the target take turns, then see how the length
+        of the draft changes the trade-off.
+      </p>
+      <div class="try-grid">
+        <figure class="fig" aria-labelledby="demo-cap" data-demo-root>
+          <div class="fig-frame">
+            <div class="fig-head"><span class="fig-title">Speculative decoding, one round at a time</span></div>
+            <div class="fig-body">
               <div class="seg" role="group" aria-label="Workload">
                 <button type="button" data-wl="code" aria-pressed="true">Code</button>
                 <button type="button" data-wl="json" aria-pressed="false">JSON Schema</button>
@@ -85,13 +101,16 @@
                 <strong data-x>2.44&times;</strong>
                 <span data-bench>Measured on the RTX 2080 Ti benchmark (Qwen3-8B target, greedy): Code, 6 cases.</span>
               </p>
-              <p class="panel-title lab">Illustration: scripted tokens</p>
+              <div class="demo-bar">
+                <p class="lab">Illustration: scripted tokens</p>
+                <span class="phase" aria-live="off" data-phase>&nbsp;</span>
+              </div>
               <div class="demo-line pl" data-line aria-hidden="true"></div>
               <p class="sr-only" role="status" data-status></p>
               <div class="tools">
                 <button type="button" class="btn" data-play>Play</button>
-                <button type="button" class="btn ghost" data-step>Step one round</button>
-                <button type="button" class="btn ghost" data-restart>Restart</button>
+                <button type="button" class="btn btn-quiet" data-step>Step one round</button>
+                <button type="button" class="btn btn-quiet" data-restart>Restart</button>
               </div>
               <dl class="demo-count">
                 <div><dt>Tokens</dt><dd data-tokens>0</dd></div>
@@ -103,20 +122,24 @@
                 <li><span class="tok rejected">bad</span> rejected by the target</li>
                 <li><span class="tok target">own</span> the target's own token</li>
               </ul>
-              <figcaption id="demo-cap">
-                Illustration. Each round the draft proposes up to three tokens (the CUDA default);
-                the 8B target scores them all in one forward pass, keeps the longest prefix it agrees
-                with, then adds its own next token. The scripted accept pattern only follows the
-                measured ranking. The draft has its own cost, so the measured speedup above, not the
-                ratio of passes shown here, is the real number (1.49&times; across all 48 cases).
-              </figcaption>
-            </figure>
+            </div>
+          </div>
+          <figcaption class="fig-cap" id="demo-cap">
+            <b>Figure 1.</b> Illustration. Each round the draft proposes up to three tokens (the CUDA default);
+            the 8B target scores them all in one forward pass, keeps the longest prefix it agrees
+            with, then adds its own next token. The scripted accept pattern only follows the
+            measured ranking. The draft has its own cost, so the measured speedup above, not the
+            ratio of passes shown here, is the real number (1.49&times; across all 48 cases).
+          </figcaption>
+        </figure>
 
-            <figure class="panel dlp" aria-labelledby="draft-cap" data-draft-root>
-              <div class="panel-top">
-                <span class="panel-title">Draft length</span>
-                <span class="phase">Measured</span>
-              </div>
+        <figure class="fig" aria-labelledby="draft-cap" data-draft-root>
+          <div class="fig-frame">
+            <div class="fig-head">
+              <span class="fig-title">Draft length</span>
+              <span class="badge badge-measured">Measured</span>
+            </div>
+            <div class="fig-body">
               <div class="seg" role="group" aria-label="Draft length in tokens per round">
                 <button type="button" data-g="2" aria-pressed="false">2</button>
                 <button type="button" data-g="4" aria-pressed="true">4</button>
@@ -149,21 +172,25 @@
                 Longer drafts can emit more tokens per verification but waste more rejected work.
                 On this workload 4 was the best fixed length, and adaptive essentially matched it.
               </p>
-              <figcaption id="draft-cap">
-                Measured on Apple Silicon with MLX: 4-bit Qwen, 8B target, output constrained to
-                <code>[0-9]{32}</code>, warmup excluded. Only 2, 4, 8 and adaptive were run; nothing
-                between them is interpolated. This is a separate implementation from the CUDA
-                benchmark below.
-              </figcaption>
-            </figure>
-          </div>
-        </section>
-
-        <div class="chart-row">
-          <figure class="panel chart" aria-labelledby="chart-cap">
-            <div class="panel-top">
-              <span class="panel-title" id="chart-cap">Speedup over the target model alone, by workload</span>
             </div>
+          </div>
+          <figcaption class="fig-cap" id="draft-cap">
+            <b>Figure 2.</b> Measured on Apple Silicon with MLX: 4-bit Qwen, 8B target, output constrained to
+            <code>[0-9]{32}</code>, warmup excluded. Only 2, 4, 8 and adaptive were run; nothing
+            between them is interpolated. This is a separate implementation from the CUDA
+            benchmark below.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 3 Typical Performance Characteristics -->
+    <section class="wrap sec" aria-labelledby="perf-title">
+      <h2 class="sec-head" id="perf-title"><span class="num">3</span> Typical Performance Characteristics</h2>
+      <figure class="fig fig-chart" aria-labelledby="chart-cap">
+        <div class="fig-frame">
+          <div class="fig-head"><span class="fig-title" id="chart-cap">Speedup over the target model alone, by workload</span></div>
+          <div class="fig-body">
             <table class="bars">
               <caption class="sr-only">Onyx speedup over Qwen3-8B alone on an RTX 2080 Ti, by workload</caption>
               <thead>
@@ -185,126 +212,134 @@
               <li><span class="swatch base" aria-hidden="true"></span>Qwen3-8B alone (1.0&times;)</li>
               <li><span class="swatch gain" aria-hidden="true"></span>Gain from speculation</li>
             </ul>
-            <figcaption>
-              Greedy decoding on an RTX 2080 Ti. Both runs enforce the same constraints, so the gain
-              comes from speculation alone. Every output matched the target's token for token.
-            </figcaption>
-          </figure>
+          </div>
         </div>
+        <figcaption class="fig-cap">
+          <b>Figure 3.</b> Greedy decoding on an RTX 2080 Ti. Both runs enforce the same constraints, so the gain
+          comes from speculation alone. Every output matched the target's token for token.
+        </figcaption>
+      </figure>
+    </section>
 
-        <section class="sec" aria-labelledby="gram-title">
-          <p class="eyebrow">Interactive</p>
-          <h2 id="gram-title">Grammar playground</h2>
-          <p class="sec-lede">
-            Constrained generation, one token at a time. A token is legal only if every character in
-            it can be consumed from the current grammar state, the way Onyx scans each token's raw bytes.
-          </p>
-          <figure class="panel gp" aria-labelledby="gp-cap" data-grammar-root>
-            <div class="panel-top">
-              <span class="panel-title">Regex constraint over a toy vocabulary</span>
-              <span class="phase">Illustration</span>
-            </div>
-            <div class="gp-grid">
-              <div class="gp-left">
-                <div class="seg" role="group" aria-label="Preset constraints">
-                  <button type="button" data-re="[A-Z]{3}-[0-9]{4}" aria-pressed="false"><code>[A-Z]{3}-[0-9]{4}</code></button>
-                  <button type="button" data-re="[0-9]{4}-[0-9]{2}-[0-9]{2}" aria-pressed="false"><code>[0-9]{4}-[0-9]{2}-[0-9]{2}</code></button>
-                  <button type="button" data-re="(yes|no)" aria-pressed="false"><code>(yes|no)</code></button>
-                </div>
-                <label class="field">
-                  <span>Regular expression</span>
-                  <input type="text" value="[A-Z]{3}-[0-9]{4}" data-regex spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="gp-msg">
-                </label>
-                <div class="gp-note" data-note>
-                  <p class="gp-hint">Supports literals, <code>[a-z]</code> classes, <code>{n}</code> <code>{n,m}</code>, <code>?</code> <code>*</code> <code>+</code>, <code>|</code> and <code>( )</code>. Try <code>[0-9]+</code> to see a state reused.</p>
-                  <p class="gp-msg" id="gp-msg" aria-live="polite" data-msg></p>
-                </div>
-
-                <dl class="demo-count gp-facts">
-                  <div><dt>DFA state</dt><dd data-state></dd></div>
-                  <div><dt>Can end here</dt><dd data-accept></dd></div>
-                  <div><dt>Mask</dt><dd data-mask></dd></div>
-                  <div><dt>Mask cache</dt><dd class="sm" data-cache></dd></div>
-                </dl>
-
-                <p class="panel-title lab">Output so far</p>
-                <div class="demo-line gp-out" data-out></div>
-                <div class="gp-scan" data-scan></div>
-                <p class="sr-only" role="status" data-status></p>
-
-                <div class="tools">
-                  <button type="button" class="btn" data-step>Step</button>
-                  <button type="button" class="btn ghost" data-play>Play</button>
-                  <button type="button" class="btn ghost" data-reset>Reset</button>
-                </div>
+    <!-- 4 Grammar playground -->
+    <section class="wrap sec" aria-labelledby="gram-title">
+      <h2 class="sec-head" id="gram-title"><span class="num">4</span> Grammar playground</h2>
+      <p class="sec-lede">
+        Constrained generation, one token at a time. A token is legal only if every character in
+        it can be consumed from the current grammar state, the way Onyx scans each token's raw bytes.
+      </p>
+      <figure class="fig gp" aria-labelledby="gp-cap" data-grammar-root>
+        <div class="fig-frame">
+          <div class="fig-head">
+            <span class="fig-title">Regex constraint over a toy vocabulary</span>
+            <span class="badge badge-illus">Illustration</span>
+          </div>
+          <div class="fig-body gp-grid">
+            <div class="gp-left">
+              <div class="seg" role="group" aria-label="Preset constraints">
+                <button type="button" data-re="[A-Z]{3}-[0-9]{4}" aria-pressed="false"><code>[A-Z]{3}-[0-9]{4}</code></button>
+                <button type="button" data-re="[0-9]{4}-[0-9]{2}-[0-9]{2}" aria-pressed="false"><code>[0-9]{4}-[0-9]{2}-[0-9]{2}</code></button>
+                <button type="button" data-re="(yes|no)" aria-pressed="false"><code>(yes|no)</code></button>
+              </div>
+              <label class="field">
+                <span>Regular expression</span>
+                <input type="text" value="[A-Z]{3}-[0-9]{4}" data-regex spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="gp-msg">
+              </label>
+              <div class="gp-note" data-note>
+                <p class="gp-hint">Supports literals, <code>[a-z]</code> classes, <code>{n}</code> <code>{n,m}</code>, <code>?</code> <code>*</code> <code>+</code>, <code>|</code> and <code>( )</code>. Try <code>[0-9]+</code> to see a state reused.</p>
+                <p class="gp-msg" id="gp-msg" aria-live="polite" data-msg></p>
               </div>
 
-              <div class="gp-right">
-                <div class="vocab-head">
-                  <span class="panel-title">Vocabulary, <span data-size></span></span>
-                  <span class="vocab-pick">next pick <b data-pick></b></span>
-                </div>
-                <ul class="vocab" aria-label="Toy vocabulary" data-vocab></ul>
-                <p class="vocab-count" data-legal></p>
-                <ul class="legend" aria-hidden="true">
-                  <li><span class="vc legal">ab</span> legal in this state</li>
-                  <li><span class="vc blocked">ab</span> some character has no transition</li>
-                  <li><span class="vc legal pick">ab</span> the model's pick</li>
-                </ul>
+              <dl class="demo-count gp-facts">
+                <div><dt>DFA state</dt><dd data-state></dd></div>
+                <div><dt>Can end here</dt><dd data-accept></dd></div>
+                <div><dt>Mask</dt><dd data-mask></dd></div>
+                <div><dt>Mask cache</dt><dd class="sm" data-cache></dd></div>
+              </dl>
+
+              <p class="lab gp-lab">Output so far</p>
+              <div class="demo-line gp-out" data-out></div>
+              <div class="gp-scan" data-scan></div>
+              <p class="sr-only" role="status" data-status></p>
+
+              <div class="tools">
+                <button type="button" class="btn" data-step>Step</button>
+                <button type="button" class="btn btn-quiet" data-play>Play</button>
+                <button type="button" class="btn btn-quiet" data-reset>Reset</button>
               </div>
             </div>
-            <figcaption id="gp-cap">
-              Illustration. The pick is a fixed pseudo-random score over the legal tokens, not a model.
-              In Onyx this runs in Rust over the full tokenizer vocabulary, and each grammar state's
-              mask is cached and applied on the GPU. Reset keeps this page's cache, so a second run
-              shows hits.
-            </figcaption>
-          </figure>
-        </section>
 
-        <div class="how">
-          <h3>How it got there</h3>
-          <ul>
-            <li>
-              <strong>The draft runs as hand-written CUDA graphs.</strong>
-              Reimplementing the draft's decoder step over a static KV cache cut it from
-              7.5–9.8 to 4.1–4.4 ms per token, and raised the overall speedup from 1.17&times;
-              to 1.49&times; in one week.
-            </li>
-            <li>
-              <strong>Output stays bitwise-identical.</strong>
-              Scoring several positions at once can round differently in FP16. When the top two
-              scores are within rounding of each other, Onyx replays the history one token at a time
-              from a clean checkpoint, using CUDA graphs in 8-token blocks.
-            </li>
-            <li>
-              <strong>Grammar masks live on the GPU.</strong>
-              A Rust engine (regex DFAs and a stack-based JSON Schema parser, exposed through PyO3)
-              works out which tokens are legal in each state. Caching those scans by grammar state
-              lifted long constrained outputs from 0.49–0.99&times; to as high as 2.0&times;.
-            </li>
-            <li>
-              <strong>Speculation costs almost nothing up front.</strong>
-              The draft prefills the prompt only after the target has picked the first token, which
-              cut speculation's added time to first token from 637 ms to 0.3 ms.
-            </li>
-          </ul>
-          <p class="stack" aria-label="Built with">
-            <span>Python</span><span>Rust</span><span>CUDA</span><span>PyTorch</span><span>MLX</span><span>PyO3</span><span>FastAPI</span>
-          </p>
-          <p class="cta-row">
-            <a class="btn" href="https://github.com/bayareahomelander/Onyx">View on GitHub</a>
-            <a class="btn ghost" href="https://github.com/bayareahomelander/Onyx/blob/main/onyx_cuda/README.md#demo">Watch the side-by-side demos</a>
-          </p>
+            <div class="gp-right">
+              <div class="vocab-head">
+                <span class="lab">Vocabulary, <span data-size></span></span>
+                <span class="vocab-pick">next pick <b data-pick></b></span>
+              </div>
+              <ul class="vocab" aria-label="Toy vocabulary" data-vocab></ul>
+              <p class="vocab-count" data-legal></p>
+              <ul class="legend" aria-hidden="true">
+                <li><span class="vc legal">ab</span> legal in this state</li>
+                <li><span class="vc blocked">ab</span> some character has no transition</li>
+                <li><span class="vc legal pick">ab</span> the model's pick</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+        <figcaption class="fig-cap" id="gp-cap">
+          <b>Figure 4.</b> Illustration. The pick is a fixed pseudo-random score over the legal tokens, not a model.
+          In Onyx this runs in Rust over the full tokenizer vocabulary, and each grammar state's
+          mask is cached and applied on the GPU. Reset keeps this page's cache, so a second run
+          shows hits.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- 5 How it got there -->
+    <section class="wrap sec" aria-labelledby="how-title">
+      <h2 class="sec-head" id="how-title"><span class="num">5</span> How it got there</h2>
+      <ol class="how">
+        <li>
+          <h3><span class="num">5.1</span> The draft runs as hand-written CUDA graphs.</h3>
+          <p>
+            Reimplementing the draft's decoder step over a static KV cache cut it from
+            7.5–9.8 to 4.1–4.4 ms per token, and raised the overall speedup from 1.17&times;
+            to 1.49&times; in one week.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">5.2</span> Output stays bitwise-identical.</h3>
+          <p>
+            Scoring several positions at once can round differently in FP16. When the top two
+            scores are within rounding of each other, Onyx replays the history one token at a time
+            from a clean checkpoint, using CUDA graphs in 8-token blocks.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">5.3</span> Grammar masks live on the GPU.</h3>
+          <p>
+            A Rust engine (regex DFAs and a stack-based JSON Schema parser, exposed through PyO3)
+            works out which tokens are legal in each state. Caching those scans by grammar state
+            lifted long constrained outputs from 0.49–0.99&times; to as high as 2.0&times;.
+          </p>
+        </li>
+        <li>
+          <h3><span class="num">5.4</span> Speculation costs almost nothing up front.</h3>
+          <p>
+            The draft prefills the prompt only after the target has picked the first token, which
+            cut speculation's added time to first token from 637 ms to 0.3 ms.
+          </p>
+        </li>
+      </ol>
+      <p class="cta-row">
+        <a class="btn" href="https://github.com/bayareahomelander/Onyx">View on GitHub</a>
+        <a class="btn btn-quiet" href="https://github.com/bayareahomelander/Onyx/blob/main/onyx_cuda/README.md#demo">Watch the side-by-side demos</a>
+      </p>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <span>&copy; 2026 Paco Sun</span>
-      <span class="foot-links"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></span>
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>&copy; 2026 Paco Sun · bayareahomelander.github.io</span>
+      <nav aria-label="Elsewhere"><a href="https://github.com/bayareahomelander">GitHub</a><a href="https://medium.com/@pacosun">Medium</a><a href="mailto:SunweichenP@Gmail.com">Email</a></nav>
     </div>
   </footer>
   <script src="/onyx/onyx.js" defer></script>

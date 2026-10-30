@@ -1,0 +1,333 @@
+/* site.css: the shared datasheet system.
+   A white sheet, black ink, one deep green for section numbers, rules and status.
+   Hairline-ruled tables with tinted header rows, one grotesk (Archivo, with its width
+   axis), square corners, no shadows. Page-agnostic: pages add their own layout in a
+   sibling stylesheet. */
+
+/* ---------- Tokens ---------- */
+:root {
+  --paper: #ffffff;
+  --ink: #0b0d0c;
+  --ink-2: #2c322f;
+  --muted: #55605a;
+  --rule: #b9c1bc;          /* hairline between rows */
+  --tint: #edf2ef;          /* table header rows */
+  --tint-2: #dfeae3;        /* group rows, active row */
+  --accent: #0a5c36;        /* section numbers, rules, status */
+  --accent-soft: #d3e6da;   /* verified wash */
+  --on-accent: #ffffff;
+
+  --font: "Archivo", "Arial Narrow", system-ui, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --wrap: 1200px;
+  --gutter: 24px;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0e1210;
+    --ink: #e8eeea;
+    --ink-2: #c3cdc7;
+    --muted: #94a39a;
+    --rule: #2f3a34;
+    --tint: #161e19;
+    --tint-2: #1f2b24;
+    --accent: #43b582;
+    --accent-soft: #24402f;
+    --on-accent: #0e1210;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--accent) var(--tint);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  font-variant-numeric: lining-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  caret-color: var(--accent);
+  accent-color: var(--accent);
+}
+
+::selection { background: var(--accent); color: var(--on-accent); }
+
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+b, strong { font-weight: 700; }
+.nw { white-space: nowrap; }
+
+a {
+  display: inline-block;
+  min-height: 24px;
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+a:where(:not(.btn)):hover { color: var(--accent); text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0; }
+
+q { quotes: "\201C" "\201D"; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.skip {
+  position: absolute; left: -9999px; top: 8px; z-index: 10;
+  background: var(--ink); color: var(--paper); padding: 8px 12px; text-decoration: none;
+}
+.skip:focus { left: 8px; }
+.skip:hover { color: var(--paper); }
+
+/* ---------- Top strip: wordmark, document line, nav ---------- */
+.strip { border-bottom: 1px solid var(--ink); }
+.strip-in {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0 28px; min-height: 44px;
+}
+.wordmark {
+  font-size: 1.125rem; font-weight: 800; font-stretch: 75%; letter-spacing: 0.01em;
+  text-decoration: none; line-height: 44px; min-height: 44px;
+}
+.wordmark:hover { color: var(--ink); }
+.docline { flex: 1; font-size: 0.8125rem; color: var(--muted); }
+.strip nav { display: flex; flex-wrap: wrap; gap: 0 20px; }
+.strip nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 0.9375rem; font-weight: 500; color: var(--ink-2); text-decoration: none;
+}
+.strip nav a:hover { color: var(--accent); }
+.strip nav a[aria-current] {
+  color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px; text-underline-offset: 0.5em;
+}
+
+/* ---------- Numbered section headings ---------- */
+.sec { padding-top: 52px; }
+.sec-head {
+  display: flex; align-items: baseline; gap: 0.6em;
+  margin-bottom: 14px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--accent);
+  font-size: 1.5rem; font-weight: 700; font-stretch: 88%; line-height: 1.2;
+}
+.sec-head .num { color: var(--accent); font-variant-numeric: tabular-nums; }
+.sec-lede { max-width: 70ch; color: var(--ink-2); margin-bottom: 18px; }
+
+/* ---------- Ruled tables ---------- */
+.ds {
+  width: 100%; border-collapse: collapse; table-layout: fixed;
+  font-size: 0.9375rem; line-height: 1.4; font-variant-numeric: tabular-nums;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+}
+.ds caption { text-align: left; padding: 0 0 8px; font-size: 0.8125rem; color: var(--muted); caption-side: bottom; }
+.ds th, .ds td { padding: 9px 12px; text-align: left; vertical-align: top; font-weight: 400; }
+.ds thead th {
+  background: var(--tint); border-bottom: 1px solid var(--ink);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
+  padding-block: 7px;
+}
+.ds tbody th[scope="row"] { font-weight: 700; }
+.ds tbody tr + tr > * { border-top: 1px solid var(--rule); }
+.ds tbody tr > * + * { border-left: 1px solid var(--rule); }
+.ds thead th + th { border-left: 1px solid var(--rule); }
+.ds tbody th[scope="colgroup"] {
+  background: var(--tint); font-size: 0.875rem; font-weight: 700; border-left: 0;
+  border-top: 1px solid var(--ink);
+}
+.ds tbody:first-of-type th[scope="colgroup"] { border-top: 0; }
+.ds tbody tr[data-on] > * { background: var(--tint-2); }
+.ds tbody tr[data-on] > :first-child { color: var(--accent); }
+.ds .num-col { font-variant-numeric: tabular-nums; }
+
+/* Application Notes: the article list (home and /writing/). Columns No. | Title | Summary | Source. */
+.notes .c-no { width: 4.5rem; }
+.notes .c-title { width: 24rem; }
+.notes .c-src { width: 7rem; }
+.notes td.no { font-weight: 700; color: var(--accent); }
+.notes td, .notes th[scope="row"] { vertical-align: middle; }
+.notes tbody th[scope="row"] a { font-weight: 700; }
+.notes td:not(.no) { color: var(--ink-2); }
+
+/* ---------- Buttons and status badges ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 18px; border: 1px solid var(--ink); border-radius: 0;
+  background: var(--ink); color: var(--paper);
+  font-family: inherit; font-size: 0.9375rem; font-weight: 600; line-height: 1.2; text-decoration: none; text-align: center;
+}
+.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn-quiet { background: transparent; color: var(--ink); }
+.btn-quiet:hover { background: var(--tint); border-color: var(--ink); color: var(--ink); }
+
+.badge {
+  display: inline-block; padding: 1px 8px; border: 1px solid var(--accent); border-radius: 0;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; line-height: 1.5; text-transform: uppercase;
+}
+.badge-active { background: var(--accent); color: var(--on-accent); }
+.badge-preview { background: transparent; color: var(--accent); border-style: dashed; }
+
+/* ---------- Figures ---------- */
+.fig-cap { font-size: 0.8125rem; line-height: 1.5; color: var(--muted); margin-top: 8px; }
+.fig-cap b { color: var(--ink); }
+
+/* Figure frame, shared by the Onyx and Flint figures: a ruled box with a tinted title
+   bar, an optional Illustration badge, and a legend line. */
+.fig-frame { border: 1px solid var(--ink); background: var(--paper); }
+.fig-head {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px;
+  padding: 6px 12px; background: var(--tint); border-bottom: 1px solid var(--ink);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
+}
+.fig-body { padding: 14px 12px 16px; }
+.badge-illus { background: transparent; color: var(--accent); border-style: dashed; }
+.legend {
+  list-style: none; padding: 12px 0 0; margin: 14px 0 0; border-top: 1px solid var(--rule);
+  display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.8125rem; color: var(--muted);
+}
+.legend li { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- Front matter: title block and status box (top of every page) ---------- */
+.front {
+  display: grid; grid-template-columns: minmax(0, 1fr) 23rem; gap: 24px 48px;
+  align-items: end; padding-block: 28px 4px;
+}
+.title h1 {
+  font-size: clamp(3.75rem, 9vw, 6rem); font-weight: 800; font-stretch: 62%;
+  line-height: 0.88; letter-spacing: -0.01em;
+}
+.role { margin-top: 14px; font-size: 1.5rem; font-weight: 600; line-height: 1.2; }
+.desc { margin-top: 10px; max-width: 70ch; font-size: 1.0625rem; color: var(--ink-2); }
+
+.status-box { border: 1px solid var(--ink); background: var(--paper); }
+.box-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 6px 12px; background: var(--tint); border-bottom: 1px solid var(--ink);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
+}
+.box-list > div {
+  display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); gap: 12px;
+  padding: 6px 12px; border-bottom: 1px solid var(--rule); font-size: 0.9375rem; line-height: 1.35;
+}
+.box-list dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.2em; }
+.box-list dd { font-weight: 500; }
+.pair { display: flex; gap: 18px; }
+.pair a { display: inline-flex; align-items: center; min-height: 24px; }
+.box-act { padding: 12px; }
+.box-act .btn { width: 100%; }
+
+.sec.first { padding-top: 24px; }
+
+/* ---------- Token line: the Onyx speculative-decoding illustration (home and /onyx/) ----------
+   Tokens are driven by script. Committed tokens sit flush; pending ones get a box. */
+.phase { min-height: 1.35em; margin-bottom: 6px; font-size: 0.8125rem; font-weight: 600; line-height: 1.35; color: var(--accent); }
+.demo-line {
+  min-height: 4.9rem; padding: 8px 10px; border: 1px solid var(--rule); background: var(--paper);
+  font-family: var(--mono); font-size: 0.9375rem; line-height: 1.5; word-break: break-all;
+  transition: opacity 0.4s ease;
+}
+.demo-count { display: flex; gap: 6px 28px; margin-top: 10px; }
+.demo-count dt { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.demo-count dd { font-size: 1.125rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.tok {
+  display: inline-block; white-space: pre; padding: 0.05em 0; margin: 0.15em 0; border-radius: 0;
+  border: 1px solid transparent; border-left-width: 0; border-right-width: 0;
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, opacity 0.35s ease;
+}
+.tok.draft, .tok.ok, .tok.rejected, .tok.target { padding: 0.05em 0.15em; margin: 0.15em 0.05em; }
+.tok.draft { color: var(--accent); background: var(--tint); border: 1px dashed var(--accent); }
+.tok.ok { background: var(--accent-soft); }
+.tok.rejected { color: var(--muted); border: 1px dashed var(--rule); text-decoration: line-through; text-decoration-color: var(--ink); }
+.tok.target { background: var(--tint-2); border-bottom: 2px solid var(--ink); }
+.tok.gone { opacity: 0; }
+
+/* ---------- Footer: document line ---------- */
+.foot { margin-top: 72px; border-top: 1px solid var(--ink); padding-block: 14px 36px; font-size: 0.8125rem; color: var(--muted); }
+.foot-in { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 24px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 0 18px; }
+.foot a { display: inline-flex; align-items: center; min-height: 24px; text-decoration: none; }
+.foot a:hover { color: var(--accent); text-decoration: underline; }
+
+@media (max-width: 1000px) {
+  .front { grid-template-columns: 1fr; align-items: start; }
+  .status-box { max-width: 28rem; }
+}
+
+/* ---------- Small screens: tables reflow to labeled stacked rows ---------- */
+@media (max-width: 760px) {
+  :root { --gutter: 16px; }
+
+  .front { padding-top: 20px; }
+  .status-box { max-width: none; }
+  .sec { padding-top: 40px; }
+  .sec.first { padding-top: 28px; }
+  .sec-head { font-size: 1.3125rem; }
+  .foot { margin-top: 56px; }
+
+  .docline { display: none; }
+  .strip-in { gap: 0 16px; }
+  .strip nav { gap: 0 14px; }
+  .strip nav a { font-size: 0.875rem; }
+
+  .ds, .ds tbody, .ds tr, .ds th, .ds td { display: block; }
+  .ds colgroup { display: none; }
+  .ds thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  .ds tbody tr { padding: 10px 0; }
+  .ds tbody tr + tr { border-top: 1px solid var(--rule); }
+  .ds tbody tr + tr > *, .ds tbody tr > * + * { border: 0; }
+  .ds th, .ds td { padding: 0; }
+  .ds td[data-label] { position: relative; padding: 4px 0 4px 6.5rem; min-height: 24px; }
+  .ds td[data-label]::before {
+    content: attr(data-label); position: absolute; left: 0; top: 0.5rem; width: 6.25rem;
+    font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted);
+    line-height: 1.3;
+  }
+  .ds tbody tr[data-on] > * { background: transparent; }
+  .ds tbody tr[data-on] { background: var(--tint-2); }
+  .ds tbody tr:has(> th[scope="colgroup"]) { padding: 0; }
+  .ds tbody th[scope="colgroup"] { padding: 8px 12px; border-top: 1px solid var(--ink); }
+  .ds tbody:first-of-type th[scope="colgroup"] { border-top: 0; }
+  .ds tbody tr + tr:has(> th[scope="colgroup"]) { border-top: 0; }
+
+  .notes tbody tr { padding-block: 12px; }
+  .notes tbody th[scope="row"] { padding-block: 2px 4px; font-size: 1.0625rem; line-height: 1.5; }
+  .notes td.no { display: block; padding: 0; font-size: 0.875rem; min-height: 0; }
+  .notes td.no::before {
+    content: "Application note "; position: static; display: inline; width: auto;
+    font-size: 0.875rem; letter-spacing: 0; text-transform: none; color: var(--muted); font-weight: 700;
+  }
+}
+
+@media (max-width: 640px) {
+  .fig-body { padding: 12px 10px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tok, .demo-line { transition: none; }
+}
+
+@media print {
+  .skip, .strip nav { display: none; }
+}
