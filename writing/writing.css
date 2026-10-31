@@ -39,21 +39,20 @@ code { font-family: var(--mono); font-size: 0.9em; }
 
 .tmap .go {
   flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 4rem; padding: 0 12px;
-  border-left: 1px solid var(--rule); font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); text-decoration: none;
+  font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); text-decoration: none;
 }
 .tmap .go:hover { background: var(--tint); }
-.tmap .is-active .go { border-left-color: var(--accent); }
 .tmap .go:focus-visible { outline-offset: -4px; }
 
 .tmap-list > li.is-coming .row { border-style: dashed; border-color: var(--muted); background: transparent; }
 .tmap-list > li.is-coming .node { cursor: default; color: var(--muted); }
 .tmap-list > li.is-coming .node .num { color: var(--muted); }
 
-/* ---------- Stage detail: a ruled box, headed by the stage's number and name ---------- */
+/* ---------- Stage detail: a boxed object, headed by the stage's number and name ---------- */
 .tmap-side { position: sticky; top: 16px; }
 .tmap-panel { min-height: 25rem; padding: 14px 16px 16px; border: 1px solid var(--ink); background: var(--paper); }
 .tmap-panel h3 {
-  display: flex; align-items: baseline; gap: 0.6em; padding-bottom: 6px; border-bottom: 1px solid var(--accent);
+  display: flex; align-items: baseline; gap: 0.6em;
   font-size: 1.375rem; font-weight: 700; font-stretch: 88%; line-height: 1.2;
 }
 .tmap-panel h3 .num { flex: none; color: var(--accent); font-variant-numeric: tabular-nums; }
@@ -61,7 +60,7 @@ code { font-family: var(--mono); font-size: 0.9em; }
 .tmap-panel .desc { margin-top: 2px; max-width: 70ch; font-size: 0.9375rem; color: var(--ink-2); }
 .tmap-panel .read { margin-top: 12px; }
 .tmap-panel .read a { display: inline-flex; align-items: center; min-height: 24px; font-size: 0.9375rem; font-weight: 600; }
-.tmap-panel .viz { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); }
+.tmap-panel .viz { margin: 20px 0 0; }
 .tmap-panel .viz-box { min-height: 170px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
 .tmap-panel figcaption { margin-top: 10px; font-size: 0.8125rem; line-height: 1.5; color: var(--muted); }
 .tmap-panel .ill { font-weight: 700; color: var(--ink); }

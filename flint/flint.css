@@ -18,7 +18,7 @@
 }
 .early { color: var(--ink); }
 .box-note {
-  padding: 8px 12px; border-bottom: 1px solid var(--rule);
+  padding: 8px 12px;
   font-size: 0.8125rem; line-height: 1.5; color: var(--muted);
 }
 
@@ -44,19 +44,18 @@
 .viz-svg text.hd.on, .viz-svg text.num.hi { fill: var(--accent); }
 .viz-svg .rule { stroke: var(--rule); stroke-width: 1; }
 
-/* Step list: a ruled table of rows; the current row takes Group Tint with a green number. */
+/* Step list: rows set by space; the current row takes Group Tint with a green number. */
 .stages {
   list-style: none; margin: 0; padding: 0; counter-reset: st;
   border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
 }
 .stages li {
-  counter-increment: st; position: relative; padding: 7px 10px 7px 36px;
+  counter-increment: st; position: relative; padding: 8px 10px 8px 36px;
   font-size: 0.875rem; line-height: 1.4; color: var(--muted);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-.stages li + li { border-top: 1px solid var(--rule); }
 .stages li::before {
-  content: counter(st); position: absolute; left: 12px; top: 7px;
+  content: counter(st); position: absolute; left: 12px; top: 8px;
   font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted);
 }
 .stages li b { display: block; font-weight: 700; color: var(--ink-2); }
@@ -139,8 +138,7 @@
 
 /* ---------- 3 What makes it hard ---------- */
 .how { list-style: none; padding: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
-.how li { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 0 32px; padding: 14px 12px; }
-.how li + li { border-top: 1px solid var(--rule); }
+.how li { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 0 32px; padding: 16px 12px; }
 .how h3 { display: flex; align-items: baseline; gap: 0.7em; font-size: 1rem; font-weight: 700; font-stretch: 92%; line-height: 1.25; }
 .how .num { flex: none; color: var(--accent); font-variant-numeric: tabular-nums; }
 .how p { max-width: 70ch; color: var(--ink-2); }
@@ -156,6 +154,7 @@
   .viz-svg { max-width: 420px; margin-inline: auto; }
 
   .how li { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 8px; }
+  .how li + li { border-top: 1px solid var(--rule); }
 
   /* Two columns: the date becomes the row's first line, the milestone follows without a label. */
   .road tbody th[scope="row"] { padding-bottom: 2px; }

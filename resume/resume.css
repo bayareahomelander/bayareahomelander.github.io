@@ -13,7 +13,7 @@
 /* ---------- Resume tables ---------- */
 .res .c-when { width: 9.5rem; }
 .res .c-role { width: 17rem; }
-.res tbody tr > * { padding-block: 12px; }
+.res tbody tr > * { padding-block: 16px; }
 .res td.when, .res tbody td[data-label="Period"] { font-weight: 600; white-space: nowrap; }
 
 .res-name { display: block; font-size: 1rem; font-weight: 700; line-height: 1.25; }
@@ -37,7 +37,7 @@
 .res b { color: var(--ink); }
 
 /* Z.AI: the weightiest role. A larger name, larger text, and results set in the condensed face. */
-.res tr.prime > * { padding-block: 22px; }
+.res tr.prime > * { padding-block: 24px; }
 .res tr.prime .res-name { font-size: 1.5rem; font-weight: 800; font-stretch: 85%; line-height: 1.1; }
 .res tr.prime .res-org { font-size: 0.9375rem; margin-top: 5px; color: var(--ink); font-weight: 500; }
 .res tr.prime td { color: var(--ink); }
@@ -52,7 +52,7 @@
 
 /* Skills and education */
 .skills tbody th[scope="row"] { font-weight: 700; }
-.skills tbody tr > * { padding-block: 9px; }
+.skills tbody tr > * { padding-block: 11px; }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1000px) {

@@ -1,8 +1,8 @@
 /* site.css: the shared datasheet system.
-   A white sheet, black ink, one deep green for section numbers, rules and status.
-   Hairline-ruled tables with tinted header rows, one grotesk (Archivo, with its width
-   axis), square corners, no shadows. Page-agnostic: pages add their own layout in a
-   sibling stylesheet. */
+   A white sheet, black ink, one deep green for section numbers and status.
+   Booktabs tables (an ink rule above, a tinted header, an ink rule below; no verticals,
+   no row hairlines on desktop), one grotesk (Archivo, with its width axis), square
+   corners, no shadows. Page-agnostic: pages add their own layout in a sibling stylesheet. */
 
 /* ---------- Tokens ---------- */
 :root {
@@ -10,10 +10,10 @@
   --ink: #0b0d0c;
   --ink-2: #2c322f;
   --muted: #55605a;
-  --rule: #b9c1bc;          /* hairline between rows */
+  --rule: #b9c1bc;          /* light separator: stacked phone rows, quiet object outlines */
   --tint: #edf2ef;          /* table header rows */
   --tint-2: #dfeae3;        /* group rows, active row */
-  --accent: #0a5c36;        /* section numbers, rules, status */
+  --accent: #0a5c36;        /* section numbers, status */
   --accent-soft: #d3e6da;   /* verified wash */
   --on-accent: #ffffff;
 
@@ -127,8 +127,7 @@ q { quotes: "\201C" "\201D"; }
 .sec { padding-top: 52px; }
 .sec-head {
   display: flex; align-items: baseline; gap: 0.6em;
-  margin-bottom: 14px; padding-bottom: 6px;
-  border-bottom: 1px solid var(--accent);
+  margin-bottom: 16px;
   font-size: 1.5rem; font-weight: 700; font-stretch: 88%; line-height: 1.2;
 }
 .sec-head .num { color: var(--accent); font-variant-numeric: tabular-nums; }
@@ -141,21 +140,14 @@ q { quotes: "\201C" "\201D"; }
   border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
 }
 .ds caption { text-align: left; padding: 0 0 8px; font-size: 0.8125rem; color: var(--muted); caption-side: bottom; }
-.ds th, .ds td { padding: 9px 12px; text-align: left; vertical-align: top; font-weight: 400; }
+.ds th, .ds td { padding: 11px 12px; text-align: left; vertical-align: top; font-weight: 400; }
 .ds thead th {
-  background: var(--tint); border-bottom: 1px solid var(--ink);
+  background: var(--tint);
   font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
-  padding-block: 7px;
+  padding-block: 8px;
 }
 .ds tbody th[scope="row"] { font-weight: 700; }
-.ds tbody tr + tr > * { border-top: 1px solid var(--rule); }
-.ds tbody tr > * + * { border-left: 1px solid var(--rule); }
-.ds thead th + th { border-left: 1px solid var(--rule); }
-.ds tbody th[scope="colgroup"] {
-  background: var(--tint); font-size: 0.875rem; font-weight: 700; border-left: 0;
-  border-top: 1px solid var(--ink);
-}
-.ds tbody:first-of-type th[scope="colgroup"] { border-top: 0; }
+.ds tbody th[scope="colgroup"] { background: var(--tint-2); font-size: 0.875rem; font-weight: 700; padding-block: 8px; }
 .ds tbody tr[data-on] > * { background: var(--tint-2); }
 .ds tbody tr[data-on] > :first-child { color: var(--accent); }
 .ds .num-col { font-variant-numeric: tabular-nums; }
@@ -196,13 +188,13 @@ q { quotes: "\201C" "\201D"; }
 .fig-frame { border: 1px solid var(--ink); background: var(--paper); }
 .fig-head {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px;
-  padding: 6px 12px; background: var(--tint); border-bottom: 1px solid var(--ink);
+  padding: 7px 12px; background: var(--tint);
   font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
 }
-.fig-body { padding: 14px 12px 16px; }
+.fig-body { padding: 16px 12px 18px; }
 .badge-illus { background: transparent; color: var(--accent); border-style: dashed; }
 .legend {
-  list-style: none; padding: 12px 0 0; margin: 14px 0 0; border-top: 1px solid var(--rule);
+  list-style: none; padding: 0; margin: 14px 0 0;
   display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.8125rem; color: var(--muted);
 }
 .legend li { display: flex; align-items: center; gap: 8px; }
@@ -222,18 +214,18 @@ q { quotes: "\201C" "\201D"; }
 .status-box { border: 1px solid var(--ink); background: var(--paper); }
 .box-head {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 6px 12px; background: var(--tint); border-bottom: 1px solid var(--ink);
+  padding: 7px 12px; background: var(--tint);
   font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
 }
 .box-list > div {
   display: grid; grid-template-columns: 6.25rem minmax(0, 1fr); gap: 12px;
-  padding: 6px 12px; border-bottom: 1px solid var(--rule); font-size: 0.9375rem; line-height: 1.35;
+  padding: 7px 12px; font-size: 0.9375rem; line-height: 1.35;
 }
 .box-list dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.2em; }
 .box-list dd { font-weight: 500; }
 .pair { display: flex; gap: 18px; }
 .pair a { display: inline-flex; align-items: center; min-height: 24px; }
-.box-act { padding: 12px; }
+.box-act { padding: 8px 12px 12px; }
 .box-act .btn { width: 100%; }
 
 .sec.first { padding-top: 24px; }
@@ -296,7 +288,6 @@ q { quotes: "\201C" "\201D"; }
   }
   .ds tbody tr { padding: 10px 0; }
   .ds tbody tr + tr { border-top: 1px solid var(--rule); }
-  .ds tbody tr + tr > *, .ds tbody tr > * + * { border: 0; }
   .ds th, .ds td { padding: 0; }
   .ds td[data-label] { position: relative; padding: 4px 0 4px 6.5rem; min-height: 24px; }
   .ds td[data-label]::before {
@@ -307,9 +298,8 @@ q { quotes: "\201C" "\201D"; }
   .ds tbody tr[data-on] > * { background: transparent; }
   .ds tbody tr[data-on] { background: var(--tint-2); }
   .ds tbody tr:has(> th[scope="colgroup"]) { padding: 0; }
-  .ds tbody th[scope="colgroup"] { padding: 8px 12px; border-top: 1px solid var(--ink); }
-  .ds tbody:first-of-type th[scope="colgroup"] { border-top: 0; }
-  .ds tbody tr + tr:has(> th[scope="colgroup"]) { border-top: 0; }
+  .ds tbody th[scope="colgroup"] { padding: 8px 12px; }
+  .ds tbody tr + tr:has(> th[scope="colgroup"]), .ds tbody tr:has(> th[scope="colgroup"]) + tr { border-top: 0; }
 
   .notes tbody tr { padding-block: 12px; }
   .notes tbody th[scope="row"] { padding-block: 2px 4px; font-size: 1.0625rem; line-height: 1.5; }
@@ -330,4 +320,6 @@ q { quotes: "\201C" "\201D"; }
 
 @media print {
   .skip, .strip nav { display: none; }
+  /* Print keeps its ruled heading (resume.css recolors it to ink). */
+  .sec-head { padding-bottom: 6px; border-bottom: 1px solid var(--accent); }
 }

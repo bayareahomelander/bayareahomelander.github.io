@@ -1,5 +1,5 @@
 /* home.css: layout for the datasheet front page. Builds on site.css, which carries the title
-   block, status box, Application Notes table and token line. */
+   block, status box, Application Notes table and token line. Rows are separated by space, not rules. */
 
 /* ---------- Key specifications ---------- */
 .specs .c-param { width: 15rem; }
@@ -28,7 +28,7 @@ p.dev-note { margin-top: 8px; }
 .dev-links { display: flex; flex-wrap: wrap; gap: 0 18px; }
 .dev-links a { display: inline-flex; align-items: center; font-weight: 600; }
 .dev .fig-cell { padding: 12px; }
-.dev tbody tr > * { padding-block: 12px; }
+.dev tbody tr > * { padding-block: 16px; }
 
 .fig-box { border: 1px solid var(--rule); background: var(--paper); padding: 10px 12px; }
 
@@ -47,7 +47,7 @@ p.dev-note { margin-top: 8px; }
 .exp tbody td:first-child { font-weight: 600; }
 .exp tbody td:not(:first-child) { color: var(--ink-2); }
 .exp tbody b { color: var(--ink); }
-.exp tr.prime > * { padding-block: 18px; font-size: 1rem; }
+.exp tr.prime > * { padding-block: 20px; font-size: 1rem; }
 .exp tr.prime th[scope="row"] { font-size: 1.25rem; font-weight: 800; font-stretch: 85%; line-height: 1.15; }
 .exp tr.prime td:not(:first-child) { color: var(--ink); }
 .exp tr.prime b { font-size: 1.5rem; font-weight: 800; font-stretch: 80%; line-height: 1; }

@@ -11,9 +11,7 @@ code { font-family: var(--mono); font-size: 0.9em; }
   list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
 }
-.feat li { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; }
-.feat li:nth-child(n+3) { border-top: 1px solid var(--rule); }
-.feat li:nth-child(even) { border-left: 1px solid var(--rule); }
+.feat li { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 16px 16px; }
 .feat strong {
   font-size: 2rem; font-weight: 750; font-stretch: 78%; line-height: 1; letter-spacing: -0.005em;
   white-space: nowrap; font-variant-numeric: tabular-nums;
@@ -45,8 +43,7 @@ code { font-family: var(--mono); font-size: 0.9em; }
 
 /* ---------- Figure 1: speculative decoding ---------- */
 .measured {
-  display: flex; align-items: center; gap: 16px; margin: 14px 0; padding: 10px 0;
-  border-block: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 16px; margin: 16px 0;
 }
 .measured strong {
   flex: none; min-width: 4.4ch; font-size: 2.25rem; font-weight: 800; font-stretch: 78%; line-height: 1;
@@ -69,18 +66,15 @@ code { font-family: var(--mono); font-size: 0.9em; }
 }
 .bars caption { caption-side: top; text-align: left; }
 .bars thead th {
-  padding: 6px 10px; background: var(--tint); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  padding: 7px 10px; background: var(--tint); border-top: 1px solid var(--ink);
   text-align: left; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2);
 }
 .bars thead th.n { text-align: right; }
-.bars thead th + th { border-left: 1px solid var(--rule); }
 .bars tr > :first-child { width: 42%; }
 .bars .n { width: 4.5rem; }
-.bars tbody th, .bars tbody td { padding: 7px 10px; vertical-align: middle; text-align: left; font-weight: 400; }
+.bars tbody th, .bars tbody td { padding: 9px 10px; vertical-align: middle; text-align: left; font-weight: 400; }
 .bars tbody th { font-weight: 500; line-height: 1.3; }
 .bars tbody td.n { text-align: right; color: var(--muted); }
-.bars tbody tr + tr > * { border-top: 1px solid var(--rule); }
-.bars tbody tr > * + * { border-left: 1px solid var(--rule); }
 .bars .cell { display: flex; align-items: center; gap: 10px; }
 .bars .val { min-width: 3rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 
@@ -101,7 +95,7 @@ code { font-family: var(--mono); font-size: 0.9em; }
 .bars tr.total .bar { background: var(--accent); }
 
 .chart-key {
-  list-style: none; padding: 12px 0 0; margin: 14px 0 0; border-top: 1px solid var(--rule);
+  list-style: none; padding: 0; margin: 14px 0 0;
   display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.8125rem; color: var(--muted);
 }
 .chart-key li { display: flex; align-items: center; gap: 8px; }
@@ -128,12 +122,12 @@ code { font-family: var(--mono); font-size: 0.9em; }
 .dl-bars tr.sel th, .dl-bars tr.sel .val { font-weight: 700; }
 .dl-bars.acc tr.sel .bar, .dl-bars.spd tr.sel .bar { background: var(--accent); }
 .dl-bars tr.sel > * { background: var(--tint); }
-.dl-take { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: 0.9375rem; color: var(--ink-2); }
+.dl-take { margin-top: 18px; font-size: 0.9375rem; color: var(--ink-2); }
 
 /* ---------- Figure 4: grammar playground ---------- */
 .gp-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
 .gp-left { padding-right: 28px; }
-.gp-right { padding-left: 28px; border-left: 1px solid var(--rule); }
+.gp-right { padding-left: 28px; }
 
 .field { display: block; margin-top: 14px; }
 .field > span {
@@ -182,8 +176,7 @@ code { font-family: var(--mono); font-size: 0.9em; }
 
 /* ---------- 5 How it got there ---------- */
 .how { list-style: none; padding: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
-.how li { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 0 32px; padding: 14px 12px; }
-.how li + li { border-top: 1px solid var(--rule); }
+.how li { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 0 32px; padding: 16px 12px; }
 .how h3 { display: flex; align-items: baseline; gap: 0.7em; font-size: 1rem; font-weight: 700; font-stretch: 92%; line-height: 1.25; }
 .how .num { flex: none; color: var(--accent); font-variant-numeric: tabular-nums; }
 .how p { max-width: 70ch; color: var(--ink-2); }
@@ -194,17 +187,17 @@ code { font-family: var(--mono); font-size: 0.9em; }
   .try-grid { grid-template-columns: minmax(0, 1fr); }
   .gp-grid { grid-template-columns: minmax(0, 1fr); }
   .gp-left { padding-right: 0; }
-  .gp-right { padding: 0; margin-top: 24px; border-left: none; }
+  .gp-right { padding: 0; margin-top: 24px; }
 }
 
 @media (max-width: 760px) {
   .feat { grid-template-columns: minmax(0, 1fr); }
   .feat li { grid-template-columns: 6rem minmax(0, 1fr); gap: 12px; padding: 12px 8px; }
   .feat li:nth-child(n+2) { border-top: 1px solid var(--rule); }
-  .feat li:nth-child(even) { border-left: 0; }
   .feat strong { font-size: 1.75rem; }
 
   .how li { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 8px; }
+  .how li + li { border-top: 1px solid var(--rule); }
 }
 
 @media (max-width: 640px) {
