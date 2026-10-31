@@ -8,7 +8,7 @@
   <meta property="og:title" content="Paco Sun · ML Engineer, LLM Inference">
   <meta property="og:description" content="Paco Sun is a machine learning engineer in Vancouver working on LLM inference: fine-tuning, serving, and speculative decoding. Creator of Onyx.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=3">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=4">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Paco Sun, ML engineer focused on LLM inference">
@@ -76,7 +76,7 @@
           <tr>
             <th scope="row">Median serving latency</th>
             <td class="val" data-label="Value">&minus;28%</td>
-            <td data-label="Conditions">Under multi-user load, with TensorRT-LLM, Flash Attention, KV-cache reuse, and continuous batching.</td>
+            <td data-label="Conditions">Multi-user load; TensorRT-LLM, Flash Attention, KV-cache reuse, continuous batching.</td>
             <td data-label="Ref"><a href="/resume/#r-exp">Resume</a></td>
           </tr>
           <tr>
@@ -87,29 +87,50 @@
           </tr>
         </tbody>
         <tbody>
+          <tr><th scope="colgroup" colspan="4">Flint · Open source · v0.1.0</th></tr>
+          <tr>
+            <th scope="row">Forward GEMM</th>
+            <td class="val" data-label="Value">82&ndash;89%</td>
+            <td data-label="Conditions">Of cuBLAS. RTX 2080 Ti, GPT-2 small shapes, FP16 in, FP32 accumulate, against cublasGemmEx; median of 10 interleaved rounds.</td>
+            <td data-label="Ref"><a href="/flint/#flint-perf">Flint results</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Input-gradient GEMM</th>
+            <td class="val" data-label="Value">86&ndash;99%</td>
+            <td data-label="Conditions">Of cuBLAS. Same GPU, shapes, precision, baseline, and rounds.</td>
+            <td data-label="Ref"><a href="/flint/#flint-perf">Flint results</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Weight-gradient GEMM</th>
+            <td class="val" data-label="Value">91&ndash;108%</td>
+            <td data-label="Conditions">Of cuBLAS. Same GPU, shapes, precision, baseline, and rounds.</td>
+            <td data-label="Ref"><a href="/flint/#flint-perf">Flint results</a></td>
+          </tr>
+        </tbody>
+        <tbody>
           <tr><th scope="colgroup" colspan="4">Onyx · Open source</th></tr>
           <tr>
             <th scope="row">Speedup, code</th>
             <td class="val" data-label="Value">2.44&times;</td>
-            <td data-label="Conditions">Over Qwen3-8B alone. RTX 2080 Ti, greedy decoding, code workload (6 cases).</td>
+            <td data-label="Conditions">Over Qwen3-8B alone. RTX 2080 Ti, greedy, code (6 cases).</td>
             <td data-label="Ref"><a href="/onyx/#chart-cap">Onyx chart</a></td>
           </tr>
           <tr>
             <th scope="row">Speedup, overall</th>
             <td class="val" data-label="Value">1.49&times;</td>
-            <td data-label="Conditions">Over Qwen3-8B alone. RTX 2080 Ti, greedy decoding, 48-request benchmark.</td>
+            <td data-label="Conditions">Over Qwen3-8B alone. RTX 2080 Ti, greedy, 48 requests.</td>
             <td data-label="Ref"><a href="/onyx/#chart-cap">Onyx chart</a></td>
           </tr>
           <tr>
             <th scope="row">Added first-token time</th>
             <td class="val" data-label="Value">0.3 ms</td>
-            <td data-label="Conditions">Down from 637 ms. The draft prefills the prompt only after the target has picked the first token.</td>
+            <td data-label="Conditions">Down from 637 ms: the draft prefills after the first token.</td>
             <td data-label="Ref"><a href="/onyx/">Onyx</a></td>
           </tr>
           <tr>
             <th scope="row">Output vs. model alone</th>
             <td class="val" data-label="Value">Identical</td>
-            <td data-label="Conditions">Token for token: every output matched. Greedy decoding, RTX 2080 Ti, 48-request benchmark.</td>
+            <td data-label="Conditions">Token for token. RTX 2080 Ti, greedy, 48 requests.</td>
             <td data-label="Ref"><a href="/onyx/#chart-cap">Onyx chart</a></td>
           </tr>
         </tbody>
@@ -126,6 +147,21 @@
         </thead>
         <tbody>
           <tr>
+            <th scope="row" id="dev-flint"><span class="dev-name">Flint</span><span class="dev-sub">GPT-2 from scratch on hand-written CUDA kernels</span></th>
+            <td data-label="Status"><span class="badge badge-active">Active</span><span class="dev-note">v0.1.0</span></td>
+            <td data-label="Description">
+              <p>Hand-written FP16 tensor-core matrix multiplies for GPT-2&rsquo;s training step, with FP32 accumulation and fused bias, GELU, and residual epilogues. On an RTX 2080 Ti they run at 82&ndash;108% of cuBLAS, and results are bit-identical from run to run.</p>
+              <p class="dev-note">C++17, CUDA, inline PTX</p>
+              <p class="dev-links"><a href="/flint/" aria-describedby="dev-flint">How it works</a><a href="https://github.com/bayareahomelander/Flint">GitHub</a></p>
+            </td>
+            <td class="fig-cell">
+              <figure aria-labelledby="fig1-cap">
+                <div class="fig-box" aria-hidden="true"><div class="flint-preview" data-flint-preview></div></div>
+                <figcaption class="fig-cap" id="fig1-cap"><b>Figure 1.</b> Flint, GPT-2 from scratch on hand-written CUDA kernels. Illustration of a tiled matrix multiply.</figcaption>
+              </figure>
+            </td>
+          </tr>
+          <tr>
             <th scope="row" id="dev-onyx"><span class="dev-name">Onyx</span><span class="dev-sub">Grammar-constrained LLM inference engine</span></th>
             <td data-label="Status"><span class="badge badge-active">Active</span><span class="dev-note">Open source</span></td>
             <td data-label="Description">
@@ -134,7 +170,7 @@
               <p class="dev-links"><a href="/onyx/" aria-describedby="dev-onyx">How it works</a><a href="https://github.com/bayareahomelander/Onyx">GitHub</a></p>
             </td>
             <td class="fig-cell">
-              <figure aria-labelledby="fig1-cap">
+              <figure aria-labelledby="fig2-cap">
                 <div class="fig-box" data-demo-root aria-hidden="true">
                   <p class="phase" data-phase>&nbsp;</p>
                   <div class="demo-line" data-demo></div>
@@ -143,22 +179,7 @@
                     <div><dt>Target passes</dt><dd data-passes>0</dd></div>
                   </dl>
                 </div>
-                <figcaption class="fig-cap" id="fig1-cap"><b>Figure 1.</b> Onyx, illustration with scripted tokens: a small draft model guesses ahead; the large target model checks every guess in one pass and keeps only what it agrees with.</figcaption>
-              </figure>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" id="dev-flint"><span class="dev-name">Flint</span><span class="dev-sub">GPT-2 from scratch on hand-written CUDA kernels</span></th>
-            <td data-label="Status"><span class="badge badge-preview">Preview</span><span class="dev-note">v0.1 in December 2026</span></td>
-            <td data-label="Description">
-              <p>Trains GPT-2 (124M) on one consumer GPU and then serves it, with every kernel written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.</p>
-              <p>Early result: its matrix multiply already runs at over 80% of cuBLAS on every GPT-2 layer shape.</p>
-              <p class="dev-links"><a href="/flint/" aria-describedby="dev-flint">Read more</a></p>
-            </td>
-            <td class="fig-cell">
-              <figure aria-labelledby="fig2-cap">
-                <div class="fig-box" aria-hidden="true"><div class="flint-preview" data-flint-preview></div></div>
-                <figcaption class="fig-cap" id="fig2-cap"><b>Figure 2.</b> Flint, GPT-2 from scratch on hand-written CUDA kernels. Illustration of a tiled matrix multiply.</figcaption>
+                <figcaption class="fig-cap" id="fig2-cap"><b>Figure 2.</b> Onyx, illustration with scripted tokens: a small draft model guesses ahead; the large target model checks every guess in one pass and keeps only what it agrees with.</figcaption>
               </figure>
             </td>
           </tr>
@@ -212,7 +233,7 @@
             <td data-label="Period">2025 – now</td>
             <th scope="row">Independent</th>
             <td data-label="Organization">Vancouver</td>
-            <td data-label="Summary">Building Onyx and Flint (GPT-2 from scratch on hand-written CUDA kernels), and writing the series above.</td>
+            <td data-label="Summary">Building Onyx, releasing Flint v0.1.0 (GPT-2 from scratch on hand-written CUDA kernels), and writing the series above.</td>
           </tr>
           <tr class="prime">
             <td data-label="Period">2022 – 2025</td>
@@ -243,11 +264,11 @@
       <p class="sec-lede">I'm looking for ML engineering roles, especially in LLM inference and serving.</p>
       <div class="pins" data-pins>
         <figure class="pkg-fig" aria-labelledby="fig3-cap">
-          <svg class="pkg" viewBox="0 0 340 190" aria-hidden="true" focusable="false">
-            <rect class="body" x="118" y="24" width="104" height="142"/>
+          <svg class="pkg" viewBox="0 0 340 229" aria-hidden="true" focusable="false">
+            <rect class="body" x="118" y="24" width="104" height="181"/>
             <circle class="mark" cx="134" cy="40" r="4"/>
-            <text class="brand" x="170" y="92" text-anchor="middle">PACO SUN</text>
-            <text class="sub" x="170" y="108" text-anchor="middle">LLM INFERENCE</text>
+            <text class="brand" x="170" y="112" text-anchor="middle">PACO SUN</text>
+            <text class="sub" x="170" y="128" text-anchor="middle">LLM INFERENCE</text>
 
             <a href="mailto:SunweichenP@Gmail.com" tabindex="-1" data-pin="1">
               <rect class="hit" x="20" y="41" width="98" height="30"/>
@@ -268,22 +289,34 @@
               <text class="name" x="84" y="134" text-anchor="end">MEDIUM</text>
             </a>
             <a href="/resume/" tabindex="-1" data-pin="4">
-              <rect class="hit" x="222" y="119" width="98" height="30"/>
-              <rect class="tab" x="222" y="125" width="26" height="18"/>
-              <text class="no" x="235" y="134">4</text>
-              <text class="name" x="256" y="134">RESUME</text>
+              <rect class="hit" x="20" y="158" width="98" height="30"/>
+              <rect class="tab" x="92" y="164" width="26" height="18"/>
+              <text class="no" x="105" y="173">4</text>
+              <text class="name" x="84" y="173" text-anchor="end">RESUME</text>
             </a>
             <a href="/resume/Paco-Sun-Resume.pdf" tabindex="-1" data-pin="5">
-              <rect class="hit" x="222" y="80" width="98" height="30"/>
-              <rect class="tab" x="222" y="86" width="26" height="18"/>
-              <text class="no" x="235" y="95">5</text>
-              <text class="name" x="256" y="95">PDF</text>
+              <rect class="hit" x="222" y="158" width="98" height="30"/>
+              <rect class="tab" x="222" y="164" width="26" height="18"/>
+              <text class="no" x="235" y="173">5</text>
+              <text class="name" x="256" y="173">PDF</text>
             </a>
             <a href="https://github.com/bayareahomelander/Onyx" tabindex="-1" data-pin="6">
+              <rect class="hit" x="222" y="119" width="98" height="30"/>
+              <rect class="tab" x="222" y="125" width="26" height="18"/>
+              <text class="no" x="235" y="134">6</text>
+              <text class="name" x="256" y="134">ONYX</text>
+            </a>
+            <a href="https://github.com/bayareahomelander/Flint" tabindex="-1" data-pin="7">
+              <rect class="hit" x="222" y="80" width="98" height="30"/>
+              <rect class="tab" x="222" y="86" width="26" height="18"/>
+              <text class="no" x="235" y="95">7</text>
+              <text class="name" x="256" y="95">FLINT</text>
+            </a>
+            <a tabindex="-1" data-pin="8">
               <rect class="hit" x="222" y="41" width="98" height="30"/>
               <rect class="tab" x="222" y="47" width="26" height="18"/>
-              <text class="no" x="235" y="56">6</text>
-              <text class="name" x="256" y="56">ONYX</text>
+              <text class="no" x="235" y="56">8</text>
+              <text class="name" x="256" y="56">NC</text>
             </a>
           </svg>
           <figcaption class="fig-cap" id="fig3-cap"><b>Figure 3.</b> Pin configuration, top view. Pin 1 is marked with a dot.</figcaption>
@@ -302,6 +335,8 @@
             <tr data-pin="4"><td class="pin-no" data-label="Pin">4</td><th scope="row">RESUME</th><td data-label="Description">Experience, projects, and skills: <a href="/resume/">Resume</a></td></tr>
             <tr data-pin="5"><td class="pin-no" data-label="Pin">5</td><th scope="row">PDF</th><td data-label="Description">The resume as a file: <a href="/resume/Paco-Sun-Resume.pdf" download>Resume PDF</a></td></tr>
             <tr data-pin="6"><td class="pin-no" data-label="Pin">6</td><th scope="row">ONYX</th><td data-label="Description">Open-source repository: <a href="https://github.com/bayareahomelander/Onyx">Onyx on GitHub</a></td></tr>
+            <tr data-pin="7"><td class="pin-no" data-label="Pin">7</td><th scope="row">FLINT</th><td data-label="Description">Open-source repository: <a href="https://github.com/bayareahomelander/Flint">Flint on GitHub</a></td></tr>
+            <tr data-pin="8"><td class="pin-no" data-label="Pin">8</td><th scope="row">NC</th><td data-label="Description">No connection.</td></tr>
           </tbody>
         </table>
       </div>

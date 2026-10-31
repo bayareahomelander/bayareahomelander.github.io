@@ -6,10 +6,13 @@
 .specs .c-value { width: 9.5rem; }
 .specs .c-ref { width: 7.5rem; }
 .specs tbody tr > * { vertical-align: middle; }
+.specs tbody th[scope="colgroup"] { padding-block: 6px; }
 .specs td.val {
   font-size: 2rem; font-weight: 750; font-stretch: 78%; line-height: 1; letter-spacing: -0.005em;
-  white-space: nowrap; padding-block: 8px;
+  white-space: nowrap; padding-block: 3px;
 }
+.specs tbody tr:not(:has(> th[scope="colgroup"])) > * { padding-block: 4px; }
+.specs tbody tr:not(:has(> th[scope="colgroup"])) > td.val { padding-block: 3px; }
 .specs tbody th[scope="row"] { font-size: 1rem; }
 .specs td:not(.val) { color: var(--ink-2); }
 .specs td a { font-weight: 600; color: var(--ink); }

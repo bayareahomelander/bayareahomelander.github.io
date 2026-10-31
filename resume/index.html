@@ -8,7 +8,7 @@
   <meta property="og:title" content="Resume · Paco Sun · ML Engineer, LLM Inference">
   <meta property="og:description" content="Resume of Paco Sun, machine learning engineer in Vancouver working on LLM inference.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=3">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/home.png?v=4">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Paco Sun, ML engineer focused on LLM inference">
@@ -86,7 +86,7 @@
             <td class="when" data-label="Period">2025 – now</td>
             <th scope="row"><span class="res-name">Independent</span><span class="res-org">Vancouver</span></th>
             <td data-label="Highlights">
-              <p>Built Onyx, an open-source inference engine. Now building Flint, GPT-2 from scratch
+              <p>Built Onyx, an open-source inference engine. Released Flint v0.1.0, GPT-2 from scratch
                  on hand-written CUDA kernels. Writing a step-by-step series on how LLMs work.</p>
             </td>
           </tr>
@@ -152,13 +152,13 @@
             </td>
           </tr>
           <tr>
-            <td data-label="Status"><span class="badge badge-preview">Preview</span><span class="res-note">In progress</span></td>
-            <th scope="row"><span class="res-name res-proj">Flint</span><span class="res-sub">GPT-2 from scratch on hand-written CUDA kernels</span><span class="res-stack">C++17, CUDA, inline PTX</span></th>
+            <td data-label="Status"><span class="badge badge-active">Active</span><span class="res-note">Open source</span></td>
+            <th scope="row"><span class="res-name res-proj"><a href="https://github.com/bayareahomelander/Flint">Flint</a></span><span class="res-sub">GPT-2 from scratch on hand-written CUDA kernels</span><span class="res-stack">C++17, CUDA, inline PTX</span><span class="res-stack print-only">github.com/bayareahomelander/Flint</span></th>
             <td data-label="Highlights">
               <ul class="pts">
-                <li>A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime. v0.1 ships December 2026.</li>
-                <li>Tensor-core matrix multiply in inline PTX with deterministic split-K and fused bias, GELU, and residual-add; it already runs at over <b>80% of cuBLAS</b> on every GPT-2 layer shape.</li>
-                <li>In progress: deterministic flash attention (forward and backward) in 64 KB of shared memory, and FP16 training with loss scaling.</li>
+                <li>Released v0.1.0, the GEMM: the FP16 tensor-core matrix multiplies a GPT-2 training step needs, with FP32 accumulation, written by hand in CUDA and inline PTX, plus fused bias, GELU, and residual epilogues.</li>
+                <li>On an RTX 2080 Ti at GPT-2 small&rsquo;s shapes: <b>82&ndash;89%</b> of cuBLAS forward, <b>86&ndash;99%</b> input gradient, <b>91&ndash;108%</b> weight gradient, with fused GELU epilogues faster than cuBLASLt on Turing.</li>
+                <li>Bit-identical results from run to run on one GPU, benchmarked as the median of 10 interleaved rounds against cuBLAS.</li>
               </ul>
             </td>
           </tr>

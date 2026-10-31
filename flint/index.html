@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Flint · GPT-2 from scratch on hand-written CUDA kernels · Paco Sun</title>
-  <meta name="description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime.">
+  <meta name="description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine built to train GPT-2 (124M) on one consumer GPU and then serve it, with no cuBLAS, cuDNN, or PyTorch at runtime. v0.1.0 ships the tensor-core GEMMs, at 82-108% of cuBLAS on an RTX 2080 Ti.">
   <meta property="og:title" content="Flint · GPT-2 from scratch on hand-written CUDA kernels · Paco Sun">
-  <meta property="og:description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it, with no cuBLAS, cuDNN, or PyTorch at runtime.">
+  <meta property="og:description" content="Flint, GPT-2 from scratch on hand-written CUDA kernels: a CUDA engine built to train GPT-2 (124M) on one consumer GPU and then serve it, with no cuBLAS, cuDNN, or PyTorch at runtime. v0.1.0 ships the tensor-core GEMMs, at 82-108% of cuBLAS on an RTX 2080 Ti.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://bayareahomelander.github.io/og/flint.png?v=3">
+  <meta property="og:image" content="https://bayareahomelander.github.io/og/flint.png?v=4">
   <meta property="og:image:width" content="2400">
   <meta property="og:image:height" content="1254">
   <meta property="og:image:alt" content="Flint, GPT-2 from scratch on hand-written CUDA kernels">
@@ -41,37 +41,49 @@
   </header>
 
   <main id="main">
-        <!-- Title block and status box -->
+    <!-- Title block and status box -->
     <section class="wrap front" id="flint" aria-labelledby="flint-title">
       <div class="title">
         <h1 id="flint-title">Flint <span class="h1-sub">GPT-2 from scratch on hand-written CUDA kernels</span></h1>
         <p class="desc">
-          A CUDA engine that trains GPT-2 (124M) on one consumer GPU and then serves it.
+          A CUDA engine built to train GPT-2 (124M) on one consumer GPU and then serve it.
           Every kernel is written by hand: no cuBLAS, cuDNN, or PyTorch at runtime.
-        </p>
-        <p class="desc early">
-          <strong>Early result:</strong> the matrix multiply already runs at over 80% of cuBLAS on
-          every GPT-2 layer shape. Full benchmarks and logs come with v0.1.
+          v0.1.0 ships the first piece, the tensor-core matrix multiplies a training step needs,
+          measured against cuBLAS on an RTX 2080 Ti. Results are bit-identical from run to run
+          on one GPU, validated against PyTorch, and clean under compute-sanitizer.
         </p>
       </div>
 
       <aside class="status-box" aria-labelledby="status-title">
-        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-preview">Preview</span></h2>
+        <h2 class="box-head" id="status-title"><span>Status</span> <span class="badge badge-active">Active</span></h2>
         <dl class="box-list">
-          <div><dt>Stage</dt><dd>In progress</dd></div>
-          <div><dt>Release</dt><dd>v0.1 in December 2026</dd></div>
-          <div><dt>Built with</dt><dd>C++17, CUDA, Inline PTX, CMake, pytest, Nsight Compute, compute-sanitizer</dd></div>
+          <div><dt>Source</dt><dd>Open source</dd></div>
+          <div><dt>Release</dt><dd>v0.1.0 &middot; October 2026</dd></div>
+          <div><dt>Languages</dt><dd>C++, CUDA, Python</dd></div>
+          <div><dt>Built with</dt><dd>Inline PTX, CMake, pytest, Nsight Compute, compute-sanitizer</dd></div>
         </dl>
-        <p class="box-note">Private until v0.1. Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
+        <p class="box-note">Targets NVIDIA Turing and Ada GPUs on Linux and Windows.</p>
         <div class="box-act">
-          <a class="btn" href="#techniques">See the two techniques</a>
+          <a class="btn" href="https://github.com/bayareahomelander/Flint">View on GitHub</a>
+          <a class="btn btn-quiet" href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">Read the v0.1.0 write-up</a>
         </div>
       </aside>
     </section>
 
-    <!-- 1 Background -->
-    <section class="wrap sec first" aria-labelledby="bg-title">
-      <h2 class="sec-head" id="bg-title"><span class="num">1</span> Background</h2>
+    <!-- 1 Features -->
+    <section class="wrap sec first" aria-labelledby="feat-title">
+      <h2 class="sec-head" id="feat-title"><span class="num">1</span> Features</h2>
+      <ul class="feat" aria-label="Flint v0.1.0 results">
+        <li><strong>82&ndash;89%</strong><span>of cuBLAS on the forward matrix multiply, across GPT-2 small&rsquo;s five linear layers on an RTX 2080 Ti</span></li>
+        <li><strong>86&ndash;99%</strong><span>of cuBLAS on the input gradient, the backward multiply for the layer&rsquo;s input</span></li>
+        <li><strong>91&ndash;108%</strong><span>of cuBLAS on the weight gradient, accumulated in FP32 across micro-batches</span></li>
+        <li><strong>105.7%</strong><span>of cuBLASLt on the fused bias and GELU multiply, and 148.5% on GELU&rsquo;s backward, because cuBLASLt runs those as a separate kernel on Turing</span></li>
+      </ul>
+    </section>
+
+    <!-- 2 Two techniques -->
+    <section class="wrap sec" aria-labelledby="bg-title">
+      <h2 class="sec-head" id="bg-title"><span class="num">2</span> Background</h2>
       <p class="sec-lede">
         Onyx speeds up decoding on top of existing kernels; this goes one level down, to the
         kernels themselves. Prior from-scratch projects such as llm.c train GPT-2 without
@@ -82,12 +94,12 @@
       </p>
     </section>
 
-    <!-- 2 Two techniques -->
     <section class="wrap sec" id="techniques" aria-labelledby="viz-title">
-      <h2 class="sec-head" id="viz-title"><span class="num">2</span> Two techniques, step by step</h2>
+      <h2 class="sec-head" id="viz-title"><span class="num">3</span> Two techniques, step by step</h2>
       <p class="sec-lede">
         The two kernels at the heart of the project, drawn generically. Press play, or step
-        through one stage at a time.
+        through one stage at a time. The matrix multiply is what v0.1.0 ships; flash attention is
+        milestone M3.
       </p>
 
       <figure class="fig viz" data-viz="gemm" aria-labelledby="gemm-t">
@@ -216,7 +228,10 @@
 
     <!-- 3 What makes it hard -->
     <section class="wrap sec" aria-labelledby="hard-title">
-      <h2 class="sec-head" id="hard-title"><span class="num">3</span> What makes it hard</h2>
+      <h2 class="sec-head" id="hard-title"><span class="num">4</span> What makes it hard</h2>
+      <p class="sec-lede">
+        The difficulties across the whole project. v0.1.0 delivers the first; its benchmarks follow the fourth.
+      </p>
       <ol class="how">
         <li>
           <h3><span class="num">3.1</span> A tensor-core matrix multiply in inline PTX.</h3>
@@ -249,20 +264,85 @@
       </ol>
     </section>
 
-    <!-- 4 Roadmap -->
+    <!-- 4 Typical Performance Characteristics -->
+    <section class="wrap sec" id="perf" aria-labelledby="perf-title">
+      <h2 class="sec-head" id="perf-title"><span class="num">5</span> Typical Performance Characteristics</h2>
+      <figure class="fig fig-chart" id="flint-perf" aria-labelledby="chart-cap">
+        <div class="fig-frame">
+          <div class="fig-head"><span class="fig-title" id="chart-cap">Flint&rsquo;s GEMMs as a share of cuBLAS, by layer and layout</span><span class="badge badge-active">Measured</span></div>
+          <div class="fig-body">
+            <table class="bars">
+              <caption class="sr-only">Flint GEMM throughput and share of cuBLAS (cuBLASLt for the fused kernels) on an RTX 2080 Ti, at GPT-2 small&rsquo;s shapes</caption>
+              <thead>
+                <tr><th scope="col">Layer</th><th scope="col" class="shape">Shape (M&times;N&times;K)</th><th scope="col" class="n">TFLOPS</th><th scope="col">% of cuBLAS</th></tr>
+              </thead>
+              <tbody>
+                <tr class="grp"><th scope="colgroup" colspan="4">Forward, y = x w&#7488;</th></tr>
+                <tr style="--v:82.1"><th scope="row">qkv</th><td class="shape">8192&times;2304&times;768</td><td class="n">44.3</td><td><div class="cell"><span class="bar"></span><span class="val">82.1%</span></div></td></tr>
+                <tr style="--v:85.0"><th scope="row">Attention projection</th><td class="shape">8192&times;768&times;768</td><td class="n">42.7</td><td><div class="cell"><span class="bar"></span><span class="val">85.0%</span></div></td></tr>
+                <tr style="--v:83.1"><th scope="row">MLP up</th><td class="shape">8192&times;3072&times;768</td><td class="n">44.7</td><td><div class="cell"><span class="bar"></span><span class="val">83.1%</span></div></td></tr>
+                <tr style="--v:88.2"><th scope="row">MLP down</th><td class="shape">8192&times;768&times;3072</td><td class="n">47.5</td><td><div class="cell"><span class="bar"></span><span class="val">88.2%</span></div></td></tr>
+                <tr style="--v:89.0"><th scope="row">Logits</th><td class="shape">8192&times;50304&times;768</td><td class="n">47.3</td><td><div class="cell"><span class="bar"></span><span class="val">89.0%</span></div></td></tr>
+                <tr class="grp"><th scope="colgroup" colspan="4">Input gradient, dX = dY W</th></tr>
+                <tr style="--v:90.6"><th scope="row">qkv</th><td class="shape">8192&times;768&times;2304</td><td class="n">49.1</td><td><div class="cell"><span class="bar"></span><span class="val">90.6%</span></div></td></tr>
+                <tr style="--v:85.9"><th scope="row">Attention projection</th><td class="shape">8192&times;768&times;768</td><td class="n">43.3</td><td><div class="cell"><span class="bar"></span><span class="val">85.9%</span></div></td></tr>
+                <tr style="--v:90.9"><th scope="row">MLP up</th><td class="shape">8192&times;768&times;3072</td><td class="n">49.4</td><td><div class="cell"><span class="bar"></span><span class="val">90.9%</span></div></td></tr>
+                <tr style="--v:90.4"><th scope="row">MLP down</th><td class="shape">8192&times;3072&times;768</td><td class="n">46.0</td><td><div class="cell"><span class="bar"></span><span class="val">90.4%</span></div></td></tr>
+                <tr style="--v:99.1"><th scope="row">Logits</th><td class="shape">8192&times;768&times;50304</td><td class="n">47.3</td><td><div class="cell"><span class="bar"></span><span class="val">99.1%</span></div></td></tr>
+                <tr class="grp"><th scope="colgroup" colspan="4">Weight gradient, dW = dY&#7488; X (FP32, accumulating)</th></tr>
+                <tr style="--v:95.2"><th scope="row">qkv</th><td class="shape">2304&times;768&times;8192</td><td class="n">45.4</td><td><div class="cell"><span class="bar"></span><span class="val">95.2%</span></div></td></tr>
+                <tr class="hi" style="--v:107.8"><th scope="row">Attention projection</th><td class="shape">768&times;768&times;8192</td><td class="n">41.2</td><td><div class="cell"><span class="bar"></span><span class="val">107.8%</span></div></td></tr>
+                <tr style="--v:91.4"><th scope="row">MLP up</th><td class="shape">3072&times;768&times;8192</td><td class="n">41.2</td><td><div class="cell"><span class="bar"></span><span class="val">91.4%</span></div></td></tr>
+                <tr style="--v:92.3"><th scope="row">MLP down</th><td class="shape">768&times;3072&times;8192</td><td class="n">41.5</td><td><div class="cell"><span class="bar"></span><span class="val">92.3%</span></div></td></tr>
+                <tr style="--v:93.9"><th scope="row">Logits</th><td class="shape">50304&times;768&times;8192</td><td class="n">51.8</td><td><div class="cell"><span class="bar"></span><span class="val">93.9%</span></div></td></tr>
+                <tr class="grp"><th scope="colgroup" colspan="4">Fused epilogues, against cuBLASLt</th></tr>
+                <tr style="--v:83.2"><th scope="row">qkv, + bias</th><td class="shape">8192&times;2304&times;768</td><td class="n">43.6</td><td><div class="cell"><span class="bar"></span><span class="val">83.2%</span></div></td></tr>
+                <tr style="--v:86.7"><th scope="row">Attention projection, + bias</th><td class="shape">8192&times;768&times;768</td><td class="n">42.2</td><td><div class="cell"><span class="bar"></span><span class="val">86.7%</span></div></td></tr>
+                <tr style="--v:83.7"><th scope="row">MLP up, + bias</th><td class="shape">8192&times;3072&times;768</td><td class="n">43.8</td><td><div class="cell"><span class="bar"></span><span class="val">83.7%</span></div></td></tr>
+                <tr style="--v:89.1"><th scope="row">MLP down, + bias</th><td class="shape">8192&times;768&times;3072</td><td class="n">46.7</td><td><div class="cell"><span class="bar"></span><span class="val">89.1%</span></div></td></tr>
+                <tr class="hi" style="--v:105.7"><th scope="row">MLP up, + bias + GELU</th><td class="shape">8192&times;3072&times;768</td><td class="n">39.3</td><td><div class="cell"><span class="bar"></span><span class="val">105.7%</span></div></td></tr>
+                <tr class="hi" style="--v:148.5"><th scope="row">MLP down input gradient, + GELU backward</th><td class="shape">8192&times;3072&times;768</td><td class="n">40.8</td><td><div class="cell"><span class="bar"></span><span class="val">148.5%</span></div></td></tr>
+                <tr style="--v:85.5"><th scope="row">Attention projection, + bias + residual</th><td class="shape">8192&times;768&times;768</td><td class="n">32.5</td><td><div class="cell"><span class="bar"></span><span class="val">85.5%</span></div></td></tr>
+                <tr style="--v:89.5"><th scope="row">MLP down, + bias + residual</th><td class="shape">8192&times;768&times;3072</td><td class="n">44.4</td><td><div class="cell"><span class="bar"></span><span class="val">89.5%</span></div></td></tr>
+              </tbody>
+            </table>
+            <ul class="chart-key">
+              <li><span class="swatch gain" aria-hidden="true"></span>Flint below the baseline</li>
+              <li><span class="swatch hi" aria-hidden="true"></span>Flint at or above the baseline</li>
+              <li><span class="swatch ref" aria-hidden="true"></span>100% of cuBLAS</li>
+            </ul>
+          </div>
+        </div>
+        <figcaption class="fig-cap">
+          <b>Figure 3.</b> RTX 2080 Ti, FP16 inputs with FP32 accumulation, GPT-2 small at 8,192 tokens. Each value is
+          the median of 10 interleaved rounds against cuBLAS&rsquo;s <code>cublasGemmEx</code>, or cuBLASLt&rsquo;s matching
+          epilogue for the fused kernels. Raw logs for every number are linked from the
+          <a href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">v0.1.0 write-up</a>.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- 5 Roadmap -->
     <section class="wrap sec" aria-labelledby="road-title">
-      <h2 class="sec-head" id="road-title"><span class="num">4</span> Roadmap</h2>
+      <h2 class="sec-head" id="road-title"><span class="num">6</span> Roadmap</h2>
       <table class="ds road">
-        <colgroup><col class="c-when"><col></colgroup>
+        <colgroup><col class="c-when"><col><col class="c-stat"></colgroup>
         <thead>
-          <tr><th scope="col">Date</th><th scope="col">Milestone</th></tr>
+          <tr><th scope="col">Milestone</th><th scope="col">Goal</th><th scope="col">Status</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Dec 2026</th><td data-label="Milestone"><b>v0.1:</b> the matrix multiply, benchmarked against cuBLAS.</td></tr>
-          <tr><th scope="row">2027</th><td data-label="Milestone"><b>Training:</b> GPT-2 124M end to end on these kernels.</td></tr>
-          <tr><th scope="row">2027</th><td data-label="Milestone"><b>Inference:</b> KV cache, decode attention split across thread blocks, int8 weight-only quantization, and each decode step captured as one CUDA graph. Measured against the memory-bandwidth limit and llama.cpp.</td></tr>
+          <tr><th scope="row">M0</th><td data-label="Goal">Build, test bridge and benchmark harness (<a href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M0.md">write-up</a>).</td><td data-label="Status" class="st done">Done</td></tr>
+          <tr><th scope="row">M1</th><td data-label="Goal">Tensor-core GEMM (<a href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">write-up</a>).</td><td data-label="Status" class="st done">Done &middot; v0.1.0</td></tr>
+          <tr><th scope="row">M2</th><td data-label="Goal">One training step matching PyTorch: embeddings, LayerNorm, attention, cross-entropy, AdamW, loss scaling.</td><td data-label="Status" class="st next">Next</td></tr>
+          <tr><th scope="row">M3</th><td data-label="Goal">Flash attention, forward and backward, on Turing.</td><td data-label="Status" class="st">Planned</td></tr>
+          <tr><th scope="row">M4</th><td data-label="Goal">The long run: GPT-2 124M on 10B FineWeb-Edu tokens, evaluated on HellaSwag against OpenAI&rsquo;s checkpoint.</td><td data-label="Status" class="st">Planned</td></tr>
+          <tr><th scope="row">M5</th><td data-label="Goal">Inference: KV cache, decode attention, int8 weights, OpenAI&rsquo;s checkpoints up to 1.5B.</td><td data-label="Status" class="st">Planned</td></tr>
         </tbody>
       </table>
+      <p class="cta-row">
+        <a class="btn" href="https://github.com/bayareahomelander/Flint">View on GitHub</a>
+        <a class="btn btn-quiet" href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">Read the v0.1.0 write-up</a>
+      </p>
     </section>
   </main>
 

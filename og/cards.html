@@ -76,9 +76,9 @@ h1{font:800 190px/.88 var(--sans);font-variation-settings:'wdth' 62;letter-spaci
   </dl>
  </aside>
  <table class="ds">
-  <colgroup><col style="width:28%"><col style="width:38%"><col></colgroup>
-  <thead><tr><th>Open source</th><th>In progress</th><th>Writing</th></tr></thead>
-  <tbody><tr><td class="spec">Onyx</td><td class="spec">GPT-2 from scratch in CUDA</td><td class="spec">From Text to Next Token</td></tr></tbody>
+  <colgroup><col style="width:22%"><col style="width:22%"><col></colgroup>
+  <thead><tr><th>Open source</th><th>Open source</th><th>Writing</th></tr></thead>
+  <tbody><tr><td class="spec">Onyx</td><td class="spec">Flint</td><td class="spec">From Text to Next Token</td></tr></tbody>
  </table>
 </section>
 
@@ -113,19 +113,19 @@ h1{font:800 190px/.88 var(--sans);font-variation-settings:'wdth' 62;letter-spaci
   <p class="role">GPT-2 from scratch on hand-written CUDA kernels</p>
  </div>
  <aside class="box">
-  <h2 class="box-head"><span>Status</span><span class="badge preview">Preview</span></h2>
+  <h2 class="box-head"><span>Status</span><span class="badge active">Active</span></h2>
   <dl>
-   <div class="box-row"><dt>Stage</dt><dd>In progress</dd></div>
-   <div class="box-row"><dt>Release</dt><dd>v0.1 in December 2026</dd></div>
+   <div class="box-row"><dt>Release</dt><dd>v0.1.0</dd></div>
+   <div class="box-row"><dt>Languages</dt><dd>C++17, CUDA, inline PTX</dd></div>
   </dl>
  </aside>
  <table class="ds">
-  <colgroup><col style="width:30%"><col></colgroup>
-  <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+  <colgroup><col style="width:38%"><col style="width:22%"><col></colgroup>
+  <thead><tr><th>Parameter</th><th>Value</th><th>Test conditions</th></tr></thead>
   <tbody>
-   <tr><th>Kernels</th><td class="spec">Written by hand</td></tr>
-   <tr><th>At runtime</th><td class="spec">No cuBLAS, cuDNN, or PyTorch</td></tr>
-   <tr><th>Built with</th><td class="spec">CUDA, Inline PTX, CMake</td></tr>
+   <tr><th>Forward GEMM</th><td class="val">82&ndash;89%</td><td>Of cuBLAS, RTX 2080 Ti</td></tr>
+   <tr><th>Input-gradient GEMM</th><td class="val">86&ndash;99%</td><td>Of cuBLAS, RTX 2080 Ti</td></tr>
+   <tr><th>Weight-gradient GEMM</th><td class="val">91&ndash;108%</td><td>Of cuBLAS, RTX 2080 Ti</td></tr>
   </tbody>
  </table>
 </section>
