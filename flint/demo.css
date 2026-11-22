@@ -1,0 +1,94 @@
+.gemm-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+.gemm { width: 100%; height: auto; display: block; }
+.gemm .grid { stroke: var(--rule); stroke-width: 1; fill: none; }
+.gemm .frame { stroke: var(--ink); stroke-width: 1.25; fill: none; }
+.gemm .label { fill: var(--graphite); font-size: 17px; font-family: "Schibsted Grotesk", system-ui, sans-serif; }
+.gemm .label b, .gemm .label .em { fill: var(--ink); font-weight: 620; }
+.gemm .hl { fill: var(--blue-wash); stroke: var(--blue); stroke-width: 2; }
+.gemm .done { fill: var(--ink-wash); stroke: none; }
+.gemm .acc { fill: var(--ink); stroke: none; transition: opacity 0.3s var(--ease); }
+.gemm .cut { stroke: var(--ink); stroke-width: 2.5; }
+.gemm .warp { stroke: var(--blue); stroke-width: 1.5; stroke-dasharray: 4 3; fill: none; }
+.gemm .need { fill: none; stroke: var(--pencil); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.gemm .stamp { fill: var(--blue); font-size: 17px; font-weight: 620; font-family: "Schibsted Grotesk", system-ui, sans-serif; }
+.gemm .on-ink { fill: var(--paper); font-size: 14px; font-weight: 600; font-family: "Schibsted Grotesk", system-ui, sans-serif; }
+
+.gemm-stage {
+  font-size: 1.375rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.gemm-side .status { margin-top: 0.75rem; min-height: 9em; }
+
+.partials {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.25rem 1rem;
+  font-size: 0.9375rem;
+}
+.partials li { display: flex; gap: 0.6rem; border-bottom: 1px solid var(--ink-wash); padding: 0.3rem 0; }
+.partials .k { color: var(--graphite); font-family: "Schibsted Grotesk", system-ui, sans-serif; font-size: 0.8125rem; min-width: 3.6em; }
+
+.sumlog { width: 100%; border-collapse: collapse; margin-top: 1.25rem; font-size: 0.9375rem; }
+.sumlog th, .sumlog td { text-align: left; padding: 0.35rem 1rem 0.35rem 0; font-weight: 400; }
+.sumlog thead th { font-size: 0.8125rem; color: var(--graphite); border-bottom: 1px solid var(--rule); }
+.sumlog td { border-top: 1px solid var(--ink-wash); }
+.sumlog .num { text-align: right; padding-right: 0; padding-left: 1rem; }
+.sumlog .order { color: var(--graphite); }
+.sumlog .num, .sumlog .order { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; font-size: 0.875rem; }
+.flint-chart .barcell { width: 30%; }
+.sumlog .diff { text-decoration: underline; text-decoration-color: var(--blue); text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+.sumlog tr.fixed td:first-child { font-weight: 600; }
+.sum-demo .status { min-height: 1.6em; }
+
+@media (max-width: 860px) {
+  .gemm-body { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .gemm { max-width: 30rem; }
+  .gemm-side .status { min-height: 7em; }
+}
+@media (max-width: 600px) {
+  .partials { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flint-chart .shape { display: none; }
+  .sumlog .order { display: none; }
+}
+
+/* Progress: proof marks per milestone */
+.milestones { list-style: none; }
+.milestones > li {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--ink-wash);
+}
+.milestones > li:first-child { border-top: 0; padding-top: 0; }
+.milestones > li:last-child { padding-bottom: 0; }
+.ms-mark { width: 1.5rem; height: 1.125rem; margin-top: 0.3rem; color: var(--blue); }
+.planned .ms-mark { color: var(--pencil); }
+.milestones h3 {
+  font-size: 1.1875rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+.planned h3 { color: var(--graphite); }
+.ms-id { display: inline-block; min-width: 2.25rem; color: var(--graphite); font-variant-numeric: tabular-nums; }
+.ms-state { color: var(--graphite); font-size: 0.9375rem; margin-top: 0.125rem; }
+.milestones li > div > p:not(.ms-state), .milestones .dash { max-width: 64ch; margin-top: 0.75rem; }
+.dash { list-style: none; }
+.dash li { position: relative; padding-left: 1.25rem; }
+.dash li + li { margin-top: 0.5rem; }
+.dash li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.8em;
+  width: 0.5rem;
+  border-top: 1px solid var(--pencil);
+}

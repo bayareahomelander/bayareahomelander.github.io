@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onyx: grammar-constrained LLM inference · Paco Sun</title>
+<meta name="description" content="Onyx constrains LLM output to a regex or JSON Schema as it generates and speeds it up with grammar-aware speculative decoding: 1.49× faster than Qwen3-8B alone, with identical output.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Onyx: grammar-constrained LLM inference">
+<meta property="og:description" content="Speculative decoding that enforces a regex or JSON Schema, 1.49× faster than the target alone with identical output. Step through how it works.">
+<meta property="og:url" content="https://bayareahomelander.github.io/onyx/">
+<link rel="canonical" href="https://bayareahomelander.github.io/onyx/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/schibsted-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="demo.css">
+<script>
+(function () {
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+})();
+</script>
+<script src="../assets/site.js" defer></script>
+<script src="demo.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="slug">
+    <div>
+      <p class="name"><a href="../">Paco Sun</a></p>
+      <span class="role">Machine learning engineer, LLM inference<span class="sep" aria-hidden="true"> · </span>Vancouver</span>
+    </div>
+    <nav aria-label="Site">
+      <a href="./" aria-current="page">Onyx</a>
+      <a href="../flint/">Flint</a>
+      <a href="mailto:sunweichenp@gmail.com">sunweichenp@gmail.com</a>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.25a7.75 7.75 0 0 0 0 15.5z" fill="currentColor"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="row title" aria-labelledby="top">
+      <div class="m"></div>
+      <div class="c">
+        <h1 id="top">Onyx</h1>
+        <p class="standfirst">An LLM inference engine that holds output to a regex or a JSON Schema as it generates, and makes it faster with grammar-aware speculative decoding.</p>
+        <p>Greedy output matches the target model running alone, token for token, including the finish reason. Onyx serves an OpenAI-style chat-completions API with streaming, on NVIDIA GPUs through PyTorch and CUDA, and on Apple Silicon through a separate MLX implementation.</p>
+        <p class="facts"><span>Python, Rust, PyTorch, CUDA, MLX</span><a href="https://github.com/bayareahomelander/Onyx">Repository on GitHub</a><a href="https://github.com/bayareahomelander/Onyx/blob/main/onyx_cuda/README.md#demo">Race videos</a></p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="demo">
+      <div class="m"><h2 id="demo">Draft, then verify</h2></div>
+      <div class="c">
+        <div class="prose">
+          <p>A large model writes one token per forward pass. Speculative decoding lets a small draft model guess the next few tokens; the large target model then checks every guess in a single pass, keeps the ones it agrees with, and adds a token of its own. Because the target still decides every token, the output can’t change. Only the number of passes does.</p>
+        </div>
+
+        <div class="demo onyx-demo" data-onyx>
+          <div class="prompt">
+            <p><span class="small">Prompt</span> Extract the person as JSON with <code>name</code>, <code>born</code> and <code>field</code>: “Ada Lovelace, born 1815, mathematics.”</p>
+            <label class="switch"><input type="checkbox" data-aware checked> <span>The draft model also follows the grammar</span></label>
+          </div>
+
+          <div class="lanes">
+            <div class="lane">
+              <div class="lane-head"><span class="lane-name">Onyx</span><span class="lane-count" data-count="onyx"></span></div>
+              <div class="out code" data-out="onyx"></div>
+              <div class="passes" data-passes="onyx" aria-hidden="true"></div>
+            </div>
+            <div class="lane">
+              <div class="lane-head"><span class="lane-name">Qwen3-8B alone</span><span class="lane-count" data-count="alone"></span></div>
+              <div class="out code" data-out="alone"></div>
+              <div class="passes" data-passes="alone" aria-hidden="true"></div>
+            </div>
+            <p class="small pass-key" aria-hidden="true">Each slot below a lane is one forward pass of the target model; the bar shows how many tokens that pass produced.</p>
+          </div>
+
+          <p class="status" data-status aria-live="polite"></p>
+
+          <div class="legend" aria-hidden="true">
+            <span><i class="tok draft">draft</i>proposed by the draft model</span>
+            <span><i class="tok acc">kept</i>verified by the target</span>
+            <span><i class="tok reject">wrong</i>rejected</span>
+            <span><i class="tok bonus">own</i>written by the target</span>
+          </div>
+
+          <div class="demo-controls">
+            <button class="btn quiet" type="button" data-back>Back</button>
+            <button class="btn" type="button" data-next>Next step</button>
+            <button class="btn quiet" type="button" data-play>Play</button>
+            <button class="textbtn" type="button" data-reset>Start over</button>
+            <span class="count" data-step></span>
+          </div>
+        </div>
+
+        <p class="small demo-note">An illustration: the token boundaries, draft guesses and rounds are scripted to show the mechanism, not recorded from a run. Fewer target passes don’t translate one-for-one into speed, because the draft takes time and a pass that checks several tokens costs more than a one-token step. Measured end to end, Onyx is 1.49× faster overall and 2.11× faster on JSON Schema output.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="results">
+      <div class="m"><h2 id="results">Results</h2></div>
+      <div class="c">
+        <div class="prose">
+          <p>On a Linux RTX 2080 Ti, across a fixed 48-case benchmark, Onyx generated 1.49× faster in aggregate than Qwen3-8B alone, and every output matched the target alone token for token, including the finish reason.</p>
+        </div>
+        <table class="chart">
+          <caption>Speedup over Qwen3-8B alone, by workload. Constrained baselines enforce the same regex or schema, so the gain is from speculation alone.</caption>
+          <thead><tr><th scope="col">Workload</th><th scope="col" class="num">Cases</th><th scope="col" class="num">Speedup</th><th scope="col" class="barcell"><span class="visually-hidden">Bar</span></th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Code</th><td class="num dim">6</td><td class="num">2.44×</td><td class="barcell"><div class="bar" style="--v:97.6%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">JSON Schema output</th><td class="num dim">4</td><td class="num">2.11×</td><td class="barcell"><div class="bar" style="--v:84.4%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Regex-constrained output</th><td class="num dim">4</td><td class="num">2.07×</td><td class="barcell"><div class="bar" style="--v:82.8%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Information extraction</th><td class="num dim">6</td><td class="num">1.85×</td><td class="barcell"><div class="bar" style="--v:74%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Original mixed prompts</th><td class="num dim">9</td><td class="num">1.62×</td><td class="barcell"><div class="bar" style="--v:64.8%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Output that changes pattern</th><td class="num dim">3</td><td class="num">1.39×</td><td class="barcell"><div class="bar" style="--v:55.6%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Prose</th><td class="num dim">8</td><td class="num">1.22×</td><td class="barcell"><div class="bar" style="--v:48.8%;--base:40%"><i></i></div></td></tr>
+            <tr><th scope="row">Short replies</th><td class="num dim">8</td><td class="num">1.13×</td><td class="barcell"><div class="bar" style="--v:45.2%;--base:40%"><i></i></div></td></tr>
+            <tr class="total"><th scope="row">All cases</th><td class="num">48</td><td class="num">1.49×</td><td class="barcell"><div class="bar" style="--v:59.6%;--base:40%"><i></i></div></td></tr>
+          </tbody>
+        </table>
+        <p class="axis-note">The target running alone, 1.0×. Bars run from 0 to 2.5×.</p>
+
+        <div class="prose" style="margin-top:2.25rem">
+          <h3>Where it is still slower</h3>
+          <p>Nine of the 48 cases are slower than the target alone: six with very short outputs, at most 21 ms slower, and three longer requests that needed numerical recovery. They count in the aggregate.</p>
+          <h3>How the benchmark is kept honest</h3>
+          <p>The corpus is frozen: 48 cases across 8 workload categories, with a 16-case held-out split. The harness checks every timed run against the target-only output and aborts on any token or finish-reason mismatch, or an incomplete output. Speed is only reported for correct output.</p>
+          <h3>On Apple Silicon</h3>
+          <p>The separate MLX implementation, with 4-bit Qwen models, reached 1.45× with an 8B target. With a 1.5B target it was slower than running alone, at 0.94×. On a <code>[0-9]{4}</code> grammar, draft acceptance rose from 75% with an unconstrained draft to 100% with a grammar-aware one.</p>
+          <p class="small">Sources: <a href="https://github.com/bayareahomelander/Onyx/blob/main/onyx_cuda/README.md">Onyx CUDA README</a> and its performance notes; <a href="https://github.com/bayareahomelander/Onyx#mac-benchmarks">Mac benchmarks</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="how">
+      <div class="m"><h2 id="how">How it works</h2></div>
+      <div class="c prose">
+        <h3>Draft, then verify</h3>
+        <p>Each round, the Qwen2.5-0.5B draft proposes up to three tokens. The Qwen3-8B target scores the current token and every proposal in one forward pass, keeps the longest prefix it agrees with, and adds its own next token, so a round emits one to four tokens. Both KV caches are then cropped back to the accepted tokens.</p>
+        <h3>The target decides every token</h3>
+        <p>That is why greedy output matches the target running alone, and real-model tests check it. Requests with a positive temperature sample from the target alone.</p>
+        <h3>Grammar masks live on the GPU</h3>
+        <p>A Rust engine, with regex DFAs and a stack-based JSON Schema parser exposed to Python through PyO3, works out which tokens are legal in each grammar state from the tokenizer’s raw bytes. Its scans are cached by grammar state and reused as GPU masks, and both models only pick legal tokens. Caching the vocabulary scans lifted long constrained outputs from 0.49–0.99× to as high as 2.0×.</p>
+        <h3>FP16 near-ties are repaired</h3>
+        <p>Scoring several positions in one batch can round differently from one-token decoding. When the two best legal scores at a position are within FP16 rounding of each other, Onyx recomputes them with one-token steps from a clean checkpoint cache. On the validated GPU, CUDA graphs replay the emitted history of unconstrained requests in blocks of up to eight tokens, matching one-token steps bitwise.</p>
+        <h3>The draft runs as CUDA graphs</h3>
+        <p>The draft’s decoder step is reimplemented over its own weights with a static KV cache and captured as CUDA graphs, cutting draft time from about 7.5–9.8 ms to 4.1–4.4 ms per token. Together with CUDA-graph decoding and recovery, this took the aggregate speedup from 1.17× to 1.49×. The draft also waits to read the prompt until the target has picked the first token, which cut speculation’s added time to first token from 637 ms to 0.3 ms.</p>
+        <h3>Built with a coding agent</h3>
+        <p>Onyx was developed with Claude Code as a coding agent. I wrote the agent instructions and handoff documents (a code map, invariants, validation steps), delegated scoped tasks to subagents, and verified their changes with unit tests and real-model GPU tests.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="../">Paco Sun</a>
+    <a href="../flint/">Next: Flint</a>
+  </footer>
+</div>
+</body>
+</html>

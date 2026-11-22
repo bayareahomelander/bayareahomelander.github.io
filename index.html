@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paco Sun, machine learning engineer</title>
+<meta name="description" content="Paco Sun is a machine learning engineer in Vancouver who builds fast, exact LLM inference: Onyx, grammar-constrained speculative decoding, and Flint, GPT-2 on hand-written CUDA kernels.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Paco Sun, machine learning engineer">
+<meta property="og:description" content="LLM inference that runs faster without changing a single output token.">
+<meta property="og:url" content="https://bayareahomelander.github.io/">
+<link rel="canonical" href="https://bayareahomelander.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/schibsted-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css">
+<script>
+(function () {
+  var d = document.documentElement;
+  try { var t = localStorage.getItem("theme"); if (t) d.dataset.theme = t; } catch (e) {}
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    d.classList.add("motion");
+    setTimeout(function () { if (!d.classList.contains("inking")) d.classList.remove("motion"); }, 2500);
+  }
+})();
+</script>
+<script src="assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="slug">
+    <div>
+      <h1 class="name"><a href="./">Paco Sun</a></h1>
+      <span class="role">Machine learning engineer, LLM inference<span class="sep" aria-hidden="true"> · </span>Vancouver</span>
+    </div>
+    <nav aria-label="Contact and profiles">
+      <a href="mailto:sunweichenp@gmail.com">sunweichenp@gmail.com</a>
+      <a href="https://github.com/bayareahomelander">GitHub</a>
+      <a href="https://www.linkedin.com/in/weichensun/">LinkedIn</a>
+      <a href="https://medium.com/@pacosun">Medium</a>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.25a7.75 7.75 0 0 0 0 15.5z" fill="currentColor"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="row hero" aria-label="Introduction">
+      <div class="m">
+        <p class="note">
+          <svg class="mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M2.5 9.8c2 1.3 3.6 3 5 5.4C10.4 9.6 15 4.7 21.5 2.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Drafted in pencil, verified in ink: the way Onyx decodes. <a href="onyx/#demo">See it step by step</a>
+        </p>
+      </div>
+      <div class="c">
+        <p class="lede" aria-hidden="true" data-ink><span class="w">I</span> <span class="w">make</span> <span class="w">LLM</span> <span class="w">inference</span> <span class="w">faster</span> <span class="w">without</span> <span class="w">changing</span> <span class="w">a</span> <span class="w">single</span> <span class="w">output</span> <span class="w">token.</span></p>
+        <p class="visually-hidden">I make LLM inference faster without changing a single output token.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="projects">
+      <div class="m"><h2 id="projects">Projects</h2></div>
+      <div class="c">
+        <article class="entry">
+          <h3><a href="onyx/">Onyx</a></h3>
+          <p class="sub">Grammar-constrained LLM inference engine<span class="sep" aria-hidden="true">·</span>Python, Rust, CUDA, MLX</p>
+          <p>Speculative decoding that enforces a regex or JSON Schema while it generates. On a fixed 48-case benchmark, Onyx ran 1.49× faster than Qwen3-8B alone on an RTX 2080 Ti, and 2.1–2.4× faster on JSON, regex and code, with every output identical to the model running alone, token for token. The nine cases that are still slower are reported too.</p>
+          <p class="links"><a href="onyx/">How it works<svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 6h9.2M6.6 2.4 10.2 6l-3.6 3.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a href="https://github.com/bayareahomelander/Onyx">Repository</a></p>
+        </article>
+        <article class="entry">
+          <h3><a href="flint/">Flint</a></h3>
+          <p class="sub">GPT-2 from scratch on hand-written CUDA kernels<span class="sep" aria-hidden="true">·</span>C++17, CUDA</p>
+          <p>A from-scratch GPT-2 training and inference stack with no cuBLAS, cuDNN or PyTorch at runtime, built to train GPT-2 124M on one RTX 2080 Ti. Version 0.1.0 ships its hand-written FP16 tensor-core matrix multiply at 82–108% of cuBLAS (41–52 TFLOPS) across GPT-2’s layer shapes, bit-identical from run to run. Now in progress: a full training step matching PyTorch, with every forward and backward kernel already written and verified against PyTorch on GPT-2 124M.</p>
+          <p class="links"><a href="flint/">How it works<svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 6h9.2M6.6 2.4 10.2 6l-3.6 3.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a href="https://github.com/bayareahomelander/Flint">Repository</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="experience">
+      <div class="m"><h2 id="experience">Experience</h2></div>
+      <div class="c">
+        <article class="entry">
+          <h3>Machine Learning Engineer, Z.AI</h3>
+          <p class="sub">Remote, Canada<span class="sep" aria-hidden="true">·</span>June 2022 – February 2025</p>
+          <ul>
+            <li>Optimized LLM serving with TensorRT-LLM, FlashAttention, KV-cache reuse and continuous batching, cutting median response latency by 28% under multi-user load.</li>
+            <li>Fine-tuned GLM-family models with LoRA and 4-bit QLoRA, raising multilingual benchmark accuracy by 8% at roughly 30% lower adapter training cost than full fine-tuning.</li>
+            <li>Built automated retraining and evaluation workflows with Docker, Kubernetes, MLflow and TensorBoard, taking routine experiments from several days to under 24 hours.</li>
+            <li>Prototyped retrieval-augmented generation with vector search and reranking, improving factual answer accuracy by 7% on internal evaluation sets.</li>
+            <li>Profiled model bottlenecks with engineering and research teams, comparing quantization settings and validating throughput and quality tradeoffs before deployment.</li>
+          </ul>
+        </article>
+        <article class="entry">
+          <h3>Data Science Research Assistant, University of British Columbia</h3>
+          <p class="sub">Vancouver<span class="sep" aria-hidden="true">·</span>September 2019 – April 2021</p>
+          <ul>
+            <li>Analyzed 5,000+ social media observations with Python, pandas and NumPy, then built supervised models over 200+ features, improving classification precision by 10% over a logistic-regression baseline.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="education">
+      <div class="m"><h2 id="education">Education</h2></div>
+      <div class="c">
+        <article class="entry">
+          <h3>Bachelor’s degree, University of British Columbia</h3>
+          <p class="sub">Vancouver<span class="sep" aria-hidden="true">·</span>2016 – 2021</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="contact">
+      <div class="m"><h2 id="contact">Contact</h2></div>
+      <div class="c">
+        <dl class="contact">
+          <dt>Email</dt><dd><a href="mailto:sunweichenp@gmail.com">sunweichenp@gmail.com</a></dd>
+          <dt>GitHub</dt><dd><a href="https://github.com/bayareahomelander">bayareahomelander</a></dd>
+          <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/weichensun/">weichensun</a></dd>
+          <dt>Writing</dt><dd><a href="https://medium.com/@pacosun">medium.com/@pacosun</a></dd>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© 2026 Paco Sun</span>
+  </footer>
+</div>
+</body>
+</html>

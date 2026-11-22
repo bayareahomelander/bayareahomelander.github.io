@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flint: GPT-2 from scratch on hand-written CUDA kernels · Paco Sun</title>
+<meta name="description" content="Flint is a from-scratch GPT-2 training and inference stack in C++ and CUDA, with no cuBLAS, cuDNN or PyTorch at runtime. v0.1.0: a hand-written tensor-core GEMM at 82–108% of cuBLAS. A training step matching PyTorch is in progress.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flint: GPT-2 from scratch on hand-written CUDA kernels">
+<meta property="og:description" content="A hand-written FP16 tensor-core GEMM at 82–108% of cuBLAS across GPT-2’s layer shapes, bit-identical run to run. Step through how it works.">
+<meta property="og:url" content="https://bayareahomelander.github.io/flint/">
+<link rel="canonical" href="https://bayareahomelander.github.io/flint/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/schibsted-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="demo.css">
+<script>
+(function () {
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+})();
+</script>
+<script src="../assets/site.js" defer></script>
+<script src="demo.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="slug">
+    <div>
+      <p class="name"><a href="../">Paco Sun</a></p>
+      <span class="role">Machine learning engineer, LLM inference<span class="sep" aria-hidden="true"> · </span>Vancouver</span>
+    </div>
+    <nav aria-label="Site">
+      <a href="../onyx/">Onyx</a>
+      <a href="./" aria-current="page">Flint</a>
+      <a href="mailto:sunweichenp@gmail.com">sunweichenp@gmail.com</a>
+      <button class="theme" type="button" data-theme-toggle aria-label="Switch theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.25a7.75 7.75 0 0 0 0 15.5z" fill="currentColor"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="row title" aria-labelledby="top">
+      <div class="m"></div>
+      <div class="c">
+        <h1 id="top">Flint</h1>
+        <p class="standfirst">GPT-2 from scratch on hand-written CUDA kernels.</p>
+        <p>Flint is a from-scratch GPT-2 training and inference stack in C++ and CUDA. The goal is to train GPT-2 124M on one RTX 2080 Ti using only hand-written CUDA kernels, with no cuBLAS, cuDNN or PyTorch at runtime, then serve that model and OpenAI’s GPT-2 checkpoints through Flint’s own inference kernels.</p>
+        <p>Training GPT-2 without PyTorch has been done before; llm.c, for one, calls cuBLAS for its matrix multiplies. Flint uses no NVIDIA math libraries at all. Its GEMMs are hand-written tensor-core kernels, it is built to train in FP16 with loss scaling on Turing, and its speed is reported against cuBLAS and against the GPU’s measured peak, not in isolation.</p>
+        <p class="facts"><span>C++17, CUDA</span><span>RTX 2080 Ti (Turing) and RTX 4050 Laptop (Ada)</span><a href="https://github.com/bayareahomelander/Flint">Repository on GitHub, MIT license</a></p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="progress">
+      <div class="m"><h2 id="progress">Progress</h2></div>
+      <div class="c">
+        <ol class="milestones">
+          <li class="done">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M2.5 9.8c2 1.3 3.6 3 5 5.4C10.4 9.6 15 4.7 21.5 2.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M0</span>Setup</h3>
+              <p class="ms-state">Done, October 2026</p>
+              <p>CMake builds for both GPUs on Linux and Windows, a C API, a pytest bridge to PyTorch, compute-sanitizer runs, and a benchmark harness with a strict timing protocol.</p>
+            </div>
+          </li>
+          <li class="done">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M2.5 9.8c2 1.3 3.6 3 5 5.4C10.4 9.6 15 4.7 21.5 2.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M1</span>Tensor-core GEMM</h3>
+              <p class="ms-state">Done, released as v0.1.0 in October 2026</p>
+              <p>FP16 GEMMs with FP32 accumulation in the three layouts a linear layer’s training step needs, with fused bias, bias + GELU, GELU-backward and bias + residual epilogues. <a href="#results">Results below</a>, and the <a href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">full write-up</a> in the repository.</p>
+            </div>
+          </li>
+          <li class="active">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M5 15.5 12 3l7 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M2</span>One training step matching PyTorch</h3>
+              <p class="ms-state">In progress, to be released as v0.2.0</p>
+              <ul class="dash">
+                <li>Every kernel of GPT-2’s forward and backward pass is written: LayerNorm, token and position embeddings, attention’s batched GEMMs, causal softmax, a fused softmax and cross-entropy output layer, and the bias gradient, each with its backward pass.</li>
+                <li>The full forward and backward pass is assembled in C++, with one up-front memory allocation.</li>
+                <li>It is verified against PyTorch on GPT-2 124M, both at initialization and with OpenAI’s weights on real FineWeb-Edu text. With OpenAI’s weights, Flint’s forward pass matches Hugging Face transformers, and all 148 parameter gradients pass the correctness gate, the closest at 2.02 of an allowed 3 on the 2080 Ti.</li>
+              </ul>
+              <p>Still to come: the gradient norm with overflow detection, AdamW with loss scaling and clipping, safetensors checkpoints, the data loader, a training program with bit-identical resume, a 500-step loss comparison against PyTorch, and Flint’s first end-to-end tokens per second. No model has been trained by Flint yet; the training loop lands at the end of M2.</p>
+            </div>
+          </li>
+          <li class="planned">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M6 9.5h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M3</span>Flash attention on Turing</h3>
+              <p class="ms-state">Planned</p>
+              <p>Forward and backward. M2’s attention is deliberately simple, GEMMs plus a softmax kernel, so M3 has a known-good path to replace.</p>
+            </div>
+          </li>
+          <li class="planned">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M6 9.5h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M4</span>The long run</h3>
+              <p class="ms-state">Planned</p>
+              <p>GPT-2 124M trained on 10B FineWeb-Edu tokens, already tokenized, and evaluated on HellaSwag against OpenAI’s checkpoint. For reference, measured in advance: PyTorch with torch.compile trains the same model on the same GPU at 44.3k tokens/s, about 2.6 days per 10B tokens.</p>
+            </div>
+          </li>
+          <li class="planned">
+            <svg class="ms-mark" viewBox="0 0 24 18" aria-hidden="true"><path d="M6 9.5h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3><span class="ms-id">M5</span>Inference</h3>
+              <p class="ms-state">Planned</p>
+              <p>KV cache, decode attention, int8 weights, and OpenAI’s checkpoints up to 1.5B parameters.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="demo">
+      <div class="m"><h2 id="demo">Inside one GEMM</h2></div>
+      <div class="c">
+        <div class="prose">
+          <p>Almost all of a transformer’s arithmetic is matrix multiplication. A fast GEMM is mostly about moving data: keeping the tensor cores fed without waiting on memory. Step through how a tiled tensor-core GEMM does it.</p>
+        </div>
+
+        <div class="demo gemm-demo" data-gemm>
+          <div class="gemm-body">
+            <svg class="gemm" viewBox="0 0 600 590" role="img" aria-labelledby="gemm-title" data-svg><title id="gemm-title">Matrices A, B and C, with the parts in use highlighted</title></svg>
+            <div class="gemm-side">
+              <p class="gemm-stage" data-stage></p>
+              <p class="status" data-status aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="demo-controls">
+            <button class="btn quiet" type="button" data-back>Back</button>
+            <button class="btn" type="button" data-next>Next step</button>
+            <button class="textbtn" type="button" data-reset>Start over</button>
+            <span class="count" data-step></span>
+          </div>
+        </div>
+        <p class="small demo-note">A sketch: the 8 × 8 grids stand in for matrices with thousands of rows, and the tile sizes are not Flint’s.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="order">
+      <div class="m"><h2 id="order">Same numbers, same bits</h2></div>
+      <div class="c">
+        <div class="prose">
+          <p>The weight-gradient GEMM sums over all 8,192 tokens, so Flint splits that long dimension across thread blocks and then adds their partial results. Floating-point addition isn’t associative: the same numbers added in a different order can give a different answer. If partials are added in whatever order the blocks happen to finish, two runs can disagree. Flint adds them in a fixed order, so every run is bit-identical.</p>
+          <p>Try it. These are eight real FP32 partial sums, added with real FP32 arithmetic in your browser.</p>
+        </div>
+
+        <div class="demo sum-demo" data-sum>
+          <ol class="partials code" data-partials aria-label="Eight partial sums"></ol>
+          <div class="demo-controls">
+            <button class="btn" type="button" data-random>Add in finish order</button>
+            <button class="btn" type="button" data-fixed>Add in fixed order</button>
+            <button class="textbtn" type="button" data-clear>Clear</button>
+          </div>
+          <table class="sumlog">
+            <caption class="visually-hidden">Results of each run</caption>
+            <thead><tr><th scope="col">Run</th><th scope="col">Order</th><th scope="col" class="num">Sum (FP32)</th><th scope="col" class="num">Bits</th></tr></thead>
+            <tbody data-log></tbody>
+          </table>
+          <p class="status" data-sum-status aria-live="polite">Add them a few times in finish order, then in fixed order.</p>
+        </div>
+        <p class="small demo-note">These partials nearly cancel, which makes the effect large enough to see. In a real GEMM the differences usually sit in the last bits, but any difference breaks bit-for-bit reproducibility.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="results">
+      <div class="m"><h2 id="results">GEMM results</h2></div>
+      <div class="c">
+        <div class="prose">
+          <p>On the RTX 2080 Ti at GPT-2 small’s shapes, v0.1.0 runs at 82–89% of cuBLAS for the forward GEMM, 86–99% for the input gradient, and 91–108% for the weight gradient.</p>
+          <p>Every GEMM shape in GPT-2 small at 8,192 tokens, FP16 inputs and FP32 accumulation, on an RTX 2080 Ti. Each cell is the median of 10 interleaved rounds against cuBLAS’s <code>cublasGemmEx</code>, or cuBLASLt’s matching epilogue for the fused kernels, with the same transposes and FP32 compute. M1’s targets were 70% of cuBLAS for the forward and input-gradient GEMMs and 60% for the weight gradient; every shape clears them.</p>
+        </div>
+        <table class="chart flint-chart">
+          <caption>Flint as a percentage of cuBLAS, RTX 2080 Ti. Shapes are M × N × K.</caption>
+          <thead><tr><th scope="col">Layer</th><th scope="col" class="shape">Shape</th><th scope="col" class="num">TFLOPS</th><th scope="col" class="num">Of cuBLAS</th><th scope="col" class="barcell"><span class="visually-hidden">Bar</span></th></tr></thead>
+          <tbody>
+            <tr class="group"><th scope="rowgroup" colspan="5">Forward, y = x Wᵀ</th></tr>
+            <tr><th scope="row">qkv</th><td class="shape dim">8192 × 2304 × 768</td><td class="num">44.3</td><td class="num">82.1%</td><td class="barcell"><div class="bar" style="--v:54.73%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">attention projection</th><td class="shape dim">8192 × 768 × 768</td><td class="num">42.7</td><td class="num">85.0%</td><td class="barcell"><div class="bar" style="--v:56.67%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP up</th><td class="shape dim">8192 × 3072 × 768</td><td class="num">44.7</td><td class="num">83.1%</td><td class="barcell"><div class="bar" style="--v:55.4%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down</th><td class="shape dim">8192 × 768 × 3072</td><td class="num">47.5</td><td class="num">88.2%</td><td class="barcell"><div class="bar" style="--v:58.8%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">logits</th><td class="shape dim">8192 × 50304 × 768</td><td class="num">47.3</td><td class="num">89.0%</td><td class="barcell"><div class="bar" style="--v:59.33%;--base:66.67%"><i></i></div></td></tr>
+            <tr class="group"><th scope="rowgroup" colspan="5">Input gradient, dX = dY W</th></tr>
+            <tr><th scope="row">qkv</th><td class="shape dim">8192 × 768 × 2304</td><td class="num">49.1</td><td class="num">90.6%</td><td class="barcell"><div class="bar" style="--v:60.4%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">attention projection</th><td class="shape dim">8192 × 768 × 768</td><td class="num">43.3</td><td class="num">85.9%</td><td class="barcell"><div class="bar" style="--v:57.27%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP up</th><td class="shape dim">8192 × 768 × 3072</td><td class="num">49.4</td><td class="num">90.9%</td><td class="barcell"><div class="bar" style="--v:60.6%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down</th><td class="shape dim">8192 × 3072 × 768</td><td class="num">46.0</td><td class="num">90.4%</td><td class="barcell"><div class="bar" style="--v:60.27%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">logits</th><td class="shape dim">8192 × 768 × 50304</td><td class="num">47.3</td><td class="num">99.1%</td><td class="barcell"><div class="bar" style="--v:66.07%;--base:66.67%"><i></i></div></td></tr>
+            <tr class="group"><th scope="rowgroup" colspan="5">Weight gradient, dW = dYᵀ X (FP32, accumulating)</th></tr>
+            <tr><th scope="row">qkv</th><td class="shape dim">2304 × 768 × 8192</td><td class="num">45.4</td><td class="num">95.2%</td><td class="barcell"><div class="bar" style="--v:63.47%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">attention projection</th><td class="shape dim">768 × 768 × 8192</td><td class="num">41.2</td><td class="num">107.8%</td><td class="barcell"><div class="bar" style="--v:71.87%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP up</th><td class="shape dim">3072 × 768 × 8192</td><td class="num">41.2</td><td class="num">91.4%</td><td class="barcell"><div class="bar" style="--v:60.93%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down</th><td class="shape dim">768 × 3072 × 8192</td><td class="num">41.5</td><td class="num">92.3%</td><td class="barcell"><div class="bar" style="--v:61.53%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">logits</th><td class="shape dim">50304 × 768 × 8192</td><td class="num">51.8</td><td class="num">93.9%</td><td class="barcell"><div class="bar" style="--v:62.6%;--base:66.67%"><i></i></div></td></tr>
+            <tr class="group"><th scope="rowgroup" colspan="5">Fused epilogues, against cuBLASLt</th></tr>
+            <tr><th scope="row">qkv, + bias</th><td class="shape dim">8192 × 2304 × 768</td><td class="num">43.6</td><td class="num">83.2%</td><td class="barcell"><div class="bar" style="--v:55.47%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">attention projection, + bias</th><td class="shape dim">8192 × 768 × 768</td><td class="num">42.2</td><td class="num">86.7%</td><td class="barcell"><div class="bar" style="--v:57.8%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP up, + bias</th><td class="shape dim">8192 × 3072 × 768</td><td class="num">43.8</td><td class="num">83.7%</td><td class="barcell"><div class="bar" style="--v:55.8%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down, + bias</th><td class="shape dim">8192 × 768 × 3072</td><td class="num">46.7</td><td class="num">89.1%</td><td class="barcell"><div class="bar" style="--v:59.4%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP up, + bias + GELU</th><td class="shape dim">8192 × 3072 × 768</td><td class="num">39.3</td><td class="num">105.7%</td><td class="barcell"><div class="bar" style="--v:70.47%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down input gradient, + GELU’s backward</th><td class="shape dim">8192 × 3072 × 768</td><td class="num">40.8</td><td class="num">148.5%</td><td class="barcell"><div class="bar" style="--v:99%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">attention projection, + bias + residual</th><td class="shape dim">8192 × 768 × 768</td><td class="num">32.5</td><td class="num">85.5%</td><td class="barcell"><div class="bar" style="--v:57%;--base:66.67%"><i></i></div></td></tr>
+            <tr><th scope="row">MLP down, + bias + residual</th><td class="shape dim">8192 × 768 × 3072</td><td class="num">44.4</td><td class="num">89.5%</td><td class="barcell"><div class="bar" style="--v:59.67%;--base:66.67%"><i></i></div></td></tr>
+          </tbody>
+        </table>
+        <p class="axis-note">cuBLAS, 100%. Bars run from 0 to 150%.</p>
+
+        <div class="prose" style="margin-top:2.25rem">
+          <p>The fused GELU kernels beat cuBLASLt mostly because cuBLASLt runs those epilogues as a separate kernel on Turing. The 2080 Ti’s 53.8 TFLOPS rated peak assumes its 1,545 MHz reference boost; under these loads it runs at 1,630–1,810 MHz, power-capped.</p>
+          <h3>Where the remaining gap comes from</h3>
+          <p>Profiling with Nsight Compute, Nsight Systems, a time-versus-K sweep and static SASS analysis puts the gap to cuBLAS down to four things: the main loop, which runs at 93–96% of cuBLAS’s per-cycle rate; a fixed cost of 22–42 µs per call; power-capped clocks; and cuBLAS’s choice of kernel.</p>
+          <h3>Limitations</h3>
+          <ul>
+            <li>The GEMMs accumulate in FP32 on the tensor cores, which truncate, so K is capped at 65,536.</li>
+            <li>Results are bit-identical from run to run on one GPU, not across GPUs.</li>
+            <li>The 2080 Ti’s clocks are logged, not locked, and its GEMMs run power-capped.</li>
+          </ul>
+          <p class="small">Source: <a href="https://github.com/bayareahomelander/Flint#gemm-results">Flint README</a>; every number links to a raw JSON log in <a href="https://github.com/bayareahomelander/Flint/blob/main/docs/results/M1.md">M1.md</a>, which also gives ranges, clocks and power.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="checks">
+      <div class="m"><h2 id="checks">How it’s checked</h2></div>
+      <div class="c prose">
+        <h3>A correctness gate tied to PyTorch’s own error</h3>
+        <p>Flint’s error against an FP32 PyTorch reference has to stay within a fixed multiple of the error of PyTorch’s own mixed-precision training (autocast FP16 with GradScaler): 2× for forward outputs and 3× for gradients, by both relative L2 and max-abs error, with floors at FP16 or FP32 rounding.</p>
+        <h3>About 5,300 tests, on both GPUs, on every commit</h3>
+        <p>Every commit is built and tested on both GPUs before it lands, including runs of all four compute-sanitizer tools: memory, race, synchronization and initialization checks. Deliberate canary bugs prove the tools are actually reporting.</p>
+        <h3>Bit-identical runs, diffed machine code</h3>
+        <p>Results are bit-identical from run to run on one GPU. Changes are checked by diffing the compiled machine code (SASS) of every kernel between builds.</p>
+        <h3>Benchmarks that can’t flatter themselves</h3>
+        <p>Benchmarks interleave Flint and the baseline, discard rounds disturbed by other GPU activity, and report the percentage of both the rated and the clock-adjusted peak. A tensor-core microbenchmark reaches about 99% of the clock-adjusted peak.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="notes">
+      <div class="m"><h2 id="notes">Notes from the work</h2></div>
+      <div class="c prose">
+        <h3>One failing memory cell</h3>
+        <p>An intermittent test failure at full model size turned out not to be Flint’s fault. A memory test with no Flint code in it traced it to a single failing memory cell on the 2080 Ti; consumer cards have no ECC. The tests now retry once at a different memory placement, and pass only if the difference between the attempts matches that one cell’s signature. How to protect the multi-day M4 run is still to be decided.</p>
+        <h3>Reading the clock on the GPU itself</h3>
+        <p>On the laptop, NVIDIA’s management library updates its GPU clock reading only about every 500 ms, so short benchmark rounds read a stale clock. The tensor-core benchmark now measures the clock on the GPU: a tiny probe kernel reads one SM’s cycle counter and the global timer around each sample, leaving the measured kernel’s machine code unchanged.</p>
+        <h3>Built with AI coding agents</h3>
+        <p>Flint is developed with AI coding agents (Claude) under my direction. I make every design and scope decision.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="../">Paco Sun</a>
+    <a href="../onyx/">Next: Onyx</a>
+  </footer>
+</div>
+</body>
+</html>
